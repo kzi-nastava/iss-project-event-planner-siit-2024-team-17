@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Event {
 
     private UUID id;
-    private String eventName;
+    private String name;
     private int maxAttendance;
     private String description;
     private EventPrivacyType eventPrivacyType;
