@@ -3,6 +3,8 @@ package com.ftn.event_hopper.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+//import lombok.*;
+
 public class Report {
     private UUID id;
     private String reason;
