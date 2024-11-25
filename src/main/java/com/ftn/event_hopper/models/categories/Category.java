@@ -1,5 +1,7 @@
-package com.ftn.event_hopper.model;
+package com.ftn.event_hopper.models.categories;
 
+import com.ftn.event_hopper.models.eventTypes.EventType;
+import com.ftn.event_hopper.models.shared.CategoryStatus;
 import lombok.*;
 
 import java.util.Collection;

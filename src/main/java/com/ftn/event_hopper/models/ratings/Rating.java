@@ -1,5 +1,6 @@
-package com.ftn.event_hopper.model;
+package com.ftn.event_hopper.models.ratings;
 
+import com.ftn.event_hopper.models.users.EventOrganizer;
 import lombok.*;
 
 import java.util.UUID;

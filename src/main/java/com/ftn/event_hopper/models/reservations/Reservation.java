@@ -1,6 +1,8 @@
-package com.ftn.event_hopper.model;
+package com.ftn.event_hopper.models.reservations;
 
 
+import com.ftn.event_hopper.models.events.Event;
+import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 
 import java.time.LocalDateTime;
