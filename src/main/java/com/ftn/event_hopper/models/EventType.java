@@ -1,10 +1,16 @@
 package com.ftn.event_hopper.models;
 
-import jdk.tools.jlink.plugin.Plugin;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class EventType {
     private UUID id;
     private String name;

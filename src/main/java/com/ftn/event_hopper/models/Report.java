@@ -1,9 +1,15 @@
 package com.ftn.event_hopper.models;
 
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-//import lombok.*;
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 
 public class Report {
     private UUID id;

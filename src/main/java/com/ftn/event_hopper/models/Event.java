@@ -1,11 +1,17 @@
 package com.ftn.event_hopper.models;
 
-import com.ftn.event_hopper.shared.EventPrivacyType;
+import com.ftn.event_hopper.models.shared.EventPrivacyType;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Event {
 
     private UUID id;

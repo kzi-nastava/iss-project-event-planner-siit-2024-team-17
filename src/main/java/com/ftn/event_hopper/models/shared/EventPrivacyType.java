@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.shared;
+package com.ftn.event_hopper.models.shared;
 
 public enum EventPrivacyType {
     PRIVATE,
