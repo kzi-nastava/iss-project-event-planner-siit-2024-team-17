@@ -55,9 +55,4 @@ public class RatingController {
         return new ResponseEntity<CreatedRatingDTO>(createdRating, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/average/event/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Double> getAverageRatingForEvent(@PathVariable UUID id) {
-        return new ResponseEntity<Double>(4.5, HttpStatus.OK);
-    }
-
 }
