@@ -40,7 +40,7 @@ public class RatingController {
             return new ResponseEntity<GetRatingDTO>(HttpStatus.NOT_FOUND);
         }
 
-        rating.setId(UUID.randomUUID());
+        rating.setId(id);
         rating.setValue(5);
 
         return new ResponseEntity<GetRatingDTO>(rating, HttpStatus.OK);
