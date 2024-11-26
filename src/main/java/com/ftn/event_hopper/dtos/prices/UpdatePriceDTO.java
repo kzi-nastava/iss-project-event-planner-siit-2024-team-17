@@ -10,7 +10,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class UpdatePriceDTO {
-    private UUID id;
     private double basePrice;
     private double discount;
     private UUID productId;
