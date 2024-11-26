@@ -21,6 +21,6 @@ public class UpdateServiceProviderDTO extends UpdatePersonDTO {
     private Time workEnd;
 
     private Location companyLocation;
-    private Collection<UUID> productUUIDs;
+    private Collection<UUID> productsIds;
 
 }

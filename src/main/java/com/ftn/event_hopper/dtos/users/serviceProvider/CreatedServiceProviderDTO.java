@@ -21,5 +21,5 @@ public class CreatedServiceProviderDTO extends CreatedPersonDTO {
     private String[] companyPhotos;
     private Time workStart;
     private Location companyLocation;
-    private Collection<UUID> productUUIDs;
+    private Collection<UUID> productsIds;
 }

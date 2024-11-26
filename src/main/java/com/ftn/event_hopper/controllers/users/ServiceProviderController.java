@@ -35,8 +35,8 @@ public class ServiceProviderController {
         provider1.setWorkStart(Time.valueOf("08:00:00"));
         provider1.setWorkEnd(Time.valueOf("18:00:00"));
         provider1.setCompanyLocation(null); // Mock location
-        provider1.setProductUUIDs(new ArrayList<>());
-        provider1.setAccountUUID(UUID.randomUUID());
+        provider1.setProductsIds(new ArrayList<>());
+        provider1.setAccountId(UUID.randomUUID());
 
         provider1.setNotificationsIds(new ArrayList<>()); // Mock notifications
         provider1.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -57,8 +57,8 @@ public class ServiceProviderController {
         provider2.setWorkStart(Time.valueOf("09:00:00"));
         provider2.setWorkEnd(Time.valueOf("17:00:00"));
         provider2.setCompanyLocation(null); //  location
-        provider2.setProductUUIDs(new ArrayList<>());
-        provider2.setAccountUUID(UUID.randomUUID());
+        provider2.setProductsIds(new ArrayList<>());
+        provider2.setAccountId(UUID.randomUUID());
 
         provider2.setNotificationsIds(new ArrayList<>()); // Mock notifications
         provider2.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -89,8 +89,8 @@ public class ServiceProviderController {
         provider.setWorkStart(Time.valueOf("07:00:00"));
         provider.setWorkEnd(Time.valueOf("20:00:00"));
         provider.setCompanyLocation(null); // Mock location
-        provider.setProductUUIDs(new ArrayList<>());
-        provider.setAccountUUID(UUID.randomUUID());
+        provider.setProductsIds(new ArrayList<>());
+        provider.setAccountId(UUID.randomUUID());
 
         provider.setNotificationsIds(new ArrayList<>()); // Mock notifications
         provider.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -111,7 +111,7 @@ public class ServiceProviderController {
         createdProvider.setProfilePicture(provider.getProfilePicture());
         createdProvider.setPhoneNumber(provider.getPhoneNumber());
         createdProvider.setType(PersonType.SERVICE_PROVIDER);
-        createdProvider.setAccountUUID(UUID.randomUUID());
+        createdProvider.setAccountId(UUID.randomUUID());
 
         createdProvider.setCompanyName(provider.getCompanyName());
         createdProvider.setCompanyEmail(provider.getCompanyEmail());
@@ -119,8 +119,8 @@ public class ServiceProviderController {
         createdProvider.setCompanyPhotos(provider.getCompanyPhotos());
         createdProvider.setWorkStart(provider.getWorkStart());
         createdProvider.setCompanyLocation(provider.getCompanyLocation());
-        createdProvider.setProductUUIDs(provider.getProductUUIDs());
-        createdProvider.setAccountUUID(UUID.randomUUID());
+        createdProvider.setProductsIds(provider.getProductsIds());
+        createdProvider.setAccountId(UUID.randomUUID());
 
         createdProvider.setNotificationsIds(new ArrayList<>()); // Mock notifications
         createdProvider.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -150,7 +150,7 @@ public class ServiceProviderController {
         existingProvider.setCompanyPhotos(provider.getCompanyPhotos());
         existingProvider.setWorkStart(provider.getWorkStart());
         existingProvider.setCompanyLocation(provider.getCompanyLocation());
-        existingProvider.setProductUUIDs(provider.getProductUUIDs());
+        existingProvider.setProductsIds(provider.getProductsIds());
 
         existingProvider.setFavoriteEventsIds(provider.getFavoriteEventsIds());
         existingProvider.setFavoriteProductsIds(provider.getFavoriteProductsIds());

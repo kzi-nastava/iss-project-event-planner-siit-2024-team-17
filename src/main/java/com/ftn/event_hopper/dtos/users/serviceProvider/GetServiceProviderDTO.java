@@ -23,6 +23,6 @@ public class GetServiceProviderDTO extends GetPersonDTO {
     private Time workEnd;
 
     private Location companyLocation;
-    private Collection<UUID> productUUIDs;
+    private Collection<UUID> productsIds;
 
 }

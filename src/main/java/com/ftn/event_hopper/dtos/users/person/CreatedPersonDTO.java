@@ -28,5 +28,5 @@ public class CreatedPersonDTO {
     private Collection<UUID> attendingEventsIds;
     private Collection<UUID> favoriteEventsIds;
     private Collection<UUID> favoriteProductsIds;
-    private UUID accountUUID;
+    private UUID accountId;
 }
