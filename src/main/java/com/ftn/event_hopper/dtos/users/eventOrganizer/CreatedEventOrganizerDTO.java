@@ -1,6 +1,6 @@
 package com.ftn.event_hopper.dtos.users.eventOrganizer;
 
-import com.ftn.event_hopper.dtos.users.PersonDTO;
+import com.ftn.event_hopper.dtos.users.person.CreatedPersonDTO;
 import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 
@@ -12,8 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class CreatedEventOrganizerDTO  extends PersonDTO {
-    private UUID id;
+public class CreatedEventOrganizerDTO  extends CreatedPersonDTO {
     private Collection<String> eventUUIDs;
     private Collection<Product> productUUIDs;
 }

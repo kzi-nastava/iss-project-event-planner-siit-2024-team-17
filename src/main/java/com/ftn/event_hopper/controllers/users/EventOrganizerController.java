@@ -68,18 +68,37 @@ public class EventOrganizerController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedEventOrganizerDTO> createEventOrganizer(@RequestBody CreateEventOrganizerDTO organizer) {
 
-
         CreatedEventOrganizerDTO createdOrganizer = new CreatedEventOrganizerDTO();
 
         createdOrganizer.setId(UUID.randomUUID());
-        createdOrganizer.setName("John");
-        createdOrganizer.setSurname("Doe");
-        createdOrganizer.setPhoneNumber("123-456-7890");
+        createdOrganizer.setName(organizer.getName());
+        createdOrganizer.setSurname(organizer.getSurname());
+        createdOrganizer.setProfilePicture(organizer.getProfilePicture());
+        createdOrganizer.setPhoneNumber(organizer.getPhoneNumber());
         createdOrganizer.setType("Organizer");
-        createdOrganizer.setEventUUIDs(new ArrayList<>());
-        createdOrganizer.setProductUUIDs(new ArrayList<>());
-        
+        createdOrganizer.setLocation(organizer.getLocation());
+        createdOrganizer.setEventUUIDs(organizer.getEventUUIDs());
+        createdOrganizer.setProductUUIDs(organizer.getProductUUIDs());
 
-        return new ResponseEntity<CreatedEventOrganizerDTO>(createdOrganizer, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
     }
 }
+
+
+/* Example for creating an event organizer
+        {
+        "name": "Jane",
+        "surname": "Smith",
+        "profilePicture": "https://example.com/profile/jane-smith.jpg",
+        "phoneNumber": "987-654-3210",
+        "type": "Organizer",
+        "location": {
+
+        "address": "123 Main St",
+        "city": "New York"
+        },
+        "eventUUIDs": [],
+        "productUUIDs": []
+        }
+
+*/

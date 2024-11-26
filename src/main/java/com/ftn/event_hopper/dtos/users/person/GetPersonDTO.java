@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.dtos.users;
+package com.ftn.event_hopper.dtos.users.person;
 
 import com.ftn.event_hopper.models.shared.Location;
 import lombok.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PersonDTO {
+public class GetPersonDTO {
     private UUID id;
     private String name;
     private String surname;

@@ -13,7 +13,6 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class EventOrganizer extends Person{
-    private UUID id;
     private Collection<Event> events;
     private Collection<Product> products;
 }
