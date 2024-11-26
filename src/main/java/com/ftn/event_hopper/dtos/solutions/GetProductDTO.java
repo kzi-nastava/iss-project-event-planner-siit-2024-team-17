@@ -1,6 +1,5 @@
 package com.ftn.event_hopper.dtos.solutions;
 
-
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetServiceDTO {
+public class GetProductDTO {
     private UUID id;
     private String name;
     private String description;
@@ -26,8 +25,4 @@ public class GetServiceDTO {
     private UUID serviceProviderId;
     private UUID categoryId;
     private Collection<UUID> eventTypesIds;
-    private int durationMinutes;
-    private int reservationWindowDays;
-    private int cancellationWindowDays;
-    private boolean isAutoAccept;
 }
