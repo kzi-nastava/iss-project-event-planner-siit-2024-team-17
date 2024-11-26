@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.sql.Time;
 import java.util.Collection;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,5 +22,5 @@ public class CreateServiceProviderDTO extends CreatePersonDTO {
     private Time workStart;
 
     private Location companyLocation;
-    private Collection<String> productUUIDs;
+    private Collection<UUID> productUUIDs;
 }

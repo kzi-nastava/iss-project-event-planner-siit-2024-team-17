@@ -6,6 +6,7 @@ import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,6 +14,6 @@ import java.util.Collection;
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class CreateEventOrganizerDTO extends CreatePersonDTO {
-    private Collection<String> eventUUIDs;
-    private Collection<Product> productUUIDs;
+    private Collection<UUID> eventUUIDs;
+    private Collection<UUID> productUUIDs;
 }

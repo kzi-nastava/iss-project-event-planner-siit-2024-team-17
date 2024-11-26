@@ -21,9 +21,9 @@ public class GetPersonDTO {
     private String phoneNumber;
     private PersonType type;
     private Location location;
-    private Collection<String> notificationUUIDs;
-    private Collection<String> attendingEventUUIDs;
-    private Collection<String> favoriteEventUUIDs;
-    private Collection<String> favoriteProductUUIDs;
-    private String accountUUID;
+    private Collection<UUID> notificationUUIDs;
+    private Collection<UUID> attendingEventUUIDs;
+    private Collection<UUID> favoriteEventUUIDs;
+    private Collection<UUID> favoriteProductUUIDs;
+    private UUID accountUUID;
 }

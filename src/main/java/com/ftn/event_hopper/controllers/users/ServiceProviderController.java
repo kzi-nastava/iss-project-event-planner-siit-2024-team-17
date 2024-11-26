@@ -38,6 +38,7 @@ public class ServiceProviderController {
         provider1.setWorkEnd(Time.valueOf("18:00:00"));
         provider1.setCompanyLocation(null); // Mock location
         provider1.setProductUUIDs(new ArrayList<>());
+        provider1.setAccountUUID(UUID.randomUUID());
 
         GetServiceProviderDTO provider2 = new GetServiceProviderDTO();
         provider2.setId(UUID.randomUUID());
@@ -53,6 +54,8 @@ public class ServiceProviderController {
         provider2.setWorkEnd(Time.valueOf("17:00:00"));
         provider2.setCompanyLocation(null); //  location
         provider2.setProductUUIDs(new ArrayList<>());
+        provider2.setAccountUUID(UUID.randomUUID());
+
 
         providers.add(provider1);
         providers.add(provider2);
@@ -78,6 +81,7 @@ public class ServiceProviderController {
         provider.setWorkEnd(Time.valueOf("20:00:00"));
         provider.setCompanyLocation(null); // Mock location
         provider.setProductUUIDs(new ArrayList<>());
+        provider.setAccountUUID(UUID.randomUUID());
 
         return new ResponseEntity<>(provider, HttpStatus.OK);
     }
@@ -92,6 +96,7 @@ public class ServiceProviderController {
         createdProvider.setProfilePicture(provider.getProfilePicture());
         createdProvider.setPhoneNumber(provider.getPhoneNumber());
         createdProvider.setType(PersonType.SERVICE_PROVIDER);
+        createdProvider.setAccountUUID(UUID.randomUUID());
 
         createdProvider.setCompanyName(provider.getCompanyName());
         createdProvider.setCompanyEmail(provider.getCompanyEmail());
@@ -100,6 +105,8 @@ public class ServiceProviderController {
         createdProvider.setWorkStart(provider.getWorkStart());
         createdProvider.setCompanyLocation(provider.getCompanyLocation());
         createdProvider.setProductUUIDs(provider.getProductUUIDs());
+        createdProvider.setAccountUUID(UUID.randomUUID());
+
 
         return new ResponseEntity<>(createdProvider, HttpStatus.CREATED);
     }
