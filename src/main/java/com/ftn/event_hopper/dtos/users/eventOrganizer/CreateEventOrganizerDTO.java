@@ -13,6 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class CreateEventOrganizerDTO extends CreatePersonDTO {
-    private Collection<UUID> eventUUIDs;
-    private Collection<UUID> productUUIDs;
+    private Collection<UUID> eventsIds;
+    private Collection<UUID> productsIds;
 }

@@ -38,6 +38,12 @@ public class ServiceProviderController {
         provider1.setProductUUIDs(new ArrayList<>());
         provider1.setAccountUUID(UUID.randomUUID());
 
+        provider1.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        provider1.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        provider1.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        provider1.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
+
+
         GetServiceProviderDTO provider2 = new GetServiceProviderDTO();
         provider2.setId(UUID.randomUUID());
         provider2.setName("Bob");
@@ -53,6 +59,11 @@ public class ServiceProviderController {
         provider2.setCompanyLocation(null); //  location
         provider2.setProductUUIDs(new ArrayList<>());
         provider2.setAccountUUID(UUID.randomUUID());
+
+        provider2.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        provider2.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        provider2.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        provider2.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
 
 
         providers.add(provider1);
@@ -81,6 +92,12 @@ public class ServiceProviderController {
         provider.setProductUUIDs(new ArrayList<>());
         provider.setAccountUUID(UUID.randomUUID());
 
+        provider.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        provider.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        provider.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        provider.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
+
+
         return new ResponseEntity<>(provider, HttpStatus.OK);
     }
 
@@ -104,6 +121,11 @@ public class ServiceProviderController {
         createdProvider.setCompanyLocation(provider.getCompanyLocation());
         createdProvider.setProductUUIDs(provider.getProductUUIDs());
         createdProvider.setAccountUUID(UUID.randomUUID());
+
+        createdProvider.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        createdProvider.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        createdProvider.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        createdProvider.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
 
 
         return new ResponseEntity<>(createdProvider, HttpStatus.CREATED);
@@ -129,6 +151,11 @@ public class ServiceProviderController {
         existingProvider.setWorkStart(provider.getWorkStart());
         existingProvider.setCompanyLocation(provider.getCompanyLocation());
         existingProvider.setProductUUIDs(provider.getProductUUIDs());
+
+        existingProvider.setFavoriteEventsIds(provider.getFavoriteEventsIds());
+        existingProvider.setFavoriteProductsIds(provider.getFavoriteProductsIds());
+        existingProvider.setNotificationsIds(provider.getNotificationsIds());
+        existingProvider.setAttendingEventsIds(provider.getAttendingEventsIds());
 
         return new ResponseEntity<>(existingProvider, HttpStatus.OK);
     }

@@ -27,9 +27,13 @@ public class EventOrganizerController {
         organizer1.setPhoneNumber("123-456-7890");
         organizer1.setType(PersonType.EVENT_ORGANIZER);
         organizer1.setLocation(null); // Mock location
-        organizer1.setEventUUIDs(new ArrayList<>());
-        organizer1.setProductUUIDs(new ArrayList<>());
+        organizer1.setEventsIds(new ArrayList<>());
+        organizer1.setProductsIds(new ArrayList<>());
         organizer1.setAccountUUID(UUID.randomUUID());
+        organizer1.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        organizer1.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        organizer1.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        organizer1.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
 
         GetEventOrganizerDTO organizer2 = new GetEventOrganizerDTO();
         organizer2.setId(UUID.randomUUID());
@@ -38,9 +42,13 @@ public class EventOrganizerController {
         organizer2.setPhoneNumber("123-456-7890");
         organizer2.setType(PersonType.EVENT_ORGANIZER);
         organizer2.setLocation(null); // Mock location
-        organizer2.setEventUUIDs(new ArrayList<>());
-        organizer2.setProductUUIDs(new ArrayList<>());
+        organizer2.setEventsIds(new ArrayList<>());
+        organizer2.setProductsIds(new ArrayList<>());
         organizer2.setAccountUUID(UUID.randomUUID());
+        organizer2.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        organizer2.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        organizer2.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        organizer2.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
 
         organizers.add(organizer1);
         organizers.add(organizer2);
@@ -58,9 +66,13 @@ public class EventOrganizerController {
         organizer.setPhoneNumber("123-456-7890");
         organizer.setType(PersonType.EVENT_ORGANIZER);
         organizer.setLocation(null); // Mock location
-        organizer.setEventUUIDs(new ArrayList<>());
-        organizer.setProductUUIDs(new ArrayList<>());
+        organizer.setEventsIds(new ArrayList<>());
+        organizer.setProductsIds(new ArrayList<>());
         organizer.setAccountUUID(UUID.randomUUID());
+        organizer.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        organizer.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        organizer.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        organizer.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
 
         return new ResponseEntity<>(organizer, HttpStatus.OK);
     }
@@ -77,13 +89,13 @@ public class EventOrganizerController {
         createdOrganizer.setPhoneNumber(organizer.getPhoneNumber());
         createdOrganizer.setType(PersonType.EVENT_ORGANIZER);
         createdOrganizer.setLocation(organizer.getLocation());
-        createdOrganizer.setEventUUIDs(organizer.getEventUUIDs());
-        createdOrganizer.setProductUUIDs(organizer.getProductUUIDs());
+        createdOrganizer.setEventsIds(organizer.getEventsIds());
+        createdOrganizer.setProductsIds(organizer.getProductsIds());
         createdOrganizer.setAccountUUID(organizer.getAccountUUID());
-        createdOrganizer.setNotificationUUIDs(new ArrayList<>()); // Mock notifications
-        createdOrganizer.setAttendingEventUUIDs(new ArrayList<>()); // Mock attending events
-        createdOrganizer.setFavoriteEventUUIDs(new ArrayList<>()); // Mock favorite events
-        createdOrganizer.setFavoriteProductUUIDs(new ArrayList<>()); // Mock favorite products
+        createdOrganizer.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        createdOrganizer.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        createdOrganizer.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        createdOrganizer.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
 
         return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
     }
@@ -99,8 +111,8 @@ public class EventOrganizerController {
         updatedOrganizer.setPhoneNumber(organizer.getPhoneNumber());
         updatedOrganizer.setType(PersonType.EVENT_ORGANIZER);
         updatedOrganizer.setLocation(organizer.getLocation());
-        updatedOrganizer.setEventUUIDs(organizer.getEventUUIDs());
-        updatedOrganizer.setProductUUIDs(organizer.getProductUUIDs());
+        updatedOrganizer.setEventsIds(organizer.getEventsIds());
+        updatedOrganizer.setProductsIds(organizer.getProductsIds());
         updatedOrganizer.setAccountUUID(organizer.getAccountUUID());
 
         return new ResponseEntity<>(updatedOrganizer, HttpStatus.OK);
@@ -112,23 +124,3 @@ public class EventOrganizerController {
         return new ResponseEntity<>("Event Organizer with ID " + id + " deleted successfully.", HttpStatus.OK);
     }
 }
-
-
-
-/* Example for creating an event organizer
-        {
-        "name": "Jane",
-        "surname": "Smith",
-        "profilePicture": "https://example.com/profile/jane-smith.jpg",
-        "phoneNumber": "987-654-3210",
-        "type": "Organizer",
-        "location": {
-
-        "address": "123 Main St",
-        "city": "New York"
-        },
-        "eventUUIDs": [],
-        "productUUIDs": []
-        }
-
-*/

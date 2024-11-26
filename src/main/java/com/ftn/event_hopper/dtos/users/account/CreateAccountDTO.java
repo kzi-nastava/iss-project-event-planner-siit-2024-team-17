@@ -20,6 +20,6 @@ public class CreateAccountDTO {
     private boolean isActive;
     private LocalDateTime suspensionTimeStamp;
     private PersonType type;
-    private UUID personUUID;
+    private UUID personId;
     private RegistrationRequest registrationRequest;
 }

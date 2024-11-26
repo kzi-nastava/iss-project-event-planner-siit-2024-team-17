@@ -29,7 +29,7 @@ public class AccountController {
         account1.setActive(true);
         account1.setType(PersonType.EVENT_ORGANIZER);
         account1.setSuspensionTimeStamp(LocalDateTime.now());
-        account1.setPersonUUID(UUID.randomUUID());
+        account1.setPersonId(UUID.randomUUID());
         account1.setRegistrationRequest(null);
 
         GetAccountDTO account2 = new GetAccountDTO();
@@ -40,7 +40,7 @@ public class AccountController {
         account2.setActive(true);
         account2.setType(PersonType.EVENT_ORGANIZER);
         account2.setSuspensionTimeStamp(LocalDateTime.now());
-        account2.setPersonUUID(UUID.randomUUID());
+        account2.setPersonId(UUID.randomUUID());
         account2.setRegistrationRequest(null);
 
 
@@ -61,7 +61,7 @@ public class AccountController {
         account.setActive(true);
         account.setType(PersonType.EVENT_ORGANIZER);
         account.setSuspensionTimeStamp(LocalDateTime.now());
-        account.setPersonUUID(UUID.randomUUID());
+        account.setPersonId(UUID.randomUUID());
         account.setRegistrationRequest(null);
 
         return new ResponseEntity<>(account, HttpStatus.OK);
@@ -78,7 +78,7 @@ public class AccountController {
         createdAccount.setActive(true);
         createdAccount.setType(PersonType.EVENT_ORGANIZER);
         createdAccount.setSuspensionTimeStamp(LocalDateTime.now());
-        createdAccount.setPersonUUID(UUID.randomUUID());
+        createdAccount.setPersonId(UUID.randomUUID());
         createdAccount.setRegistrationRequest(null);
 
         return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
@@ -95,7 +95,7 @@ public class AccountController {
         updatedAccount.setActive(true);
         updatedAccount.setType(PersonType.EVENT_ORGANIZER);
         updatedAccount.setSuspensionTimeStamp(LocalDateTime.now());
-        updatedAccount.setPersonUUID(UUID.randomUUID());
+        updatedAccount.setPersonId(UUID.randomUUID());
         updatedAccount.setRegistrationRequest(null);
 
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
