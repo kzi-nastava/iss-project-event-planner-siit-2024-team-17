@@ -1,8 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.users.eventOrganizer.CreateEventOrganizerDTO;
-import com.ftn.event_hopper.dtos.users.eventOrganizer.CreatedEventOrganizerDTO;
-import com.ftn.event_hopper.dtos.users.eventOrganizer.GetEventOrganizerDTO;
+import com.ftn.event_hopper.dtos.users.eventOrganizer.*;
 import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -91,9 +89,9 @@ public class EventOrganizerController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetEventOrganizerDTO> updateEventOrganizer(@PathVariable UUID id, @RequestBody CreateEventOrganizerDTO organizer) {
+    public ResponseEntity<UpdatedEventOrganizerDTO> updateEventOrganizer(@PathVariable UUID id, @RequestBody UpdatedEventOrganizerDTO organizer) {
         // Temporarily faking the update process
-        GetEventOrganizerDTO updatedOrganizer = new GetEventOrganizerDTO();
+        UpdatedEventOrganizerDTO updatedOrganizer = new UpdatedEventOrganizerDTO();
         updatedOrganizer.setId(id);
         updatedOrganizer.setName(organizer.getName());
         updatedOrganizer.setSurname(organizer.getSurname());

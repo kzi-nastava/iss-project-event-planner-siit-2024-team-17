@@ -1,8 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.users.serviceProvider.CreateServiceProviderDTO;
-import com.ftn.event_hopper.dtos.users.serviceProvider.CreatedServiceProviderDTO;
-import com.ftn.event_hopper.dtos.users.serviceProvider.GetServiceProviderDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.*;
 import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -114,9 +112,9 @@ public class ServiceProviderController {
 
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetServiceProviderDTO> updateServiceProvider(@PathVariable UUID id, @RequestBody CreatedServiceProviderDTO provider) {
+    public ResponseEntity<UpdatedServiceProviderDTO> updateServiceProvider(@PathVariable UUID id, @RequestBody UpdateServiceProviderDTO provider) {
         //temorarily faking the data, should be get by id
-        GetServiceProviderDTO existingProvider = new GetServiceProviderDTO();
+        UpdatedServiceProviderDTO existingProvider = new UpdatedServiceProviderDTO();
         if (existingProvider == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -125,6 +123,7 @@ public class ServiceProviderController {
         existingProvider.setSurname(provider.getSurname());
         existingProvider.setProfilePicture(provider.getProfilePicture());
         existingProvider.setPhoneNumber(provider.getPhoneNumber());
+
         existingProvider.setCompanyDescription(provider.getCompanyDescription());
         existingProvider.setCompanyPhotos(provider.getCompanyPhotos());
         existingProvider.setWorkStart(provider.getWorkStart());
