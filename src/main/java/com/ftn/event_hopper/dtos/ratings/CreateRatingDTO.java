@@ -10,7 +10,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class CreateRatingDTO {
-    UUID id;
     int value;
     UUID eventId;
 }

@@ -51,6 +51,7 @@ public class RatingController {
         CreatedRatingDTO createdRating = new CreatedRatingDTO();
         createdRating.setId(UUID.randomUUID());
         createdRating.setValue(rating.getValue());
+        createdRating.setEventId(rating.getEventId());
 
         return new ResponseEntity<CreatedRatingDTO>(createdRating, HttpStatus.CREATED);
     }
