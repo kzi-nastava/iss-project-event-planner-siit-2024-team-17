@@ -1,4 +1,21 @@
 package com.ftn.event_hopper.models.users;
 
-public class EventOrganizer {
+import com.ftn.event_hopper.models.comments.Comment;
+import com.ftn.event_hopper.models.events.Event;
+import com.ftn.event_hopper.models.ratings.Rating;
+import com.ftn.event_hopper.models.solutions.Product;
+import lombok.*;
+
+import java.util.Collection;
+import java.util.UUID;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
+public class EventOrganizer extends Person{
+    private UUID id;
+    private Collection<Event> events;
+    private Collection<Product> products;
 }
