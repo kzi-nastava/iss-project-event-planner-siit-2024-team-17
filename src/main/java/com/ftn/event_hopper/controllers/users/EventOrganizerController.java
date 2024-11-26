@@ -4,6 +4,7 @@ package com.ftn.event_hopper.controllers.users;
 import com.ftn.event_hopper.dtos.users.eventOrganizer.CreateEventOrganizerDTO;
 import com.ftn.event_hopper.dtos.users.eventOrganizer.CreatedEventOrganizerDTO;
 import com.ftn.event_hopper.dtos.users.eventOrganizer.GetEventOrganizerDTO;
+import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class EventOrganizerController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GetEventOrganizerDTO>> getEventOrganizers() {
+        //temporarily faking the data
         Collection<GetEventOrganizerDTO> organizers = new ArrayList<>();
 
         GetEventOrganizerDTO organizer1 = new GetEventOrganizerDTO();
@@ -26,7 +28,7 @@ public class EventOrganizerController {
         organizer1.setName("Mapa");
         organizer1.setSurname("Pa");
         organizer1.setPhoneNumber("123-456-7890");
-        organizer1.setType("Organizer");
+        organizer1.setType(PersonType.EVENT_ORGANIZER);
         organizer1.setEventUUIDs(new ArrayList<>());
         organizer1.setProductUUIDs(new ArrayList<>());
 
@@ -36,12 +38,12 @@ public class EventOrganizerController {
         organizer2.setName("John");
         organizer2.setSurname("Doe");
         organizer2.setPhoneNumber("123-456-7890");
-        organizer2.setType("Organizer");
+        organizer2.setType(PersonType.EVENT_ORGANIZER);
         organizer2.setEventUUIDs(new ArrayList<>());
         organizer2.setProductUUIDs(new ArrayList<>());
 
-        organizers.add(organizer2);
         organizers.add(organizer1);
+        organizers.add(organizer2);
 
         return new ResponseEntity<Collection<GetEventOrganizerDTO>>(organizers, HttpStatus.OK);
     }
@@ -54,11 +56,12 @@ public class EventOrganizerController {
             return new ResponseEntity<GetEventOrganizerDTO>(HttpStatus.NOT_FOUND);
         }
 
+        //temporarily faking the data
         organizer.setId(id);
         organizer.setName("John");
         organizer.setSurname("Doe");
         organizer.setPhoneNumber("123-456-7890");
-        organizer.setType("Organizer");
+        organizer.setType(PersonType.EVENT_ORGANIZER);
         organizer.setEventUUIDs(new ArrayList<>());
         organizer.setProductUUIDs(new ArrayList<>());
 
@@ -75,7 +78,7 @@ public class EventOrganizerController {
         createdOrganizer.setSurname(organizer.getSurname());
         createdOrganizer.setProfilePicture(organizer.getProfilePicture());
         createdOrganizer.setPhoneNumber(organizer.getPhoneNumber());
-        createdOrganizer.setType("Organizer");
+        createdOrganizer.setType(PersonType.EVENT_ORGANIZER);
         createdOrganizer.setLocation(organizer.getLocation());
         createdOrganizer.setEventUUIDs(organizer.getEventUUIDs());
         createdOrganizer.setProductUUIDs(organizer.getProductUUIDs());

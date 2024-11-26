@@ -1,8 +1,14 @@
 package com.ftn.event_hopper.dtos.users.person;
 
+import com.ftn.event_hopper.models.events.Event;
+import com.ftn.event_hopper.models.notifications.Notification;
 import com.ftn.event_hopper.models.shared.Location;
+import com.ftn.event_hopper.models.solutions.Product;
+import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.PersonType;
 import lombok.*;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @Getter
@@ -16,6 +22,11 @@ public class CreatedPersonDTO {
     private String surname;
     private String profilePicture;
     private String phoneNumber;
-    private String type;
+    private PersonType type;
     private Location location;
+    private Collection<String> notificationUUIDs;
+    private Collection<String> attendingEventUUIDs;
+    private Collection<String> favoriteEventUUIDs;
+    private Collection<String> favoriteProductUUIDs;
+    private String accountUUID;
 }
