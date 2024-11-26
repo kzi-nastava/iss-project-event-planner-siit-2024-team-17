@@ -1,8 +1,6 @@
 package com.ftn.event_hopper.models.users;
 
-import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.events.Event;
-import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 
