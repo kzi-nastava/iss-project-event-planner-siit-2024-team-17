@@ -1,5 +1,9 @@
 package com.ftn.event_hopper.controllers.events;
 
+import com.ftn.event_hopper.dtos.comments.UpdateCommentDTO;
+import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
+import com.ftn.event_hopper.dtos.events.CreateEventDTO;
+import com.ftn.event_hopper.dtos.events.CreatedEventDTO;
 import com.ftn.event_hopper.dtos.events.GetEventDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -69,4 +73,35 @@ public class EventController {
 
         return new ResponseEntity<Collection<GetEventDTO>>(top5Events, HttpStatus.OK);
     }
+
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedEventDTO> createEvent(@RequestBody CreateEventDTO event){
+        CreatedEventDTO createdEvent = new CreatedEventDTO();
+        createdEvent.setId(event.getId());
+        createdEvent.setName(event.getName());
+        createdEvent.setDescription(event.getDescription());
+        createdEvent.setMaxAttendance(event.getMaxAttendance());
+        createdEvent.setEventPrivacyType(event.getEventPrivacyType());
+        createdEvent.setStartTime(event.getStartTime());
+        createdEvent.setEventTypeId(event.getEventTypeId());
+        createdEvent.setLocationId(event.getLocationId());
+        event.setAgendaActivityId(event.getAgendaActivityId());
+        event.setProducts(event.getProducts());
+        event.setInvitations(event.getInvitations());
+        event.setEventOrganizerId(event.getEventOrganizerId());
+
+        return new ResponseEntity<CreatedEventDTO>(createdEvent, HttpStatus.CREATED);
+    }
+
+//    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<UpdatedEventDTO> updateEvent(@PathVariable UUID id, @RequestBody UpdateEventDTO event) throws Exception{
+//
+//        UpdatedCommentDTO updatedComment = new UpdatedCommentDTO();
+//        updatedComment.setId(id);
+//        updatedComment.setStatus(comment.getStatus());
+//
+//        return new ResponseEntity<UpdatedCommentDTO>(updatedComment, HttpStatus.OK);
+//
+//
+//    }
 }
