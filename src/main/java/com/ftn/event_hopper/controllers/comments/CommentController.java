@@ -1,11 +1,11 @@
-package com.ftn.event_hopper.controllers;
+package com.ftn.event_hopper.controllers.comments;
 
 
-import com.ftn.event_hopper.dtos.GetCommentDTO;
-import com.ftn.event_hopper.dtos.CreateCommentDTO;
-import com.ftn.event_hopper.dtos.CreatedCommentDTO;
-import com.ftn.event_hopper.dtos.UpdateCommentDTO;
-import com.ftn.event_hopper.dtos.UpdatedCommentDTO;
+import com.ftn.event_hopper.dtos.comments.GetCommentDTO;
+import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
+import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
+import com.ftn.event_hopper.dtos.comments.UpdateCommentDTO;
+import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

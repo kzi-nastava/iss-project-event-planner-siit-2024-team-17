@@ -1,5 +1,6 @@
-package com.ftn.event_hopper.models;
+package com.ftn.event_hopper.models.invitations;
 
+import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.InvitationStatus;
 import lombok.*;
 

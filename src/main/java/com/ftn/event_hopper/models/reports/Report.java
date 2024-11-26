@@ -1,5 +1,6 @@
-package com.ftn.event_hopper.models;
+package com.ftn.event_hopper.models.reports;
 
+import com.ftn.event_hopper.models.users.Person;
 import lombok.*;
 
 import java.time.LocalDateTime;

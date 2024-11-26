@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.dtos;
+package com.ftn.event_hopper.dtos.comments;
 
 import lombok.*;
 

@@ -1,9 +1,10 @@
-package com.ftn.event_hopper.models;
+package com.ftn.event_hopper.dtos.comments;
 
 import com.ftn.event_hopper.models.shared.CommentStatus;
 import lombok.*;
 
 import java.util.UUID;
+
 
 @Getter
 @Setter
@@ -11,11 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-
-public class Comment {
-
+public class UpdatedCommentDTO {
     private UUID id;
-    private String content;
     private CommentStatus status;
-    private EventOrganizer author;
 }

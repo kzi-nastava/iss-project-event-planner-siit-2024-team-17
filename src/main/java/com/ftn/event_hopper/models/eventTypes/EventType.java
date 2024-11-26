@@ -1,5 +1,7 @@
-package com.ftn.event_hopper.models;
+package com.ftn.event_hopper.models.eventTypes;
 
+import com.ftn.event_hopper.models.categories.Category;
+import com.ftn.event_hopper.models.events.Event;
 import lombok.*;
 
 import java.util.ArrayList;

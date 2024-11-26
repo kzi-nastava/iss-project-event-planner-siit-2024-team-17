@@ -1,6 +1,6 @@
-package com.ftn.event_hopper.dtos;
+package com.ftn.event_hopper.dtos.events;
 
-import com.ftn.event_hopper.models.Location;
+import com.ftn.event_hopper.models.locations.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

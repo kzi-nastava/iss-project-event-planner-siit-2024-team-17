@@ -1,6 +1,6 @@
-package com.ftn.event_hopper.controllers;
+package com.ftn.event_hopper.controllers.events;
 
-import com.ftn.event_hopper.dtos.GetEventDTO;
+import com.ftn.event_hopper.dtos.events.GetEventDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
