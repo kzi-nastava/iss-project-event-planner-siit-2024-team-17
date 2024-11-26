@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.models.users.registration;
+package com.ftn.event_hopper.models.registration;
 
 public enum RegistrationRequestStatus {
     PENDING,

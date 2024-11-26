@@ -1,6 +1,6 @@
 package com.ftn.event_hopper.models.users;
 
-import com.ftn.event_hopper.models.users.registration.RegistrationRequest;
+import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import lombok.*;
 
 import java.time.LocalDateTime;
