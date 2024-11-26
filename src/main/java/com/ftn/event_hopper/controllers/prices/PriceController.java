@@ -64,7 +64,7 @@ public class PriceController {
         createdPrice.setId(UUID.randomUUID());
         createdPrice.setBasePrice(price.getBasePrice());
         createdPrice.setDiscount(price.getDiscount());
-        createdPrice.setFinalPrice(price.getBasePrice() * price.getDiscount());
+        createdPrice.setFinalPrice(price.getBasePrice() * ((100 - price.getDiscount()) / 100));
         createdPrice.setProductId(price.getProductId());
         createdPrice.setTimestamp(LocalDateTime.now());
 
@@ -78,7 +78,7 @@ public class PriceController {
         updatedPrice.setId(UUID.randomUUID());
         updatedPrice.setBasePrice(price.getBasePrice());
         updatedPrice.setDiscount(price.getDiscount());
-        updatedPrice.setFinalPrice(price.getBasePrice() * price.getDiscount());
+        updatedPrice.setFinalPrice(price.getBasePrice() * ((100 - price.getDiscount()) / 100));
         updatedPrice.setProductId(price.getProductId());
         updatedPrice.setTimestamp(LocalDateTime.now());
 
@@ -93,6 +93,7 @@ public class PriceController {
         price.setBasePrice(100);
         price.setDiscount(10);
         price.setFinalPrice(90);
+        price.setTimestamp(LocalDateTime.now());
         price.setProductId(id);
 
         return new ResponseEntity<GetPriceDTO>(price, HttpStatus.OK);
@@ -106,6 +107,7 @@ public class PriceController {
         price.setBasePrice(100);
         price.setDiscount(10);
         price.setFinalPrice(90);
+        price.setTimestamp(LocalDateTime.now());
         price.setProductId(UUID.randomUUID());
 
         return new ResponseEntity<GetPriceDTO>(price, HttpStatus.OK);
