@@ -16,6 +16,6 @@ public class Price {
     private double basePrice;
     private double discount;
     private double finalPrice;
-    private LocalDateTime timestamp;
     private Product product;
+    private LocalDateTime timestamp;
 }
