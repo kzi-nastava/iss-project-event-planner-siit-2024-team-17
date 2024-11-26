@@ -84,4 +84,30 @@ public class PriceController {
 
         return new ResponseEntity<UpdatedPriceDTO>(updatedPrice, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/product/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetPriceDTO> getPricesByProductId(@PathVariable("id") UUID id) {
+
+        GetPriceDTO price = new GetPriceDTO();
+        price.setId(UUID.randomUUID());
+        price.setBasePrice(100);
+        price.setDiscount(10);
+        price.setFinalPrice(90);
+        price.setProductId(id);
+
+        return new ResponseEntity<GetPriceDTO>(price, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/reservation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetPriceDTO> getPriceByReservationId(@PathVariable("id") UUID id) {
+
+        GetPriceDTO price = new GetPriceDTO();
+        price.setId(UUID.randomUUID());
+        price.setBasePrice(100);
+        price.setDiscount(10);
+        price.setFinalPrice(90);
+        price.setProductId(UUID.randomUUID());
+
+        return new ResponseEntity<GetPriceDTO>(price, HttpStatus.OK);
+    }
 }
