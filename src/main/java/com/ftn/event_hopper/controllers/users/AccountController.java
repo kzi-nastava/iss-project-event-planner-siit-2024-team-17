@@ -50,6 +50,28 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
+
+
+    @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetAccountDTO> getVerifiedAccounts() {
+        // Temporarily faking the data, should be a call to a getVerifiedAccounts method
+        GetAccountDTO account = new GetAccountDTO();
+        account.setId(UUID.randomUUID());
+        account.setEmail("mapa@gmail.com");
+        account.setPassword("Marija123");
+        account.setVerified(true);
+        account.setActive(true);
+        account.setType(PersonType.EVENT_ORGANIZER);
+        account.setSuspensionTimeStamp(LocalDateTime.now());
+        account.setPersonId(UUID.randomUUID());
+        account.setRegistrationRequest(null);
+
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+
+
+
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetAccountDTO> getAccount(@PathVariable UUID id) {
         // Temporarily faking the data
