@@ -1,7 +1,5 @@
 package com.ftn.event_hopper.controllers.events;
 
-import com.ftn.event_hopper.dtos.comments.UpdateCommentDTO;
-import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
 import com.ftn.event_hopper.dtos.events.CreateEventDTO;
 import com.ftn.event_hopper.dtos.events.CreatedEventDTO;
 import com.ftn.event_hopper.dtos.events.GetEventDTO;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 //import org.springframework.data.domain.Sort;
 
 
-
-import java.rmi.server.UID;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,6 +68,20 @@ public class EventController {
         Collection<GetEventDTO> top5Events = new ArrayList<>();
 
         return new ResponseEntity<Collection<GetEventDTO>>(top5Events, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Collection<GetEventDTO>> searchEvents(
+            @RequestParam(value = "locationId", required = false) UUID locationId,
+            @RequestParam(value = "eventTypeId", required = false) UUID eventTypeId,
+            @RequestParam(value = "startTime", required = false) LocalDateTime startTime,
+            @RequestParam(value = "searchContent", required = false) String searchContent) {
+
+
+
+        Collection<GetEventDTO> filteredEvents = new ArrayList<>();
+
+        return new ResponseEntity<Collection<GetEventDTO>>(filteredEvents, HttpStatus.OK);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
