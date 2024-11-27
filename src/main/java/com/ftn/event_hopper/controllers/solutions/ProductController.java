@@ -212,7 +212,7 @@ public class ProductController {
 
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
-    
+
     
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteProduct(@PathVariable UUID id) {
@@ -231,7 +231,7 @@ public class ProductController {
         product.setCategoryId(UUID.randomUUID());
         product.setEventTypesIds(new ArrayList<>());
 
-        return new ResponseEntity<>("Product with ID " + id + " deleted successfully.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Product with ID " + id + " deleted successfully.", HttpStatus.NO_CONTENT);
     }
 
 }

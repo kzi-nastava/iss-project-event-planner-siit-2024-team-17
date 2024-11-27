@@ -13,7 +13,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class CreateAccountDTO {
-    private UUID id;
     private String email;
     private String password;
     private boolean isVerified;

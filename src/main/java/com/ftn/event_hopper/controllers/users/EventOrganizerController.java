@@ -127,6 +127,6 @@ public class EventOrganizerController {
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteEventOrganizer(@PathVariable UUID id) {
         // Simulating deletion
-        return new ResponseEntity<>("Event Organizer with ID " + id + " deleted successfully.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Event Organizer with ID " + id + " deleted successfully.", HttpStatus.NO_CONTENT);
     }
 }
