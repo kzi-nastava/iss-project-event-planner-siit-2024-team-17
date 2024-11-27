@@ -81,7 +81,7 @@ public class PersonController {
         createdPerson.setSurname(person.getSurname());
         createdPerson.setProfilePicture(person.getProfilePicture());
         createdPerson.setPhoneNumber(person.getPhoneNumber());
-        createdPerson.setType(PersonType.AUTHENTICATED_USER);
+        createdPerson.setType(person.getType());
         createdPerson.setLocation(person.getLocation());
         createdPerson.setAccountId(person.getAccountId());
         createdPerson.setNotificationsIds(new ArrayList<>()); // Mock notifications
