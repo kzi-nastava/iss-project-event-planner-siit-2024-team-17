@@ -193,10 +193,10 @@ public class EventController {
         createdEvent.setStartTime(event.getStartTime());
         createdEvent.setEventTypeId(event.getEventTypeId());
         createdEvent.setLocationId(event.getLocationId());
-        event.setAgendaActivityId(event.getAgendaActivityId());
-        event.setProductsIds(event.getProductsIds());
-        event.setInvitationsIds(event.getInvitationsIds());
-        event.setEventOrganizerId(event.getEventOrganizerId());
+        createdEvent.setAgendaActivityId(event.getAgendaActivityId());
+        createdEvent.setProductsIds(event.getProductsIds());
+        createdEvent.setInvitationsIds(event.getInvitationsIds());
+        createdEvent.setEventOrganizerId(event.getEventOrganizerId());
 
         return new ResponseEntity<CreatedEventDTO>(createdEvent, HttpStatus.CREATED);
     }
