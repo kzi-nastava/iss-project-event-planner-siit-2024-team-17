@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -197,5 +198,39 @@ public class ServiceController {
         updatedService.setAutoAccept(service.isAutoAccept());
 
         return new ResponseEntity<UpdatedServiceDTO>(updatedService, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Collection<GetServiceDTO>> searchEvents(
+            @RequestParam(value = "categoryId", required = false) UUID categoryId,
+            @RequestParam(value = "eventTypeIds", required = false) List<UUID> eventTypeIds,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "searchContent", required = false) String searchContent) {
+
+        Collection<GetServiceDTO> filteredEvents = new ArrayList<>();
+
+        GetServiceDTO service = new GetServiceDTO();
+        service.setId(UUID.randomUUID());
+        service.setName("Service 1 + " + searchContent);
+        service.setDescription("Description 1");
+        service.setPictures(new ArrayList<>());
+        service.setAvailable(true);
+        service.setVisible(true);
+        service.setStatus(ProductStatus.APPROVED);
+        service.setRatingsIds(new ArrayList<>());
+        service.setCommentsIds(new ArrayList<>());
+        service.setPriceId(UUID.randomUUID());
+        service.setServiceProviderId(UUID.randomUUID());
+        service.setCategoryId(categoryId);
+        service.setEventTypesIds(eventTypeIds);
+        service.setDurationMinutes(60);
+        service.setReservationWindowDays(7);
+        service.setCancellationWindowDays(1);
+        service.setAutoAccept(true);
+
+        filteredEvents.add(service);
+
+        return new ResponseEntity<>(filteredEvents, HttpStatus.OK);
     }
 }
