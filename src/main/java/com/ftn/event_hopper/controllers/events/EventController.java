@@ -75,7 +75,12 @@ public class EventController {
             @RequestParam(value = "locationId", required = false) UUID locationId,
             @RequestParam(value = "eventTypeId", required = false) UUID eventTypeId,
             @RequestParam(value = "startTime", required = false) LocalDateTime startTime,
-            @RequestParam(value = "searchContent", required = false) String searchContent) {
+            @RequestParam(value = "searchContent", required = false) String searchContent,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            //@RequestParam(value = "sort", defaultValue = "startTime,asc") ArrayList<String> sort,
+            @RequestParam(defaultValue = "true") boolean ascending) {
 
 
 

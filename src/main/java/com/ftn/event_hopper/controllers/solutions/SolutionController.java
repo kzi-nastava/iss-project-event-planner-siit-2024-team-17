@@ -46,11 +46,17 @@ public class SolutionController{
     @GetMapping("/search")
     public ResponseEntity<Collection<GetProductDTO>> searchSolutions(
             //kako da odvojim za checkbox product ili sevrice
+            @RequestParam(value = "isProduct") boolean isProduct,
+            @RequestParam(value = "isService") boolean isService,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
             @RequestParam(value = "eventTypeIds", required = false) ArrayList<UUID> eventTypeIds,
             @RequestParam(value = "minPrice", required = false) Double minPrice,
             @RequestParam(value = "maxPrice", required = false) Double maxPrice,
-            @RequestParam(value = "searchContent", required = false) String searchContent) {
+            @RequestParam(value = "searchContent", required = false) String searchContent,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
 
 
 
