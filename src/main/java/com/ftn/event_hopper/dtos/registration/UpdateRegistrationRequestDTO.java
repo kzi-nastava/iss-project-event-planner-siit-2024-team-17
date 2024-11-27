@@ -12,7 +12,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class UpdateRegistrationRequestDTO {
-    private LocalDateTime timestamp;
     private RegistrationRequestStatus status;
 }
 

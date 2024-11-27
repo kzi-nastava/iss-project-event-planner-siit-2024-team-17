@@ -124,17 +124,18 @@ public class RegistrationRequestController {
 
         createdRegistrationRequest.setId(UUID.randomUUID());
         createdRegistrationRequest.setTimestamp(LocalDateTime.now());
-        createdRegistrationRequest.setStatus(RegistrationRequestStatus.ACCEPTED);
+        createdRegistrationRequest.setStatus(registrationRequest.getStatus());
 
         return new ResponseEntity<>(createdRegistrationRequest, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedRegistrationRequestDTO> updateRegistrationRequest(@PathVariable UUID id, @RequestBody UpdateRegistrationRequestDTO registrationRequest) {
-        // Temporarily faking the update process
+        // Temporarily faking the update process, should be get by id
         UpdatedRegistrationRequestDTO updatedRegistrationRequest = new UpdatedRegistrationRequestDTO();
-        updatedRegistrationRequest.setTimestamp(registrationRequest.getTimestamp());
+        updatedRegistrationRequest.setId(id);
         updatedRegistrationRequest.setStatus(registrationRequest.getStatus());
+        updatedRegistrationRequest.setTimestamp(LocalDateTime.now());
 
         return new ResponseEntity<>(updatedRegistrationRequest, HttpStatus.OK);
     }
