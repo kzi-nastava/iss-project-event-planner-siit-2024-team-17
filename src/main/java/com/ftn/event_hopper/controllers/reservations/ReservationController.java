@@ -1,8 +1,6 @@
 package com.ftn.event_hopper.controllers.reservations;
 
-import com.ftn.event_hopper.dtos.reservations.CreateReservationProductDTO;
-import com.ftn.event_hopper.dtos.reservations.CreatedReservationProductDTO;
-import com.ftn.event_hopper.dtos.reservations.GetReservationDTO;
+import com.ftn.event_hopper.dtos.reservations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -70,5 +68,20 @@ public class ReservationController {
         createdReservation.setTimestamp(LocalDateTime.now());
 
         return new ResponseEntity<CreatedReservationProductDTO>(createdReservation, HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/services", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedReservationServiceDTO> createReservation(@RequestBody CreateReservationServiceDTO reservation) {
+
+        CreatedReservationServiceDTO createdReservation = new CreatedReservationServiceDTO();
+
+        createdReservation.setId(UUID.randomUUID());
+        createdReservation.setEventId(reservation.getEventId());
+        createdReservation.setProductId(reservation.getProductId());
+        createdReservation.setTimestamp(LocalDateTime.now());
+        createdReservation.setFrom(reservation.getFrom());
+        createdReservation.setTo(reservation.getTo());
+
+        return new ResponseEntity<CreatedReservationServiceDTO>(createdReservation, HttpStatus.CREATED);
     }
 }

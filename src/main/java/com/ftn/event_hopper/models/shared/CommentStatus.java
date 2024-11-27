@@ -1,7 +1,7 @@
 package com.ftn.event_hopper.models.shared;
 
-public enum ProductStatus {
+public enum CommentStatus {
     PENDING,
-    APPROVED,
-    REJECTED
+    ACCEPTED,
+    DENIED
 }
