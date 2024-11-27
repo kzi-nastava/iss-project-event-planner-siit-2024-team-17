@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
+import com.ftn.event_hopper.dtos.users.eventOrganizer.GetEventOrganizerDTO;
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,11 @@ public class PersonController {
     public ResponseEntity<GetPersonDTO> getPerson(@PathVariable UUID id) {
         // Temporarily faking the data
         GetPersonDTO person = new GetPersonDTO();
+
+        if (person == null) {
+            return new ResponseEntity<GetPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+
         person.setId(id);
         person.setName("John");
         person.setSurname("Doe");

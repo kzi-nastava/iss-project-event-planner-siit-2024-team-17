@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
+import com.ftn.event_hopper.dtos.users.person.GetPersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.*;
 import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,10 @@ public class ServiceProviderController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetServiceProviderDTO> getServiceProvider(@PathVariable UUID id) {
         GetServiceProviderDTO provider = new GetServiceProviderDTO();
+
+        if (provider == null) {
+            return new ResponseEntity<GetServiceProviderDTO>(HttpStatus.NOT_FOUND);
+        }
 
         // Temporarily faking the data
         provider.setId(id);

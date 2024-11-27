@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.controllers.registration;
 
 
+import com.ftn.event_hopper.dtos.location.GetLocationDTO;
 import com.ftn.event_hopper.dtos.registration.*;
 import com.ftn.event_hopper.models.registration.RegistrationRequestStatus;
 import org.springframework.http.HttpStatus;
@@ -105,6 +106,11 @@ public class RegistrationRequestController {
     public ResponseEntity<GetRegistrationRequestDTO> getRegistrationRequest(@PathVariable UUID id) {
         // Temporarily faking the data
         GetRegistrationRequestDTO registrationRequest = new GetRegistrationRequestDTO();
+
+        if (registrationRequest == null) {
+            return new ResponseEntity<GetRegistrationRequestDTO>(HttpStatus.NOT_FOUND);
+        }
+
         registrationRequest.setId(UUID.randomUUID());
         registrationRequest.setTimestamp(LocalDateTime.now());
         registrationRequest.setStatus(RegistrationRequestStatus.ACCEPTED);

@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.controllers.shared;
 
 import com.ftn.event_hopper.dtos.location.*;
+import com.ftn.event_hopper.dtos.solutions.GetProductDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,11 @@ public class LocationController {
     public ResponseEntity<GetLocationDTO> getLocation(@PathVariable UUID id) {
         // Temporarily faking the data
         GetLocationDTO location = new GetLocationDTO();
+
+        if (location == null) {
+            return new ResponseEntity<GetLocationDTO>(HttpStatus.NOT_FOUND);
+        }
+
         location.setId(id);
         location.setCity("Trebinje");
         location.setAddress("Ulica 1");

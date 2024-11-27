@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
+import com.ftn.event_hopper.dtos.registration.GetRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
@@ -92,6 +93,12 @@ public class AccountController {
     public ResponseEntity<GetAccountDTO> getAccount(@PathVariable UUID id) {
         // Temporarily faking the data
         GetAccountDTO account = new GetAccountDTO();
+
+        if (account == null) {
+            return new ResponseEntity<GetAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+
+
         account.setId(UUID.randomUUID());
         account.setEmail("mapa@gmail.com");
         account.setPassword("Marija123");
@@ -125,6 +132,7 @@ public class AccountController {
     public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdateAccountDTO account) {
         // Temporarily faking the update process
         UpdatedAccountDTO updatedAccount = new UpdatedAccountDTO();
+
         updatedAccount.setId(UUID.randomUUID());
         updatedAccount.setPassword(account.getPassword());
         updatedAccount.setVerified(account.isVerified());
