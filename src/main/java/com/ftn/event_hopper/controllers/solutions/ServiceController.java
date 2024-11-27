@@ -1,20 +1,20 @@
 package com.ftn.event_hopper.controllers.solutions;
 
-import com.ftn.event_hopper.dtos.solutions.GetServiceDTO;
+import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/services")
 public class ServiceController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -143,5 +143,94 @@ public class ServiceController {
         services.add(service2);
 
         return new ResponseEntity<Collection<GetServiceDTO>>(services, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID id) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedServiceDTO> createProduct(@RequestBody CreateServiceDTO service) {
+
+        CreatedServiceDTO createdService = new CreatedServiceDTO();
+
+        createdService.setId(UUID.randomUUID());
+        createdService.setName(service.getName());
+        createdService.setDescription(service.getDescription());
+        createdService.setPictures(service.getPictures());
+        createdService.setAvailable(service.isAvailable());
+        createdService.setVisible(service.isVisible());
+        createdService.setStatus(ProductStatus.APPROVED);
+        createdService.setEditTimestamp(LocalDateTime.now());
+        createdService.setRatingsIds(new ArrayList<>());
+        createdService.setCommentsIds(new ArrayList<>());
+        createdService.setPriceId(service.getPriceId());
+        createdService.setServiceProviderId(service.getServiceProviderId());
+        createdService.setCategoryId(service.getCategoryId());
+        createdService.setEventTypesIds(service.getEventTypesIds());
+        createdService.setDurationMinutes(service.getDurationMinutes());
+        createdService.setReservationWindowDays(service.getReservationWindowDays());
+        createdService.setCancellationWindowDays(service.getCancellationWindowDays());
+        createdService.setAutoAccept(service.isAutoAccept());
+        createdService.setDeleted(false);
+
+        return new ResponseEntity<CreatedServiceDTO>(createdService, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedServiceDTO> updateProduct(@RequestBody UpdateServiceDTO service, @PathVariable UUID id) {
+
+        UpdatedServiceDTO updatedService = new UpdatedServiceDTO();
+
+        updatedService.setId(id);
+        updatedService.setName(service.getName());
+        updatedService.setDescription(service.getDescription());
+        updatedService.setPictures(service.getPictures());
+        updatedService.setAvailable(service.isAvailable());
+        updatedService.setVisible(service.isVisible());
+        updatedService.setStatus(ProductStatus.APPROVED);
+        updatedService.setEditTimestamp(LocalDateTime.now());
+        updatedService.setEventTypesIds(service.getEventTypesIds());
+        updatedService.setDurationMinutes(service.getDurationMinutes());
+        updatedService.setReservationWindowDays(service.getReservationWindowDays());
+        updatedService.setCancellationWindowDays(service.getCancellationWindowDays());
+        updatedService.setAutoAccept(service.isAutoAccept());
+
+        return new ResponseEntity<UpdatedServiceDTO>(updatedService, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Collection<GetServiceDTO>> searchEvents(
+            @RequestParam(value = "categoryId", required = false) UUID categoryId,
+            @RequestParam(value = "eventTypeIds", required = false) List<UUID> eventTypeIds,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "searchContent", required = false) String searchContent) {
+
+        Collection<GetServiceDTO> filteredEvents = new ArrayList<>();
+
+        GetServiceDTO service = new GetServiceDTO();
+        service.setId(UUID.randomUUID());
+        service.setName("Service 1 + " + searchContent);
+        service.setDescription("Description 1");
+        service.setPictures(new ArrayList<>());
+        service.setAvailable(true);
+        service.setVisible(true);
+        service.setStatus(ProductStatus.APPROVED);
+        service.setRatingsIds(new ArrayList<>());
+        service.setCommentsIds(new ArrayList<>());
+        service.setPriceId(UUID.randomUUID());
+        service.setServiceProviderId(UUID.randomUUID());
+        service.setCategoryId(categoryId);
+        service.setEventTypesIds(eventTypeIds);
+        service.setDurationMinutes(60);
+        service.setReservationWindowDays(7);
+        service.setCancellationWindowDays(1);
+        service.setAutoAccept(true);
+
+        filteredEvents.add(service);
+
+        return new ResponseEntity<>(filteredEvents, HttpStatus.OK);
     }
 }
