@@ -77,49 +77,38 @@ public class PersonController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedPersonDTO> createPerson(@RequestBody CreatePersonDTO person) {
         // Creating a new event person with the provided data
-        CreatedPersonDTO createdOrganizer = new CreatedPersonDTO();
+        CreatedPersonDTO createdPerson = new CreatedPersonDTO();
 
-        createdOrganizer.setId(UUID.randomUUID());
-        createdOrganizer.setName(person.getName());
-        createdOrganizer.setSurname(person.getSurname());
-        createdOrganizer.setProfilePicture(person.getProfilePicture());
-        createdOrganizer.setPhoneNumber(person.getPhoneNumber());
-        createdOrganizer.setType(PersonType.AUTHENTICATED_USER);
-        createdOrganizer.setLocation(person.getLocation());
-        createdOrganizer.setAccountId(person.getAccountId());
-        createdOrganizer.setNotificationsIds(new ArrayList<>()); // Mock notifications
-        createdOrganizer.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
-        createdOrganizer.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
-        createdOrganizer.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
+        createdPerson.setId(UUID.randomUUID());
+        createdPerson.setName(person.getName());
+        createdPerson.setSurname(person.getSurname());
+        createdPerson.setProfilePicture(person.getProfilePicture());
+        createdPerson.setPhoneNumber(person.getPhoneNumber());
+        createdPerson.setType(PersonType.AUTHENTICATED_USER);
+        createdPerson.setLocation(person.getLocation());
+        createdPerson.setAccountId(person.getAccountId());
+        createdPerson.setNotificationsIds(new ArrayList<>()); // Mock notifications
+        createdPerson.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
+        createdPerson.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
+        createdPerson.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
 
-        return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdPerson, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedPersonDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdatedPersonDTO person) {
         // Temporarily faking the update process
-        UpdatedPersonDTO updatedOrganizer = new UpdatedPersonDTO();
-        updatedOrganizer.setId(id);
-        updatedOrganizer.setName(person.getName());
-        updatedOrganizer.setSurname(person.getSurname());
-        updatedOrganizer.setProfilePicture(person.getProfilePicture());
-        updatedOrganizer.setPhoneNumber(person.getPhoneNumber());
-        updatedOrganizer.setType(PersonType.EVENT_ORGANIZER);
-        updatedOrganizer.setLocation(person.getLocation());
-        updatedOrganizer.setAccountId(person.getAccountId());
+        UpdatedPersonDTO updatedPerson = new UpdatedPersonDTO();
+        updatedPerson.setId(id);
+        updatedPerson.setName(person.getName());
+        updatedPerson.setSurname(person.getSurname());
+        updatedPerson.setProfilePicture(person.getProfilePicture());
+        updatedPerson.setPhoneNumber(person.getPhoneNumber());
+        updatedPerson.setType(PersonType.EVENT_ORGANIZER);
+        updatedPerson.setLocation(person.getLocation());
+        updatedPerson.setAccountId(person.getAccountId());
 
-        return new ResponseEntity<>(updatedOrganizer, HttpStatus.OK);
+        return new ResponseEntity<>(updatedPerson, HttpStatus.OK);
     }
-
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deletePerson(@PathVariable UUID id) {
-        // Simulating deletion
-        return new ResponseEntity<>("Event Organizer with ID " + id + " deleted successfully.", HttpStatus.OK);
-    }
-    
-    
-    
-    
-    
     
 }
