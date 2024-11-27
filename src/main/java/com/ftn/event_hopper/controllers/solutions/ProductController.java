@@ -119,10 +119,4 @@ public class ProductController {
 
         return new ResponseEntity<Collection<GetProductDTO>>(products, HttpStatus.OK);
     }
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID id) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
 }
