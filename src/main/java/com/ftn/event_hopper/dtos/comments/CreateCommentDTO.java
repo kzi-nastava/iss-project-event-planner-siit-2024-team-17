@@ -12,7 +12,6 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 public class CreateCommentDTO {
-    private UUID id;
     private String content;
     private UUID authorId;
 }

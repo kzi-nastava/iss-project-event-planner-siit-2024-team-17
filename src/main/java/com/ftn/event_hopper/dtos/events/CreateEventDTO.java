@@ -17,7 +17,6 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 public class CreateEventDTO {
-    private UUID id;
     private String name;
     private int maxAttendance;
     private String description;

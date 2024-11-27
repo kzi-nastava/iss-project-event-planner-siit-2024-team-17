@@ -58,8 +58,6 @@ public class SolutionController{
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 
-
-
         Collection<GetProductDTO> filteredSolutions = new ArrayList<>();
 
         return new ResponseEntity<Collection<GetProductDTO>>(filteredSolutions, HttpStatus.OK);
