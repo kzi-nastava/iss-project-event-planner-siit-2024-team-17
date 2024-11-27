@@ -36,5 +36,5 @@ public class Product {
     private ServiceProvider serviceProvider;
     private Category category;
     private Collection<EventType> eventTypes;
-    private Collection<EventOrganizer> eventOrganizers;
+    private EventOrganizer eventOrganizers;
 }
