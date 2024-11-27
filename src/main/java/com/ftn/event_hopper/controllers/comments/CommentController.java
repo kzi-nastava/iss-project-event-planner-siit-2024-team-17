@@ -6,6 +6,7 @@ import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
 import com.ftn.event_hopper.dtos.comments.UpdateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
+import com.ftn.event_hopper.models.shared.CommentStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,21 @@ public class CommentController {
 
         Collection<GetCommentDTO> comments = new ArrayList<GetCommentDTO>();
 
-        return  new ResponseEntity<Collection<GetCommentDTO>>(comments, HttpStatus.OK);
+        GetCommentDTO comment1 = new GetCommentDTO();
+        comment1.setId(UUID.randomUUID());
+        comment1.setContent("Very nice");
+        comment1.setStatus(CommentStatus.PENDING);
+        comment1.setAuthor(UUID.randomUUID());
+
+        GetCommentDTO comment2 = new GetCommentDTO();
+        comment2.setId(UUID.randomUUID());
+        comment2.setContent("Very nice");
+        comment2.setStatus(CommentStatus.PENDING);
+        comment2.setAuthor(UUID.randomUUID());
+
+        comments.add(comment1);
+        comments.add(comment2);
+        return new ResponseEntity<Collection<GetCommentDTO>>(comments, HttpStatus.OK);
 
     }
 
@@ -37,6 +52,11 @@ public class CommentController {
             return new ResponseEntity<GetCommentDTO>(HttpStatus.NOT_FOUND);
         }
 
+        comment.setId(id);
+        comment.setContent("Very nice");
+        comment.setStatus(CommentStatus.PENDING);
+        comment.setAuthor(UUID.randomUUID());
+
         return new ResponseEntity<GetCommentDTO>(comment, HttpStatus.OK);
     }
 
@@ -44,7 +64,7 @@ public class CommentController {
     public ResponseEntity<CreatedCommentDTO> createComment(@RequestBody CreateCommentDTO comment){
 
         CreatedCommentDTO createdComment = new CreatedCommentDTO();
-        createdComment.setId(comment.getId());
+        createdComment.setId(UUID.randomUUID());
         createdComment.setContent(comment.getContent());
         createdComment.setAuthorId(comment.getAuthorId());
         createdComment.setCreatedAt(LocalDateTime.now());

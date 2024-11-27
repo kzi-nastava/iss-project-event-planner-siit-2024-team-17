@@ -1,7 +1,6 @@
 package com.ftn.event_hopper.controllers.solutions;
 
-
-import com.ftn.event_hopper.dtos.events.GetEventDTO;
+import com.ftn.event_hopper.dtos.reports.GetReportDTO;
 import com.ftn.event_hopper.dtos.solutions.GetProductDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

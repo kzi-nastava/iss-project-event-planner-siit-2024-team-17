@@ -1,17 +1,13 @@
 package com.ftn.event_hopper.controllers.events;
 
-import com.ftn.event_hopper.dtos.events.CreateEventDTO;
-import com.ftn.event_hopper.dtos.events.CreatedEventDTO;
-import com.ftn.event_hopper.dtos.events.GetEventDTO;
+import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
+import com.ftn.event_hopper.dtos.events.*;
+import com.ftn.event_hopper.models.shared.EventPrivacyType;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Sort;
 
 
 import java.time.LocalDateTime;
@@ -24,30 +20,45 @@ import java.util.UUID;
 public class EventController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetEventDTO>> getEvents(
-        @RequestParam(required = false) String title,
-        @RequestParam(required = false) String location,
-        @RequestParam(required = false) String eventType,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime date,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "id,asc") String[] sort){
-
-//        Sort sorting = Sort.unsorted();
-//        for (String sortParam : sort) {
-//            String[] sortParams = sortParam.split(",");
-//            String field = sortParams[0];
-//            Sort.Direction direction = sortParams.length > 1 ? Sort.Direction.fromString(sortParams[1]) : Sort.Direction.ASC;
-//            sorting = sorting.and(Sort.by(direction, field));
-//        }
-//
-//        // Kreiranje Pageable objekta
-//        Pageable pageable = PageRequest.of(page, size, sorting);
-//
-//        // Pozivanje servisa
-//        Page<GetEventDTO> events = eventService.getFilteredEvents(title, location, date, pageable);
+    public ResponseEntity<Collection<GetEventDTO>> getEvents(){
 
         Collection<GetEventDTO> events = new ArrayList<>();
+
+        GetEventDTO event1 = new GetEventDTO();
+        event1.setId(UUID.randomUUID());
+        event1.setName("Event 1");
+        event1.setDescription("Event Description");
+        event1.setMaxAttendance(80);
+        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event1.setStartTime(LocalDateTime.now());
+        event1.setPicture("picture.jpg");
+        event1.setEventTypeId(UUID.randomUUID());
+        event1.setAgendaActivityId(UUID.randomUUID());
+        event1.setLocationId(UUID.randomUUID());
+        event1.setProducts(new ArrayList<>());
+        event1.setInvitations(new ArrayList<>());
+        event1.setEventOrganizerId(UUID.randomUUID());
+
+
+
+
+        GetEventDTO event2 = new GetEventDTO();
+        event1.setId(UUID.randomUUID());
+        event1.setName("Event 2");
+        event1.setDescription("Event Description 2");
+        event1.setMaxAttendance(80);
+        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event1.setStartTime(LocalDateTime.now());
+        event1.setPicture("picture2.jpg");
+        event1.setEventTypeId(UUID.randomUUID());
+        event1.setAgendaActivityId(UUID.randomUUID());
+        event1.setLocationId(UUID.randomUUID());
+        event1.setProducts(new ArrayList<>());
+        event1.setInvitations(new ArrayList<>());
+        event1.setEventOrganizerId(UUID.randomUUID());
+
+        events.add(event1);
+        events.add(event2);
 
         return new ResponseEntity<Collection<GetEventDTO>>(events, HttpStatus.OK);
     }
@@ -60,6 +71,20 @@ public class EventController {
             return new ResponseEntity<GetEventDTO>(HttpStatus.NOT_FOUND);
         }
 
+        event.setId(id);
+        event.setName("Event 1");
+        event.setDescription("Event Description");
+        event.setMaxAttendance(80);
+        event.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event.setStartTime(LocalDateTime.now());
+        event.setPicture("picture.jpg");
+        event.setEventTypeId(UUID.randomUUID());
+        event.setAgendaActivityId(UUID.randomUUID());
+        event.setLocationId(UUID.randomUUID());
+        event.setProducts(new ArrayList<>());
+        event.setInvitations(new ArrayList<>());
+        event.setEventOrganizerId(UUID.randomUUID());
+
         return new ResponseEntity<GetEventDTO>(event, HttpStatus.OK);
     }
 
@@ -67,6 +92,41 @@ public class EventController {
     public ResponseEntity<Collection<GetEventDTO>> getTop5Events(@PathVariable UUID usersId){
         Collection<GetEventDTO> top5Events = new ArrayList<>();
 
+        GetEventDTO event1 = new GetEventDTO();
+        event1.setId(UUID.randomUUID());
+        event1.setName("Event 1");
+        event1.setDescription("Event Description");
+        event1.setMaxAttendance(80);
+        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event1.setStartTime(LocalDateTime.now());
+        event1.setPicture("picture.jpg");
+        event1.setEventTypeId(UUID.randomUUID());
+        event1.setAgendaActivityId(UUID.randomUUID());
+        event1.setLocationId(UUID.randomUUID());
+        event1.setProducts(new ArrayList<>());
+        event1.setInvitations(new ArrayList<>());
+        event1.setEventOrganizerId(UUID.randomUUID());
+
+
+
+
+        GetEventDTO event2 = new GetEventDTO();
+        event1.setId(UUID.randomUUID());
+        event1.setName("Event 2");
+        event1.setDescription("Event Description 2");
+        event1.setMaxAttendance(80);
+        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event1.setStartTime(LocalDateTime.now());
+        event1.setPicture("picture2.jpg");
+        event1.setEventTypeId(UUID.randomUUID());
+        event1.setAgendaActivityId(UUID.randomUUID());
+        event1.setLocationId(UUID.randomUUID());
+        event1.setProducts(new ArrayList<>());
+        event1.setInvitations(new ArrayList<>());
+        event1.setEventOrganizerId(UUID.randomUUID());
+
+        top5Events.add(event1);
+        top5Events.add(event2);
         return new ResponseEntity<Collection<GetEventDTO>>(top5Events, HttpStatus.OK);
     }
 
@@ -83,8 +143,42 @@ public class EventController {
             @RequestParam(defaultValue = "true") boolean ascending) {
 
 
-
         Collection<GetEventDTO> filteredEvents = new ArrayList<>();
+
+        GetEventDTO event1 = new GetEventDTO();
+        event1.setId(UUID.randomUUID());
+        event1.setName("Event 1");
+        event1.setDescription("Event Description");
+        event1.setMaxAttendance(80);
+        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event1.setStartTime(LocalDateTime.now());
+        event1.setPicture("picture.jpg");
+        event1.setEventTypeId(UUID.randomUUID());
+        event1.setAgendaActivityId(UUID.randomUUID());
+        event1.setLocationId(UUID.randomUUID());
+        event1.setProducts(new ArrayList<>());
+        event1.setInvitations(new ArrayList<>());
+        event1.setEventOrganizerId(UUID.randomUUID());
+
+
+
+        GetEventDTO event2 = new GetEventDTO();
+        event1.setId(UUID.randomUUID());
+        event1.setName("Event 2");
+        event1.setDescription("Event Description 2");
+        event1.setMaxAttendance(80);
+        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event1.setStartTime(LocalDateTime.now());
+        event1.setPicture("picture2.jpg");
+        event1.setEventTypeId(UUID.randomUUID());
+        event1.setAgendaActivityId(UUID.randomUUID());
+        event1.setLocationId(UUID.randomUUID());
+        event1.setProducts(new ArrayList<>());
+        event1.setInvitations(new ArrayList<>());
+        event1.setEventOrganizerId(UUID.randomUUID());
+
+        filteredEvents.add(event1);
+        filteredEvents.add(event2);
 
         return new ResponseEntity<Collection<GetEventDTO>>(filteredEvents, HttpStatus.OK);
     }
@@ -92,7 +186,7 @@ public class EventController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedEventDTO> createEvent(@RequestBody CreateEventDTO event){
         CreatedEventDTO createdEvent = new CreatedEventDTO();
-        createdEvent.setId(event.getId());
+        createdEvent.setId(UUID.randomUUID());
         createdEvent.setName(event.getName());
         createdEvent.setDescription(event.getDescription());
         createdEvent.setMaxAttendance(event.getMaxAttendance());
@@ -108,15 +202,4 @@ public class EventController {
         return new ResponseEntity<CreatedEventDTO>(createdEvent, HttpStatus.CREATED);
     }
 
-//    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<UpdatedEventDTO> updateEvent(@PathVariable UUID id, @RequestBody UpdateEventDTO event) throws Exception{
-//
-//        UpdatedCommentDTO updatedComment = new UpdatedCommentDTO();
-//        updatedComment.setId(id);
-//        updatedComment.setStatus(comment.getStatus());
-//
-//        return new ResponseEntity<UpdatedCommentDTO>(updatedComment, HttpStatus.OK);
-//
-//
-//    }
 }
