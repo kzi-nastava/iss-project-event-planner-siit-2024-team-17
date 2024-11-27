@@ -119,12 +119,12 @@ public class RegistrationRequestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedRegistrationRequestDTO> createRegistrationRequest(@RequestBody CreateRegistrationRequestDTO registrationRequest) {
+    public ResponseEntity<CreatedRegistrationRequestDTO> createRegistrationRequest() {
         CreatedRegistrationRequestDTO createdRegistrationRequest = new CreatedRegistrationRequestDTO();
 
         createdRegistrationRequest.setId(UUID.randomUUID());
         createdRegistrationRequest.setTimestamp(LocalDateTime.now());
-        createdRegistrationRequest.setStatus(registrationRequest.getStatus());
+        createdRegistrationRequest.setStatus(RegistrationRequestStatus.PENDING);
 
         return new ResponseEntity<>(createdRegistrationRequest, HttpStatus.CREATED);
     }
