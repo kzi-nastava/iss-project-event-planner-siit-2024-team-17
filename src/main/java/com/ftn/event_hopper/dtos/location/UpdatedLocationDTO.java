@@ -1,17 +1,15 @@
-package com.ftn.event_hopper.models.locations;
+package com.ftn.event_hopper.dtos.location;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
-
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class Location {
+public class UpdatedLocationDTO {
     private UUID id;
     private String city;
     private String address;
