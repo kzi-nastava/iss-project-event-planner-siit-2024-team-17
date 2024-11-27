@@ -1,9 +1,8 @@
 package com.ftn.event_hopper.controllers.events;
 
-import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
+
 import com.ftn.event_hopper.dtos.events.*;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +34,8 @@ public class EventController {
         event1.setEventTypeId(UUID.randomUUID());
         event1.setAgendaActivityId(UUID.randomUUID());
         event1.setLocationId(UUID.randomUUID());
-        event1.setProducts(new ArrayList<>());
-        event1.setInvitations(new ArrayList<>());
+        event1.setProductsIds(new ArrayList<>());
+        event1.setInvitationsIds(new ArrayList<>());
         event1.setEventOrganizerId(UUID.randomUUID());
 
 
@@ -53,8 +52,8 @@ public class EventController {
         event2.setEventTypeId(UUID.randomUUID());
         event2.setAgendaActivityId(UUID.randomUUID());
         event2.setLocationId(UUID.randomUUID());
-        event2.setProducts(new ArrayList<>());
-        event2.setInvitations(new ArrayList<>());
+        event2.setProductsIds(new ArrayList<>());
+        event2.setInvitationsIds(new ArrayList<>());
         event2.setEventOrganizerId(UUID.randomUUID());
 
         events.add(event1);
@@ -81,8 +80,8 @@ public class EventController {
         event.setEventTypeId(UUID.randomUUID());
         event.setAgendaActivityId(UUID.randomUUID());
         event.setLocationId(UUID.randomUUID());
-        event.setProducts(new ArrayList<>());
-        event.setInvitations(new ArrayList<>());
+        event.setProductsIds(new ArrayList<>());
+        event.setInvitationsIds(new ArrayList<>());
         event.setEventOrganizerId(UUID.randomUUID());
 
         return new ResponseEntity<GetEventDTO>(event, HttpStatus.OK);
@@ -103,8 +102,8 @@ public class EventController {
         event1.setEventTypeId(UUID.randomUUID());
         event1.setAgendaActivityId(UUID.randomUUID());
         event1.setLocationId(UUID.randomUUID());
-        event1.setProducts(new ArrayList<>());
-        event1.setInvitations(new ArrayList<>());
+        event1.setProductsIds(new ArrayList<>());
+        event1.setInvitationsIds(new ArrayList<>());
         event1.setEventOrganizerId(UUID.randomUUID());
 
 
@@ -121,8 +120,8 @@ public class EventController {
         event2.setEventTypeId(UUID.randomUUID());
         event2.setAgendaActivityId(UUID.randomUUID());
         event2.setLocationId(UUID.randomUUID());
-        event2.setProducts(new ArrayList<>());
-        event2.setInvitations(new ArrayList<>());
+        event2.setProductsIds(new ArrayList<>());
+        event2.setInvitationsIds(new ArrayList<>());
         event2.setEventOrganizerId(UUID.randomUUID());
 
         top5Events.add(event1);
@@ -156,8 +155,8 @@ public class EventController {
         event1.setEventTypeId(UUID.randomUUID());
         event1.setAgendaActivityId(UUID.randomUUID());
         event1.setLocationId(UUID.randomUUID());
-        event1.setProducts(new ArrayList<>());
-        event1.setInvitations(new ArrayList<>());
+        event1.setProductsIds(new ArrayList<>());
+        event1.setInvitationsIds(new ArrayList<>());
         event1.setEventOrganizerId(UUID.randomUUID());
 
 
@@ -173,8 +172,8 @@ public class EventController {
         event2.setEventTypeId(UUID.randomUUID());
         event2.setAgendaActivityId(UUID.randomUUID());
         event2.setLocationId(UUID.randomUUID());
-        event2.setProducts(new ArrayList<>());
-        event2.setInvitations(new ArrayList<>());
+        event2.setProductsIds(new ArrayList<>());
+        event2.setInvitationsIds(new ArrayList<>());
         event2.setEventOrganizerId(UUID.randomUUID());
 
         filteredEvents.add(event1);
@@ -195,8 +194,8 @@ public class EventController {
         createdEvent.setEventTypeId(event.getEventTypeId());
         createdEvent.setLocationId(event.getLocationId());
         event.setAgendaActivityId(event.getAgendaActivityId());
-        event.setProducts(event.getProducts());
-        event.setInvitations(event.getInvitations());
+        event.setProductsIds(event.getProductsIds());
+        event.setInvitationsIds(event.getInvitationsIds());
         event.setEventOrganizerId(event.getEventOrganizerId());
 
         return new ResponseEntity<CreatedEventDTO>(createdEvent, HttpStatus.CREATED);

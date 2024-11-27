@@ -26,7 +26,7 @@ public class CreateEventDTO {
     private UUID eventTypeId;
     private UUID agendaActivityId;
     private UUID locationId;
-    private ArrayList<Product> products = new ArrayList<Product>();
-    private ArrayList<Invitation> invitations = new ArrayList<Invitation>();
+    private ArrayList<UUID> productsIds = new ArrayList<UUID>();
+    private ArrayList<UUID> invitationsIds = new ArrayList<UUID>();
     private UUID eventOrganizerId;
 }
