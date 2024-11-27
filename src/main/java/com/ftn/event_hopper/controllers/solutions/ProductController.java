@@ -2,23 +2,77 @@ package com.ftn.event_hopper.controllers.solutions;
 
 import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.models.shared.ProductStatus;
-import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetProductDTO>> getProducts() {
+    public ResponseEntity<Collection<GetProductDTO>> getProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) UUID categoryId,
+            @RequestParam(required = false) UUID eventTypeId,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean isAvailable,
+            @RequestParam(required = false) ProductStatus status,
+            @RequestParam(required = false) String description) {
+
+        Collection<GetProductDTO> products = new ArrayList<>();
+
+        // Mock data
+        GetProductDTO product1 = new GetProductDTO();
+        product1.setId(UUID.randomUUID());
+        product1.setName("Event Ticket");
+        product1.setDescription("VIP Ticket for Concert");
+        product1.setAvailable(true);
+        product1.setVisible(true);
+        product1.setStatus(ProductStatus.APPROVED);
+        product1.setPriceId(UUID.randomUUID());
+        product1.setCategoryId(UUID.randomUUID());
+        product1.setEventTypesIds(new ArrayList<>());
+
+        GetProductDTO product2 = new GetProductDTO();
+        product2.setId(UUID.randomUUID());
+        product2.setName("Regular Ticket");
+        product2.setDescription("Regular Ticket for Sports Event");
+        product2.setAvailable(false);
+        product2.setVisible(true);
+        product2.setStatus(ProductStatus.PENDING);
+        product2.setPriceId(UUID.randomUUID());
+        product2.setCategoryId(UUID.randomUUID());
+        product2.setEventTypesIds(new ArrayList<>());
+
+        products.add(product1);
+        products.add(product2);
+
+        // Filter logic
+        Collection<GetProductDTO> filteredProducts = products.stream()
+                .filter(product -> name == null || product.getName().toLowerCase().contains(name.toLowerCase()))
+                .filter(product -> categoryId == null || product.getCategoryId().equals(categoryId))
+                .filter(product -> eventTypeId == null || product.getEventTypesIds().contains(eventTypeId))
+                .filter(product -> minPrice == null || product.getPriceId() != null) //???????????????/
+                .filter(product -> maxPrice == null || product.getPriceId() != null)
+                .filter(product -> isAvailable == null || product.isAvailable() == isAvailable)
+                .filter(product -> status == null || product.getStatus() == status) 
+                .filter(product -> description == null || product.getDescription().toLowerCase().contains(description.toLowerCase()))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(filteredProducts, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/service-provider/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<GetProductDTO>> getServiceProvidersProducts() {
         Collection<GetProductDTO> products = new ArrayList<>();
 
         GetProductDTO product = new GetProductDTO();
@@ -56,6 +110,7 @@ public class ProductController {
 
         return new ResponseEntity<Collection<GetProductDTO>>(products, HttpStatus.OK);
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetProductDTO> getProduct() {
