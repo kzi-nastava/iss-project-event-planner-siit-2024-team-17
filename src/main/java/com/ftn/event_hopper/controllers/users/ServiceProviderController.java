@@ -176,7 +176,7 @@ public class ServiceProviderController {
         }
 
         provider.setWorkEnd(Time.valueOf(LocalTime.now()));
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 

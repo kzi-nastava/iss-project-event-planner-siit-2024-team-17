@@ -161,6 +161,6 @@ public class AccountController {
 
 
         account.setActive(false);
-        return new ResponseEntity<>("Account with ID " + id + " deleted successfully.", HttpStatus.OK);
+        return new ResponseEntity<>("Account with ID " + id + " deleted successfully.", HttpStatus.NOT_FOUND);
     }
 }

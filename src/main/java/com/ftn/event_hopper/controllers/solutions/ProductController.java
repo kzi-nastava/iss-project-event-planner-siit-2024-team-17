@@ -63,7 +63,7 @@ public class ProductController {
                 .filter(product -> minPrice == null || product.getPriceId() != null) //???????????????/
                 .filter(product -> maxPrice == null || product.getPriceId() != null)
                 .filter(product -> isAvailable == null || product.isAvailable() == isAvailable)
-                .filter(product -> status == null || product.getStatus() == status) 
+                .filter(product -> status == null || product.getStatus() == status)
                 .filter(product -> description == null || product.getDescription().toLowerCase().contains(description.toLowerCase()))
                 .collect(Collectors.toList());
 
@@ -210,7 +210,7 @@ public class ProductController {
         product.setCategoryId(UUID.randomUUID());
         product.setEventTypesIds(new ArrayList<>());
 
-        return new ResponseEntity<>("Product with ID " + id + " deleted successfully.", HttpStatus.OK);
+        return new ResponseEntity<>("Product with ID " + id + " deleted successfully.", HttpStatus.NOT_FOUND);
     }
 
 }
