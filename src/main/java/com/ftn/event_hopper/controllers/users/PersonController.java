@@ -1,9 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.users.person.CreatePersonDTO;
-import com.ftn.event_hopper.dtos.users.person.CreatedPersonDTO;
-import com.ftn.event_hopper.dtos.users.person.GetPersonDTO;
-import com.ftn.event_hopper.dtos.users.person.UpdatedPersonDTO;
+import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -96,7 +93,7 @@ public class PersonController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedPersonDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdatedPersonDTO person) {
+    public ResponseEntity<UpdatedPersonDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdatePersonDTO person) {
         // Temporarily faking the update process
         UpdatedPersonDTO updatedPerson = new UpdatedPersonDTO();
         updatedPerson.setId(id);

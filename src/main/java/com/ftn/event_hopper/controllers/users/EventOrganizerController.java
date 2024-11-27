@@ -101,7 +101,7 @@ public class EventOrganizerController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedEventOrganizerDTO> updateEventOrganizer(@PathVariable UUID id, @RequestBody UpdatedEventOrganizerDTO organizer) {
+    public ResponseEntity<UpdatedEventOrganizerDTO> updateEventOrganizer(@PathVariable UUID id, @RequestBody UpdateEventOrganizerDTO organizer) {
         // Temporarily faking the update process
         UpdatedEventOrganizerDTO updatedOrganizer = new UpdatedEventOrganizerDTO();
         updatedOrganizer.setId(id);

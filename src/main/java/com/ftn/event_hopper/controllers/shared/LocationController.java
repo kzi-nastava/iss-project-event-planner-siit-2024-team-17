@@ -68,7 +68,7 @@ public class LocationController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedLocationDTO> updateLocation(@PathVariable UUID id, @RequestBody UpdatedLocationDTO location) {
+    public ResponseEntity<UpdatedLocationDTO> updateLocation(@PathVariable UUID id, @RequestBody UpdateLocationDTO location) {
         // Temporarily faking the update process
         UpdatedLocationDTO updatedLocation = new UpdatedLocationDTO();
         updatedLocation.setId(id);

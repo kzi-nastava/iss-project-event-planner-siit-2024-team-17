@@ -122,18 +122,17 @@ public class AccountController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdatedAccountDTO account) {
+    public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdateAccountDTO account) {
         // Temporarily faking the update process
         UpdatedAccountDTO updatedAccount = new UpdatedAccountDTO();
         updatedAccount.setId(UUID.randomUUID());
-        updatedAccount.setEmail("mapa@gmail.com");
-        updatedAccount.setPassword("Marija123");
-        updatedAccount.setVerified(true);
-        updatedAccount.setActive(true);
-        updatedAccount.setType(PersonType.EVENT_ORGANIZER);
-        updatedAccount.setSuspensionTimeStamp(LocalDateTime.now());
-        updatedAccount.setPersonId(UUID.randomUUID());
-        updatedAccount.setRegistrationRequest(null);
+        updatedAccount.setPassword(account.getPassword());
+        updatedAccount.setVerified(account.isVerified());
+        updatedAccount.setActive(account.isActive());
+        updatedAccount.setType(account.getType());
+        updatedAccount.setSuspensionTimeStamp(account.getSuspensionTimeStamp());
+        updatedAccount.setPersonId(account.getPersonId());
+        updatedAccount.setRegistrationRequest(account.getRegistrationRequest());
 
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
