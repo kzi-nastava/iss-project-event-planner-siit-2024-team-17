@@ -10,11 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreatedReservationDTO {
-    private UUID id;
+public class CreateReservationProductDTO {
     private UUID eventId;
     private UUID productId;
-    private LocalDateTime timestamp;
-    private LocalDateTime from;
-    private LocalDateTime to;
 }
