@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/api/persons")
 public class PersonController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

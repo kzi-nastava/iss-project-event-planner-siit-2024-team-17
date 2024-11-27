@@ -71,6 +71,22 @@ public class AccountController {
 
 
 
+    @GetMapping(value = "/active", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetAccountDTO> getActiveAccounts() {
+        // Temporarily faking the data, should be a call to a getActiveAccounts method
+        GetAccountDTO account = new GetAccountDTO();
+        account.setId(UUID.randomUUID());
+        account.setEmail("mapa@gmail.com");
+        account.setPassword("Marija123");
+        account.setVerified(true);
+        account.setActive(true);
+        account.setType(PersonType.EVENT_ORGANIZER);
+        account.setSuspensionTimeStamp(LocalDateTime.now());
+        account.setPersonId(UUID.randomUUID());
+        account.setRegistrationRequest(null);
+
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetAccountDTO> getAccount(@PathVariable UUID id) {
@@ -91,7 +107,6 @@ public class AccountController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedAccountDTO> createAccount(@RequestBody CreateAccountDTO account) {
-        // Creating a new event account with the provided data
         CreatedAccountDTO createdAccount = new CreatedAccountDTO();
         createdAccount.setId(UUID.randomUUID());
         createdAccount.setEmail("mapa@gmail.com");
@@ -125,7 +140,20 @@ public class AccountController {
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteAccount(@PathVariable UUID id) {
-        // Simulating deletion
+        // Temporarily faking the data, should be a call to a get by id method
+        GetAccountDTO account = new GetAccountDTO();
+        account.setId(UUID.randomUUID());
+        account.setEmail("mapa@gmail.com");
+        account.setPassword("Marija123");
+        account.setVerified(true);
+        account.setActive(true);
+        account.setType(PersonType.EVENT_ORGANIZER);
+        account.setSuspensionTimeStamp(LocalDateTime.now());
+        account.setPersonId(UUID.randomUUID());
+        account.setRegistrationRequest(null);
+
+
+        account.setActive(false);
         return new ResponseEntity<>("Account with ID " + id + " deleted successfully.", HttpStatus.OK);
     }
 }
