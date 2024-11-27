@@ -1,12 +1,14 @@
 package com.ftn.event_hopper.controllers.solutions;
 
-import com.ftn.event_hopper.dtos.solutions.GetProductDTO;
+import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.models.shared.ProductStatus;
+import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -119,4 +121,41 @@ public class ProductController {
 
         return new ResponseEntity<Collection<GetProductDTO>>(products, HttpStatus.OK);
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedProductDTO> updateProduct(@PathVariable UUID id, @RequestBody UpdateProductDTO product) {
+        // Temporarily faking the update process, should call a get by id
+        UpdatedProductDTO updatedProduct = new UpdatedProductDTO();
+
+        updatedProduct.setId(UUID.randomUUID());
+        updatedProduct.setName(product.getName());
+        updatedProduct.setDescription(product.getDescription());
+        updatedProduct.setPictures(product.getPictures());
+        updatedProduct.setAvailable(product.isAvailable());
+        updatedProduct.setVisible(product.isVisible());
+        updatedProduct.setPriceId(product.getPriceId());
+        updatedProduct.setEventTypesIds(product.getEventTypesIds());
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteProduct(@PathVariable UUID id) {
+        // Temporarily faking the data, should be a call to a get by id method
+        GetProductDTO product = new GetProductDTO();
+        product.setName("Product 1");
+        product.setDescription("Description 1");
+        product.setPictures(new ArrayList<>());
+        product.setAvailable(true);
+        product.setVisible(true);
+        product.setStatus(ProductStatus.APPROVED);
+        product.setRatingsIds(new ArrayList<>());
+        product.setCommentsIds(new ArrayList<>());
+        product.setPriceId(UUID.randomUUID());
+        product.setServiceProviderId(UUID.randomUUID());
+        product.setCategoryId(UUID.randomUUID());
+        product.setEventTypesIds(new ArrayList<>());
+
+        return new ResponseEntity<>("Product with ID " + id + " deleted successfully.", HttpStatus.OK);
+    }
+
 }
