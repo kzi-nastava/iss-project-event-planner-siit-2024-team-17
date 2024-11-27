@@ -5,9 +5,7 @@ import com.ftn.event_hopper.models.shared.ProductStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,6 +58,11 @@ public class ProductController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetProductDTO> getProduct() {
         GetProductDTO product = new GetProductDTO();
+
+        if (product == null) {
+            return new ResponseEntity<GetProductDTO>(HttpStatus.NOT_FOUND);
+        }
+
         product.setId(UUID.randomUUID());
         product.setName("Product 1");
         product.setDescription("Description 1");
@@ -115,6 +118,11 @@ public class ProductController {
         products.add(product2);
 
         return new ResponseEntity<Collection<GetProductDTO>>(products, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID id) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

@@ -70,6 +70,11 @@ public class ServiceController {
     public ResponseEntity<GetServiceDTO> getService() {
 
         GetServiceDTO service = new GetServiceDTO();
+
+        if (service == null) {
+            return new ResponseEntity<GetServiceDTO>(HttpStatus.NOT_FOUND);
+        }
+
         service.setId(UUID.randomUUID());
         service.setName("Service 1");
         service.setDescription("Description 1");

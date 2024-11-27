@@ -89,6 +89,11 @@ public class PriceController {
     public ResponseEntity<GetPriceDTO> getPricesByProductId(@PathVariable("id") UUID id) {
 
         GetPriceDTO price = new GetPriceDTO();
+
+        if (price == null) {
+            return new ResponseEntity<GetPriceDTO>(HttpStatus.NOT_FOUND);
+        }
+
         price.setId(UUID.randomUUID());
         price.setBasePrice(100);
         price.setDiscount(10);
@@ -103,6 +108,11 @@ public class PriceController {
     public ResponseEntity<GetPriceDTO> getPriceByReservationId(@PathVariable("id") UUID id) {
 
         GetPriceDTO price = new GetPriceDTO();
+
+        if (price == null) {
+            return new ResponseEntity<GetPriceDTO>(HttpStatus.NOT_FOUND);
+        }
+
         price.setId(UUID.randomUUID());
         price.setBasePrice(100);
         price.setDiscount(10);
