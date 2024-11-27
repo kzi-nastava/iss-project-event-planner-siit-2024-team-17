@@ -43,19 +43,19 @@ public class EventController {
 
 
         GetEventDTO event2 = new GetEventDTO();
-        event1.setId(UUID.randomUUID());
-        event1.setName("Event 2");
-        event1.setDescription("Event Description 2");
-        event1.setMaxAttendance(80);
-        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
-        event1.setStartTime(LocalDateTime.now());
-        event1.setPicture("picture2.jpg");
-        event1.setEventTypeId(UUID.randomUUID());
-        event1.setAgendaActivityId(UUID.randomUUID());
-        event1.setLocationId(UUID.randomUUID());
-        event1.setProducts(new ArrayList<>());
-        event1.setInvitations(new ArrayList<>());
-        event1.setEventOrganizerId(UUID.randomUUID());
+        event2.setId(UUID.randomUUID());
+        event2.setName("Event 2");
+        event2.setDescription("Event Description 2");
+        event2.setMaxAttendance(80);
+        event2.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event2.setStartTime(LocalDateTime.now());
+        event2.setPicture("picture2.jpg");
+        event2.setEventTypeId(UUID.randomUUID());
+        event2.setAgendaActivityId(UUID.randomUUID());
+        event2.setLocationId(UUID.randomUUID());
+        event2.setProducts(new ArrayList<>());
+        event2.setInvitations(new ArrayList<>());
+        event2.setEventOrganizerId(UUID.randomUUID());
 
         events.add(event1);
         events.add(event2);
@@ -111,19 +111,19 @@ public class EventController {
 
 
         GetEventDTO event2 = new GetEventDTO();
-        event1.setId(UUID.randomUUID());
-        event1.setName("Event 2");
-        event1.setDescription("Event Description 2");
-        event1.setMaxAttendance(80);
-        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
-        event1.setStartTime(LocalDateTime.now());
-        event1.setPicture("picture2.jpg");
-        event1.setEventTypeId(UUID.randomUUID());
-        event1.setAgendaActivityId(UUID.randomUUID());
-        event1.setLocationId(UUID.randomUUID());
-        event1.setProducts(new ArrayList<>());
-        event1.setInvitations(new ArrayList<>());
-        event1.setEventOrganizerId(UUID.randomUUID());
+        event2.setId(UUID.randomUUID());
+        event2.setName("Event 2");
+        event2.setDescription("Event Description 2");
+        event2.setMaxAttendance(80);
+        event2.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event2.setStartTime(LocalDateTime.now());
+        event2.setPicture("picture2.jpg");
+        event2.setEventTypeId(UUID.randomUUID());
+        event2.setAgendaActivityId(UUID.randomUUID());
+        event2.setLocationId(UUID.randomUUID());
+        event2.setProducts(new ArrayList<>());
+        event2.setInvitations(new ArrayList<>());
+        event2.setEventOrganizerId(UUID.randomUUID());
 
         top5Events.add(event1);
         top5Events.add(event2);
@@ -163,19 +163,19 @@ public class EventController {
 
 
         GetEventDTO event2 = new GetEventDTO();
-        event1.setId(UUID.randomUUID());
-        event1.setName("Event 2");
-        event1.setDescription("Event Description 2");
-        event1.setMaxAttendance(80);
-        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
-        event1.setStartTime(LocalDateTime.now());
-        event1.setPicture("picture2.jpg");
-        event1.setEventTypeId(UUID.randomUUID());
-        event1.setAgendaActivityId(UUID.randomUUID());
-        event1.setLocationId(UUID.randomUUID());
-        event1.setProducts(new ArrayList<>());
-        event1.setInvitations(new ArrayList<>());
-        event1.setEventOrganizerId(UUID.randomUUID());
+        event2.setId(UUID.randomUUID());
+        event2.setName("Event 2");
+        event2.setDescription("Event Description 2");
+        event2.setMaxAttendance(80);
+        event2.setEventPrivacyType(EventPrivacyType.PRIVATE);
+        event2.setStartTime(LocalDateTime.now());
+        event2.setPicture("picture2.jpg");
+        event2.setEventTypeId(UUID.randomUUID());
+        event2.setAgendaActivityId(UUID.randomUUID());
+        event2.setLocationId(UUID.randomUUID());
+        event2.setProducts(new ArrayList<>());
+        event2.setInvitations(new ArrayList<>());
+        event2.setEventOrganizerId(UUID.randomUUID());
 
         filteredEvents.add(event1);
         filteredEvents.add(event2);

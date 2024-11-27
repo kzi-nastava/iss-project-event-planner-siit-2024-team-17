@@ -17,6 +17,6 @@ public class CreatedReportDTO {
     private UUID id;
     private String reason;
     private LocalDateTime timestamp;
-    private Person reporter;
-    private Person reported;
+    private UUID reporterId;
+    private UUID reportedId;
 }

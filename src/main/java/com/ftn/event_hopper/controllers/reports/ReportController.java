@@ -44,7 +44,7 @@ public class ReportController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetReportDTO> getReport(@RequestParam UUID reportId){
+    public ResponseEntity<GetReportDTO> getReport(@RequestParam UUID id){
 
         GetReportDTO report = new GetReportDTO();
 
@@ -52,7 +52,7 @@ public class ReportController {
             return new ResponseEntity<GetReportDTO>(HttpStatus.NOT_FOUND);
         }
 
-        report.setId(reportId);
+        report.setId(id);
         report.setReason("jfniwjfiueigurugnergr");
         report.setTimestamp(LocalDateTime.now());
         report.setReportedId(UUID.randomUUID());
@@ -67,8 +67,8 @@ public class ReportController {
         createdReport.setId(UUID.randomUUID());
         createdReport.setReason(report.getReason());
         createdReport.setTimestamp(LocalDateTime.now());
-        createdReport.setReported(report.getReported());
-        createdReport.setReporter(report.getReporter());
+        createdReport.setReportedId(report.getReportedId());
+        createdReport.setReporterId(report.getReporterId());
 
         return new ResponseEntity<CreatedReportDTO>(createdReport, HttpStatus.CREATED);
     }

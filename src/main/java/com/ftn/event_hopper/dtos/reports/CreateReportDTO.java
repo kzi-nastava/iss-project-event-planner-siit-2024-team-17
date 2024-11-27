@@ -15,6 +15,6 @@ import java.util.UUID;
 public class CreateReportDTO {
 
     private String reason;
-    private Person reporter;
-    private Person reported;
+    private UUID reporterId;
+    private UUID reportedId;
 }
