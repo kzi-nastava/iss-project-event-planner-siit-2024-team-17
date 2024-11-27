@@ -12,20 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetServiceDTO {
-    private UUID id;
-    private String name;
-    private String description;
-    private Collection<String> pictures;
-    private boolean isAvailable;
-    private boolean isVisible;
-    private ProductStatus status;
-    private Collection<UUID> ratingsIds;
-    private Collection<UUID> commentsIds;
-    private UUID priceId;
-    private UUID serviceProviderId;
-    private UUID categoryId;
-    private Collection<UUID> eventTypesIds;
+public class GetServiceDTO extends GetProductDTO {
     private int durationMinutes;
     private int reservationWindowDays;
     private int cancellationWindowDays;

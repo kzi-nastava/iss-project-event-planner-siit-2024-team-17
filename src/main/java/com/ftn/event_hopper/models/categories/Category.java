@@ -18,4 +18,5 @@ public class Category {
     private String description;
     private CategoryStatus status;
     private Collection<EventType> eventTypes;
+    private boolean isDeleted;
 }
