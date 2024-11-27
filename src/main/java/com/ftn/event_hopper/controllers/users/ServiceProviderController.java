@@ -35,7 +35,7 @@ public class ServiceProviderController {
         provider1.setCompanyPhotos(new String[]{"photo1.jpg", "photo2.jpg"});
         provider1.setWorkStart(Time.valueOf("08:00:00"));
         provider1.setWorkEnd(Time.valueOf("18:00:00"));
-        provider1.setCompanyLocation(null); // Mock location
+        provider1.setCompanyLocationId(UUID.randomUUID());
         provider1.setProductsIds(new ArrayList<>());
         provider1.setAccountId(UUID.randomUUID());
 
@@ -57,7 +57,7 @@ public class ServiceProviderController {
         provider2.setCompanyPhotos(new String[]{"rental1.jpg", "rental2.jpg"});
         provider2.setWorkStart(Time.valueOf("09:00:00"));
         provider2.setWorkEnd(Time.valueOf("17:00:00"));
-        provider2.setCompanyLocation(null); //  location
+        provider2.setCompanyLocationId(UUID.randomUUID()); //  location
         provider2.setProductsIds(new ArrayList<>());
         provider2.setAccountId(UUID.randomUUID());
 
@@ -93,7 +93,7 @@ public class ServiceProviderController {
         provider.setCompanyPhotos(new String[]{"decor1.jpg", "decor2.jpg"});
         provider.setWorkStart(Time.valueOf("07:00:00"));
         provider.setWorkEnd(Time.valueOf("20:00:00"));
-        provider.setCompanyLocation(null); // Mock location
+        provider.setCompanyLocationId(UUID.randomUUID());
         provider.setProductsIds(new ArrayList<>());
         provider.setAccountId(UUID.randomUUID());
 
@@ -123,7 +123,7 @@ public class ServiceProviderController {
         createdProvider.setCompanyDescription(provider.getCompanyDescription());
         createdProvider.setCompanyPhotos(provider.getCompanyPhotos());
         createdProvider.setWorkStart(provider.getWorkStart());
-        createdProvider.setCompanyLocation(provider.getCompanyLocation());
+        createdProvider.setCompanyLocationId(provider.getCompanyLocationId());
         createdProvider.setProductsIds(provider.getProductsIds());
         createdProvider.setAccountId(UUID.randomUUID());
 
@@ -154,7 +154,7 @@ public class ServiceProviderController {
         existingProvider.setCompanyDescription(provider.getCompanyDescription());
         existingProvider.setCompanyPhotos(provider.getCompanyPhotos());
         existingProvider.setWorkStart(provider.getWorkStart());
-        existingProvider.setCompanyLocation(provider.getCompanyLocation());
+        existingProvider.setCompanyLocationId(provider.getCompanyLocationId());
         existingProvider.setProductsIds(provider.getProductsIds());
 
         existingProvider.setFavoriteEventsIds(provider.getFavoriteEventsIds());

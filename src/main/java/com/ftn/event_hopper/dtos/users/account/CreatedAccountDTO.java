@@ -21,5 +21,5 @@ public class CreatedAccountDTO {
     private LocalDateTime suspensionTimeStamp;
     private PersonType type;
     private UUID personId;
-    private RegistrationRequest registrationRequest;
+    private UUID registrationRequestId;
 }

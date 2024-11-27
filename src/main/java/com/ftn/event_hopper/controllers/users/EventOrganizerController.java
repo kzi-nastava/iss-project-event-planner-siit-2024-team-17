@@ -27,7 +27,7 @@ public class EventOrganizerController {
         organizer1.setSurname("Pa");
         organizer1.setPhoneNumber("123-456-7890");
         organizer1.setType(PersonType.EVENT_ORGANIZER);
-        organizer1.setLocation(null); // Mock location
+        organizer1.setLocationId(null); // Mock location
         organizer1.setEventsIds(new ArrayList<>());
         organizer1.setProductsIds(new ArrayList<>());
         organizer1.setAccountId(UUID.randomUUID());
@@ -42,7 +42,7 @@ public class EventOrganizerController {
         organizer2.setSurname("Doe");
         organizer2.setPhoneNumber("123-456-7890");
         organizer2.setType(PersonType.EVENT_ORGANIZER);
-        organizer2.setLocation(null); // Mock location
+        organizer2.setLocationId(null); // Mock location
         organizer2.setEventsIds(new ArrayList<>());
         organizer2.setProductsIds(new ArrayList<>());
         organizer2.setAccountId(UUID.randomUUID());
@@ -71,7 +71,7 @@ public class EventOrganizerController {
         organizer.setSurname("Doe");
         organizer.setPhoneNumber("123-456-7890");
         organizer.setType(PersonType.EVENT_ORGANIZER);
-        organizer.setLocation(null); // Mock location
+        organizer.setLocationId(null); // Mock location
         organizer.setEventsIds(new ArrayList<>());
         organizer.setProductsIds(new ArrayList<>());
         organizer.setAccountId(UUID.randomUUID());
@@ -94,7 +94,7 @@ public class EventOrganizerController {
         createdOrganizer.setProfilePicture(organizer.getProfilePicture());
         createdOrganizer.setPhoneNumber(organizer.getPhoneNumber());
         createdOrganizer.setType(PersonType.EVENT_ORGANIZER);
-        createdOrganizer.setLocation(organizer.getLocation());
+        createdOrganizer.setLocationId(organizer.getLocationId());
         createdOrganizer.setEventsIds(organizer.getEventsIds());
         createdOrganizer.setProductsIds(organizer.getProductsIds());
         createdOrganizer.setAccountId(organizer.getAccountId());
@@ -116,7 +116,7 @@ public class EventOrganizerController {
         updatedOrganizer.setProfilePicture(organizer.getProfilePicture());
         updatedOrganizer.setPhoneNumber(organizer.getPhoneNumber());
         updatedOrganizer.setType(PersonType.EVENT_ORGANIZER);
-        updatedOrganizer.setLocation(organizer.getLocation());
+        updatedOrganizer.setLocationId(organizer.getLocationId());
         updatedOrganizer.setEventsIds(organizer.getEventsIds());
         updatedOrganizer.setProductsIds(organizer.getProductsIds());
         updatedOrganizer.setAccountId(organizer.getAccountId());

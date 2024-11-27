@@ -27,7 +27,7 @@ public class PersonController {
         person1.setSurname("Pa");
         person1.setPhoneNumber("123-456-7890");
         person1.setType(PersonType.AUTHENTICATED_USER);
-        person1.setLocation(null); // Mock location
+        person1.setLocationId(UUID.randomUUID()); 
         person1.setAccountId(UUID.randomUUID());
         person1.setNotificationsIds(new ArrayList<>()); // Mock notifications
         person1.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -40,7 +40,7 @@ public class PersonController {
         person2.setSurname("Doe");
         person2.setPhoneNumber("123-456-7890");
         person2.setType(PersonType.AUTHENTICATED_USER);
-        person2.setLocation(null); // Mock location
+        person2.setLocationId(UUID.randomUUID()); 
         person2.setAccountId(UUID.randomUUID());
         person2.setNotificationsIds(new ArrayList<>()); // Mock notifications
         person2.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -67,7 +67,7 @@ public class PersonController {
         person.setSurname("Doe");
         person.setPhoneNumber("123-456-7890");
         person.setType(PersonType.AUTHENTICATED_USER);
-        person.setLocation(null); // Mock location
+        person.setLocationId(UUID.randomUUID()); 
         person.setAccountId(UUID.randomUUID());
         person.setNotificationsIds(new ArrayList<>()); // Mock notifications
         person.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -88,7 +88,7 @@ public class PersonController {
         createdPerson.setProfilePicture(person.getProfilePicture());
         createdPerson.setPhoneNumber(person.getPhoneNumber());
         createdPerson.setType(person.getType());
-        createdPerson.setLocation(person.getLocation());
+        createdPerson.setLocationId(person.getLocationId());
         createdPerson.setAccountId(person.getAccountId());
         createdPerson.setNotificationsIds(new ArrayList<>()); // Mock notifications
         createdPerson.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -108,7 +108,7 @@ public class PersonController {
         updatedPerson.setProfilePicture(person.getProfilePicture());
         updatedPerson.setPhoneNumber(person.getPhoneNumber());
         updatedPerson.setType(PersonType.EVENT_ORGANIZER);
-        updatedPerson.setLocation(person.getLocation());
+        updatedPerson.setLocationId(person.getLocationId());
         updatedPerson.setAccountId(person.getAccountId());
 
         return new ResponseEntity<>(updatedPerson, HttpStatus.OK);

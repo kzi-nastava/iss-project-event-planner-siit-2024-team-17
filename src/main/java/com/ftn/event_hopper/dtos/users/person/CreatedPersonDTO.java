@@ -23,7 +23,7 @@ public class CreatedPersonDTO {
     private String profilePicture;
     private String phoneNumber;
     private PersonType type;
-    private Location location;
+    private UUID locationId;
     private Collection<UUID> notificationsIds;
     private Collection<UUID> attendingEventsIds;
     private Collection<UUID> favoriteEventsIds;

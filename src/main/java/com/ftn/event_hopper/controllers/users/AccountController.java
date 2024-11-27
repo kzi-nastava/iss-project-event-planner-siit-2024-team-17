@@ -1,6 +1,5 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.registration.GetRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class AccountController {
         account1.setType(PersonType.EVENT_ORGANIZER);
         account1.setSuspensionTimeStamp(LocalDateTime.now());
         account1.setPersonId(UUID.randomUUID());
-        account1.setRegistrationRequest(null);
+        account1.setRegistrationRequestId(null);
 
         GetAccountDTO account2 = new GetAccountDTO();
         account2.setId(UUID.randomUUID());
@@ -42,7 +41,7 @@ public class AccountController {
         account2.setType(PersonType.EVENT_ORGANIZER);
         account2.setSuspensionTimeStamp(LocalDateTime.now());
         account2.setPersonId(UUID.randomUUID());
-        account2.setRegistrationRequest(null);
+        account2.setRegistrationRequestId(null);
 
 
         accounts.add(account1);
@@ -65,7 +64,25 @@ public class AccountController {
         account.setType(PersonType.EVENT_ORGANIZER);
         account.setSuspensionTimeStamp(LocalDateTime.now());
         account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequest(null);
+        account.setRegistrationRequestId(null);
+
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetAccountDTO> getLoginAccount() {
+        // Temporarily faking the data, should be a call to a getVerifiedAccounts method
+        GetAccountDTO account = new GetAccountDTO();
+        account.setId(UUID.randomUUID());
+        account.setEmail("mapa@gmail.com");
+        account.setPassword("Marija123");
+        account.setVerified(true);
+        account.setActive(true);
+        account.setType(PersonType.EVENT_ORGANIZER);
+        account.setSuspensionTimeStamp(LocalDateTime.now());
+        account.setPersonId(UUID.randomUUID());
+        account.setRegistrationRequestId(null);
 
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
@@ -84,13 +101,13 @@ public class AccountController {
         account.setType(PersonType.EVENT_ORGANIZER);
         account.setSuspensionTimeStamp(LocalDateTime.now());
         account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequest(null);
+        account.setRegistrationRequestId(null);
 
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetAccountDTO> getAccount(@PathVariable UUID id) {
+    public ResponseEntity<GetAccountDTO> getAccount(@RequestBody LoginDTO loginDTO ) {
         // Temporarily faking the data
         GetAccountDTO account = new GetAccountDTO();
 
@@ -100,30 +117,33 @@ public class AccountController {
 
 
         account.setId(UUID.randomUUID());
-        account.setEmail("mapa@gmail.com");
-        account.setPassword("Marija123");
+        account.setEmail(loginDTO.getEmail());
+        account.setPassword(loginDTO.getPassword());
         account.setVerified(true);
         account.setActive(true);
         account.setType(PersonType.EVENT_ORGANIZER);
         account.setSuspensionTimeStamp(LocalDateTime.now());
         account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequest(null);
+        account.setRegistrationRequestId(null);
 
-        return new ResponseEntity<>(account, HttpStatus.OK);
+        if(account.getEmail().equals(loginDTO.getEmail()) && account.getPassword().equals(loginDTO.getPassword())){
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedAccountDTO> createAccount(@RequestBody CreateAccountDTO account) {
         CreatedAccountDTO createdAccount = new CreatedAccountDTO();
         createdAccount.setId(UUID.randomUUID());
-        createdAccount.setEmail("mapa@gmail.com");
-        createdAccount.setPassword("Marija123");
-        createdAccount.setVerified(true);
-        createdAccount.setActive(true);
-        createdAccount.setType(PersonType.EVENT_ORGANIZER);
-        createdAccount.setSuspensionTimeStamp(LocalDateTime.now());
-        createdAccount.setPersonId(UUID.randomUUID());
-        createdAccount.setRegistrationRequest(null);
+        createdAccount.setEmail(account.getEmail());
+        createdAccount.setPassword(account.getPassword());
+        createdAccount.setVerified(account.isVerified());
+        createdAccount.setActive(account.isActive());
+        createdAccount.setType(account.getType());
+        createdAccount.setSuspensionTimeStamp(account.getSuspensionTimeStamp());
+        createdAccount.setPersonId(account.getPersonId());
+        createdAccount.setRegistrationRequestId(account.getRegistrationRequestId());
 
         return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
     }
@@ -140,7 +160,7 @@ public class AccountController {
         updatedAccount.setType(account.getType());
         updatedAccount.setSuspensionTimeStamp(account.getSuspensionTimeStamp());
         updatedAccount.setPersonId(account.getPersonId());
-        updatedAccount.setRegistrationRequest(account.getRegistrationRequest());
+        updatedAccount.setRegistrationRequestId(account.getRegistrationRequestId());
 
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
@@ -157,10 +177,10 @@ public class AccountController {
         account.setType(PersonType.EVENT_ORGANIZER);
         account.setSuspensionTimeStamp(LocalDateTime.now());
         account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequest(null);
+        account.setRegistrationRequestId(null);
 
 
         account.setActive(false);
-        return new ResponseEntity<>("Account with ID " + id + " deleted successfully.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Account with ID " + id + " deleted successfully.", HttpStatus.NO_CONTENT);
     }
 }
