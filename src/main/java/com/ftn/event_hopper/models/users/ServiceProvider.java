@@ -1,12 +1,11 @@
 package com.ftn.event_hopper.models.users;
 
-import com.ftn.event_hopper.models.shared.Location;
+import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 
 import java.sql.Time;
 import java.util.Collection;
-import java.util.UUID;
 
 @Getter
 @Setter

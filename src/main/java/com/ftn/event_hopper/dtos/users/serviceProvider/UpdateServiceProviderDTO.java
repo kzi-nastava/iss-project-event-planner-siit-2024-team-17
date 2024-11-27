@@ -2,7 +2,6 @@ package com.ftn.event_hopper.dtos.users.serviceProvider;
 
 
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
-import com.ftn.event_hopper.models.shared.Location;
 import lombok.*;
 
 import java.sql.Time;

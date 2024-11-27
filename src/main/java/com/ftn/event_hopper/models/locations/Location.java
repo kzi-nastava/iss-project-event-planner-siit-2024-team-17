@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.models.shared;
+package com.ftn.event_hopper.models.locations;
 
 import lombok.*;
 

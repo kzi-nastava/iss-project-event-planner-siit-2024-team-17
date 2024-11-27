@@ -1,6 +1,5 @@
 package com.ftn.event_hopper.dtos.users.person;
 
-import com.ftn.event_hopper.models.shared.Location;
 import com.ftn.event_hopper.models.users.PersonType;
 import lombok.*;
 

@@ -2,7 +2,7 @@ package com.ftn.event_hopper.models.users;
 
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.notifications.Notification;
-import com.ftn.event_hopper.models.shared.Location;
+import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 

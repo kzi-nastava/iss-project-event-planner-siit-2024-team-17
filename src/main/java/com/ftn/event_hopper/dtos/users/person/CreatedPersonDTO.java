@@ -1,10 +1,5 @@
 package com.ftn.event_hopper.dtos.users.person;
 
-import com.ftn.event_hopper.models.events.Event;
-import com.ftn.event_hopper.models.notifications.Notification;
-import com.ftn.event_hopper.models.shared.Location;
-import com.ftn.event_hopper.models.solutions.Product;
-import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.PersonType;
 import lombok.*;
 

@@ -70,7 +70,7 @@ public class AccountController {
     }
 
 
-    @GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetAccountDTO> getLoginAccount() {
         // Temporarily faking the data, should be a call to a getVerifiedAccounts method
         GetAccountDTO account = new GetAccountDTO();

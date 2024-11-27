@@ -1,10 +1,8 @@
 package com.ftn.event_hopper.dtos.users.person;
 
-import com.ftn.event_hopper.models.shared.Location;
 import com.ftn.event_hopper.models.users.PersonType;
 import lombok.*;
 
-import java.time.Period;
 import java.util.Collection;
 import java.util.UUID;
 
