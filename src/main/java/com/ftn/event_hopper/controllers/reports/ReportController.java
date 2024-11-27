@@ -44,7 +44,7 @@ public class ReportController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetReportDTO> getReport(@RequestParam UUID id){
+    public ResponseEntity<GetReportDTO> getReport(@PathVariable UUID id){
 
         GetReportDTO report = new GetReportDTO();
 
