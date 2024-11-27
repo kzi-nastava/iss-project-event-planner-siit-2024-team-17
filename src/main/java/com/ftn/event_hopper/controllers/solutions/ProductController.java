@@ -2,11 +2,13 @@ package com.ftn.event_hopper.controllers.solutions;
 
 import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.models.shared.ProductStatus;
+import com.ftn.event_hopper.models.users.PersonType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -193,6 +195,25 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
+
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedProductDTO> createProduct(@RequestBody CreateProductDTO product) {
+        CreatedProductDTO createdProduct = new CreatedProductDTO();
+        createdProduct.setId(UUID.randomUUID());
+        createdProduct.setName(product.getName());
+        createdProduct.setDescription(product.getDescription());
+        createdProduct.setPictures(product.getPictures());
+        createdProduct.setAvailable(product.isAvailable());
+        createdProduct.setVisible(product.isVisible());
+        createdProduct.setPriceId(product.getPriceId());
+        createdProduct.setEventTypesIds(product.getEventTypesIds());
+        createdProduct.setCategoryId(product.getCategoryId());
+
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    }
+    
+    
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteProduct(@PathVariable UUID id) {
         // Temporarily faking the data, should be a call to a get by id method
