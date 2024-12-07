@@ -36,7 +36,7 @@ public class Account {
     @Column(nullable = true)
     private LocalDateTime suspensionTimestamp;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private PersonType type;
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)

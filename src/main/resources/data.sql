@@ -116,7 +116,7 @@ INSERT INTO events (max_attendance, privacy, "time", event_type_id, event_organi
 VALUES
     (100, 0, '2024-12-10 10:00:00', 'f0dcab26-9656-491e-bcce-bf23f723e998', '57c05a8a-dd8b-4da8-af73-90961e423f42', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Annual gathering', 'Tech Meetup', 'https://example.com/tech.jpg'),
     (200, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Holiday party', 'Winter Fest', 'https://example.com/winter.jpg'),
-    (NULL, 0, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair', 'https://example.com/spring.jpg');
+    (50, 0, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair', 'https://example.com/spring.jpg');
 
 
 INSERT INTO persons_attending_events (event_id, person_id)
