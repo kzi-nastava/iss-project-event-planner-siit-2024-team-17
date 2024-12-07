@@ -6,6 +6,7 @@ import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.shared.ProductStatus;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,19 +19,69 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+
+@Entity
+@Table(name = "products")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("PRODUCT")
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Column
     private String description;
+
+    @ElementCollection
+    @CollectionTable(name = "product_pictures", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "picture_url")
     private Collection<String> pictures;
+
+    @Column(nullable = false)
     private boolean isAvailable;
+
+    @Column(nullable = false)
     private boolean isVisible;
+
+    @Column(nullable = false)
     private ProductStatus status;
+
+    @Column(nullable = false)
     private LocalDateTime editTimestamp;
+
+    @Column(nullable = false)
     private boolean isDeleted;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "product_prices",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id")
+    )
     private Collection<Price> prices;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
     private Collection<Comment> comments;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
     private Collection<Rating> ratings;
+
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "product_event_types",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "event_type_id", referencedColumnName = "id")
+    )
     private Collection<EventType> eventTypes;
 }
