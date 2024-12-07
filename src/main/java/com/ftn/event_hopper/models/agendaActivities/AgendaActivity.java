@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.models.agendaActivities;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,11 +12,26 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+
+@Entity
+@Table(name = "agenda_activities")
 public class AgendaActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column
     private String description;
+
+    @Column
     private String locationName;
+
+    @Column
     private LocalDateTime start;
+
+    @Column
     private LocalDateTime end;
 }
