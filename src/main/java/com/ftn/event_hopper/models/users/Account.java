@@ -40,7 +40,7 @@ public class Account {
     private PersonType type;
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "person_id", nullable = false, unique = true)
+    @JoinColumn(name = "person_id", nullable = true)
     private Person person;
 
     @OneToOne(optional = true, fetch = FetchType.LAZY)

@@ -26,9 +26,9 @@ public class Location {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private double latitude;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private double longitude;
 }

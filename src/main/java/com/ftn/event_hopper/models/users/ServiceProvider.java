@@ -2,27 +2,51 @@ package com.ftn.event_hopper.models.users;
 
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.solutions.Product;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 
-import java.sql.Time;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
+
+@Entity
+@Table(name = "service_providers")
 public class ServiceProvider extends Person{
+    @Column(nullable = false)
     private String companyName;
+
+    @Column(nullable = false)
     private String companyEmail;
+
+    @Column
     private String companyDescription;
-    private List<String> companyPhotos = new ArrayList<>();
+
+    @Column(nullable = false)
     private LocalTime workStart;
+
+    @Column(nullable = false)
     private LocalTime workEnd;
 
+    @ElementCollection
+    @CollectionTable(name = "company_pictures", joinColumns = @JoinColumn(name = "service_provider_id"))
+    @Column(name = "picture_url")
+    private List<String> companyPhotos = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "location_id", nullable = false)
     private Location companyLocation;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
     private Set<Product> products = new HashSet<>();
 
 }
