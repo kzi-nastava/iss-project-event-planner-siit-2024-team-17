@@ -1,9 +1,7 @@
 package com.ftn.event_hopper.models.solutions;
 
-import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.comments.Comment;
-import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.ratings.Rating;
