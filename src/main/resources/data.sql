@@ -1,20 +1,3 @@
-DO $$
-    DECLARE
-        r RECORD;
-    BEGIN
-        FOR r IN (
-            SELECT table_schema, table_name
-            FROM information_schema.tables
-            WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
-        )
-            LOOP
-                EXECUTE format('TRUNCATE TABLE %I.%I CASCADE;', r.table_schema, r.table_name);
-            END LOOP;
-    END $$;
-
-
-
-
 INSERT INTO locations (latitude, longitude, id, address, city)
 VALUES
     (40.7128, -74.0060, 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', '123 Main St', 'New York'),
