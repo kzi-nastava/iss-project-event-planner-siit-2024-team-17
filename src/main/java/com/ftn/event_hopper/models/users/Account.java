@@ -44,6 +44,6 @@ public class Account {
     private Person person;
 
     @OneToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "registration_request_id")
+    @JoinColumn(name = "registration_request_id", nullable = true)
     private RegistrationRequest registrationRequest;
 }
