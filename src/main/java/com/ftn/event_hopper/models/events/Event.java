@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -46,7 +45,7 @@ public class Event {
     private String picture;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "event_type_id", nullable = false)
     private EventType eventType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
