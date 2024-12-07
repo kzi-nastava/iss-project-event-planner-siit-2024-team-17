@@ -9,6 +9,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -49,7 +51,7 @@ public class Event {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "event_id")
-    private Collection<AgendaActivity> agendaActivities;
+    private Set<AgendaActivity> agendaActivities = new HashSet<AgendaActivity>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "location_id", nullable = false)

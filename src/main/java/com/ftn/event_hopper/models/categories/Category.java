@@ -5,7 +5,8 @@ import com.ftn.event_hopper.models.shared.CategoryStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -40,5 +41,6 @@ public class Category {
             joinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "event_type_id", referencedColumnName = "id")
     )
-    private Collection<EventType> eventTypes;
+    private Set<EventType> eventTypes = new HashSet<EventType>();
+
 }

@@ -10,8 +10,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -40,7 +39,7 @@ public class Product {
     @ElementCollection
     @CollectionTable(name = "product_pictures", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "picture_url")
-    private Collection<String> pictures;
+    private List<String> pictures = new ArrayList<>();
 
     @Column(nullable = false)
     private boolean isAvailable;
@@ -63,15 +62,15 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id")
     )
-    private Collection<Price> prices;
+    private List<Price> prices = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_id")
-    private Collection<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_id")
-    private Collection<Rating> ratings;
+    private Set<Rating> ratings = new HashSet<Rating>();
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = true)
@@ -83,5 +82,5 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "event_type_id", referencedColumnName = "id")
     )
-    private Collection<EventType> eventTypes;
+    private Set<EventType> eventTypes = new HashSet<EventType>();
 }

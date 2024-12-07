@@ -7,8 +7,7 @@ import com.ftn.event_hopper.models.solutions.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -28,12 +27,12 @@ public class Person {
     private String profilePicture;
     private String phoneNumber;
     private PersonType type;
-//    private Location location;
-//
-//    private Collection<Notification> notifications;
-//    private Collection<Event> attendingEvents;
-//    private Collection<Event> favoriteEvents;
-//
-//    private Collection<Product> favoriteProducts;
+    private Location location;
+
+    private List<Notification> notifications = new ArrayList<>();
+    private Set<Event> attendingEvents = new HashSet<>();
+    private Set<Event> favoriteEvents = new HashSet<>();
+
+    private Set<Product> favoriteProducts = new HashSet<>();
 }
 

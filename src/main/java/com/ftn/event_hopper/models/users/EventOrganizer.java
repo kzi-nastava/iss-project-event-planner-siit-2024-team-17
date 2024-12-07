@@ -5,6 +5,8 @@ import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -13,5 +15,5 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class EventOrganizer extends Person{
-    private Collection<Event> events;
+    private Set<Event> events = new HashSet<>();
 }
