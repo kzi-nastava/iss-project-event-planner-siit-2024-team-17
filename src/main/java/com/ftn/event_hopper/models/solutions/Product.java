@@ -30,11 +30,9 @@ public class Product {
     private ProductStatus status;
     private LocalDateTime editTimestamp;
     private boolean isDeleted;
-    private Collection<Rating> ratings;
-    private Collection<Comment> comments;
     private Collection<Price> prices;
-    private ServiceProvider serviceProvider;
+    private Collection<Comment> comments;
+    private Collection<Rating> ratings;
     private Category category;
     private Collection<EventType> eventTypes;
-    private EventOrganizer eventOrganizers;
 }

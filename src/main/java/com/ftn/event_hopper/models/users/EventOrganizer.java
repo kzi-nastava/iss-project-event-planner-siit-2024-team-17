@@ -14,5 +14,4 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class EventOrganizer extends Person{
     private Collection<Event> events;
-    private Collection<Product> products;
 }

@@ -18,9 +18,8 @@ public class Account {
     private String password;
     private boolean isVerified;
     private boolean isActive;
-    private LocalDateTime suspensionTimeStamp;
+    private LocalDateTime suspensionTimestamp;
     private PersonType type;
-
     private Person person;
     private RegistrationRequest registrationRequest;
 }

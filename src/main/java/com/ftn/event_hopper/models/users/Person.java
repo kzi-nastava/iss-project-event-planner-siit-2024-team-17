@@ -29,7 +29,5 @@ public class Person {
     private Collection<Event> favoriteEvents;
 
     private Collection<Product> favoriteProducts;
-
-    private Account account;
 }
 

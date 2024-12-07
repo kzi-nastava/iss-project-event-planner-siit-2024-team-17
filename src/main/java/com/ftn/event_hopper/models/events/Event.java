@@ -6,11 +6,11 @@ import com.ftn.event_hopper.models.invitations.Invitation;
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
-import com.ftn.event_hopper.models.solutions.Product;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 @Getter
@@ -24,13 +24,11 @@ public class Event {
     private String name;
     private int maxAttendance;
     private String description;
-    private EventPrivacyType eventPrivacyType;
-    private LocalDateTime startTime;
+    private EventPrivacyType privacy;
+    private LocalDateTime time;
     private String picture;
     private EventType eventType;
-    private AgendaActivity agendaActivity;
+    private Collection<AgendaActivity> agendaActivities;
     private Location location;
-    private ArrayList<Product> products = new ArrayList<Product>();
-    private ArrayList<Invitation> invitations = new ArrayList<Invitation>();
-    private EventOrganizer eventOrganizer;
+    private Collection<Invitation> invitations;
 }

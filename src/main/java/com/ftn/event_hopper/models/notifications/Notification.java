@@ -19,7 +19,6 @@ public class Notification {
     private UUID id;
     private String content;
     private LocalDateTime timestamp;
-    private Collection<Person> recipients;
     private Event event;
     private Product product;
 }

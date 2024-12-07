@@ -18,6 +18,4 @@ public class EventType {
     private String name;
     private String description;
     private boolean isDeactivated;
-    private ArrayList<Event> events;
-    private ArrayList<Category> categories;
 }
