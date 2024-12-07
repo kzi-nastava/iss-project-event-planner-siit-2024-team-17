@@ -42,7 +42,7 @@ public class ServiceProvider extends Person{
     private List<String> companyPhotos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "location_id", nullable = false)
+    @JoinColumn(name = "company_location_id", nullable = false)
     private Location companyLocation;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

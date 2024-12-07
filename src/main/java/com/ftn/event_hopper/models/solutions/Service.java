@@ -4,7 +4,6 @@ package com.ftn.event_hopper.models.solutions;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.*;
 
 @Getter
@@ -15,7 +14,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 
 @Entity
-@Table(name = "services")
 @DiscriminatorValue("SERVICE")
 public class Service extends Product {
 

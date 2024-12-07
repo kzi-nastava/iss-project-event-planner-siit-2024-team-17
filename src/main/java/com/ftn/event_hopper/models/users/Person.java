@@ -21,7 +21,7 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
