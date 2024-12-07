@@ -2,7 +2,6 @@ package com.ftn.event_hopper.models.events;
 
 import com.ftn.event_hopper.models.agendaActivities.AgendaActivity;
 import com.ftn.event_hopper.models.eventTypes.EventType;
-import com.ftn.event_hopper.models.invitations.Invitation;
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
 import jakarta.persistence.*;
@@ -44,10 +43,16 @@ public class Event {
     @Column
     private String picture;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private EventType eventType;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_id")
     private Collection<AgendaActivity> agendaActivities;
 
-
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
-    private Collection<Invitation> invitations;
+
 }
