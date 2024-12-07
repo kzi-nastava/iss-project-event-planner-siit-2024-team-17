@@ -30,8 +30,8 @@ public class AgendaActivity {
     private String locationName;
 
     @Column
-    private LocalDateTime start;
+    private LocalDateTime startTime;
 
     @Column
-    private LocalDateTime end;
+    private LocalDateTime endTime;
 }

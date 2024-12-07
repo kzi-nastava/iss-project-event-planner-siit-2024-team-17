@@ -12,8 +12,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+
 @Entity
 @Table(name = "reservations")
 public class Reservation {
@@ -25,10 +27,10 @@ public class Reservation {
     private LocalDateTime timestamp;
 
     @Column(nullable = false)
-    private LocalDateTime from;
+    private LocalDateTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime to;
+    private LocalDateTime endTime;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)

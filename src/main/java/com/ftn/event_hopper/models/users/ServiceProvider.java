@@ -46,7 +46,7 @@ public class ServiceProvider extends Person{
     private Location companyLocation;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "service_provider_id")
     private Set<Product> products = new HashSet<>();
 
 }

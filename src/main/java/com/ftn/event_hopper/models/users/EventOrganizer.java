@@ -19,6 +19,6 @@ import java.util.Set;
 public class EventOrganizer extends Person{
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_organizer_id")
     private Set<Event> events = new HashSet<>();
 }
