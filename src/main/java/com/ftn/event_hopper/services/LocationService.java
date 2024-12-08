@@ -17,7 +17,7 @@ public class LocationService {
     @Autowired
     private LocationDTOMapper locationDTOMapper;
 
-    public SimpleLocationDTO findOneSimple(UUID id) {
+    public SimpleLocationDTO findOneSimpleLocation(UUID id) {
         Location location = locationRepository.findById(id).orElseGet(null);
         return locationDTOMapper.fromLocationToSimpleDTO(location);
     }

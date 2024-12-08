@@ -73,7 +73,6 @@ public class PersonDTOMapper {
                 });
 
 
-
     }
 
     public SimplePersonDTO fromPersonToSimpleDTO(Person person) {
@@ -125,6 +124,13 @@ public class PersonDTOMapper {
         Person person = modelMapper.map(createPersonDTO, Person.class);
         // Manually set the Location object since CreatePersonDTO contains LocationDTO
         person.setLocation(locationDTOMapper.fromLocationDTOToLocation(createPersonDTO.getLocation()));
+        return person;
+    }
+
+    public Person fromSimplePersonDTOToPerson(SimplePersonDTO simplePersonDTO) {
+        Person person = modelMapper.map(simplePersonDTO, Person.class);
+        // Manually set the Location object since CreatePersonDTO contains LocationDTO
+        person.setLocation(locationDTOMapper.fromLocationDTOToLocation(simplePersonDTO.getLocation()));
         return person;
     }
 }

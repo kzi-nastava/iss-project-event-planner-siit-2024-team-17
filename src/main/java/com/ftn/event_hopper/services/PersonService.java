@@ -70,4 +70,5 @@ public class PersonService {
         return personDTOMapper.fromPersonToProfileInfoDTO(person);
     }
 
+    // person doesnt have remove/delete
 }

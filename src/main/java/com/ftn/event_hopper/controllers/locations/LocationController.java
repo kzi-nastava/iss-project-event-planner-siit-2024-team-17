@@ -36,7 +36,7 @@ public class LocationController {
 
     @GetMapping(value = "/{id}/simple", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleLocationDTO> getSimpleLocation(@PathVariable UUID id) {
-        return new ResponseEntity<>(locationService.findOneSimple(id), HttpStatus.OK);
+        return new ResponseEntity<>(locationService.findOneSimpleLocation(id), HttpStatus.OK);
     }
 
 
