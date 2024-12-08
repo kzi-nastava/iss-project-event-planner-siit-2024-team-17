@@ -29,8 +29,6 @@ public class EventOrganizerController {
         organizer1.setType(PersonType.EVENT_ORGANIZER);
         organizer1.setLocationId(null); // Mock location
         organizer1.setEventsIds(new ArrayList<>());
-        organizer1.setProductsIds(new ArrayList<>());
-        organizer1.setAccountId(UUID.randomUUID());
         organizer1.setNotificationsIds(new ArrayList<>()); // Mock notifications
         organizer1.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
         organizer1.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
@@ -44,8 +42,6 @@ public class EventOrganizerController {
         organizer2.setType(PersonType.EVENT_ORGANIZER);
         organizer2.setLocationId(null); // Mock location
         organizer2.setEventsIds(new ArrayList<>());
-        organizer2.setProductsIds(new ArrayList<>());
-        organizer2.setAccountId(UUID.randomUUID());
         organizer2.setNotificationsIds(new ArrayList<>()); // Mock notifications
         organizer2.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
         organizer2.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
@@ -73,8 +69,6 @@ public class EventOrganizerController {
         organizer.setType(PersonType.EVENT_ORGANIZER);
         organizer.setLocationId(null); // Mock location
         organizer.setEventsIds(new ArrayList<>());
-        organizer.setProductsIds(new ArrayList<>());
-        organizer.setAccountId(UUID.randomUUID());
         organizer.setNotificationsIds(new ArrayList<>()); // Mock notifications
         organizer.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
         organizer.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
@@ -96,8 +90,6 @@ public class EventOrganizerController {
         createdOrganizer.setType(PersonType.EVENT_ORGANIZER);
         createdOrganizer.setLocationId(organizer.getLocationId());
         createdOrganizer.setEventsIds(organizer.getEventsIds());
-        createdOrganizer.setProductsIds(organizer.getProductsIds());
-        createdOrganizer.setAccountId(organizer.getAccountId());
         createdOrganizer.setNotificationsIds(new ArrayList<>()); // Mock notifications
         createdOrganizer.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
         createdOrganizer.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
@@ -118,8 +110,6 @@ public class EventOrganizerController {
         updatedOrganizer.setType(PersonType.EVENT_ORGANIZER);
         updatedOrganizer.setLocationId(organizer.getLocationId());
         updatedOrganizer.setEventsIds(organizer.getEventsIds());
-        updatedOrganizer.setProductsIds(organizer.getProductsIds());
-        updatedOrganizer.setAccountId(organizer.getAccountId());
 
         return new ResponseEntity<>(updatedOrganizer, HttpStatus.OK);
     }

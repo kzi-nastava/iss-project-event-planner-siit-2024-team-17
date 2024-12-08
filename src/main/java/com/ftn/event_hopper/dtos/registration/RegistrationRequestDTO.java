@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetRegistrationRequestDTO {
+public class RegistrationRequestDTO {
     private UUID id;
     private LocalDateTime timestamp;
     private RegistrationRequestStatus status;

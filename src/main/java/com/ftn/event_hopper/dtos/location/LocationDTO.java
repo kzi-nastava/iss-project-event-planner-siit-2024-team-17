@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetLocationDTO {
+public class LocationDTO {
     private UUID id;
     private String city;
     private String address;
