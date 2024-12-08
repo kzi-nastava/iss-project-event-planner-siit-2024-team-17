@@ -33,4 +33,15 @@ public class LocationDTOMapper {
     public Location fromUpdatedDTOToLocation(UpdatedLocationDTO updatedLocationDTO) {
         return modelMapper.map(updatedLocationDTO, Location.class);
     }
+    
+    public Location fromSimpleLocationDTOToLocation(SimpleLocationDTO locationDTO) {
+        return modelMapper.map(locationDTO, Location.class);
+    }
+
+    public Location fromLocationDTOToLocation(SimpleLocationDTO locationDTO) {
+        return modelMapper.map(locationDTO, Location.class);
+    }
+
+
+
 }

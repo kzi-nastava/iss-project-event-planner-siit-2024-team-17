@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ProfileInfoForPersonDTO {
+public class ProfileForPersonDTO {
     private UUID id;
     private String name;
     private String surname;
