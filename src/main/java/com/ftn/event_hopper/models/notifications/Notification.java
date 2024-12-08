@@ -2,11 +2,10 @@ package com.ftn.event_hopper.models.notifications;
 
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.solutions.Product;
-import com.ftn.event_hopper.models.users.Person;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.UUID;
 
 @Getter
@@ -15,11 +14,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+
+@Entity
+@Table(name = "notifications")
 public class Notification {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
     private LocalDateTime timestamp;
-    private Collection<Person> recipients;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "event_id", nullable = true)
     private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "product_id", nullable = true)
     private Product product;
 }

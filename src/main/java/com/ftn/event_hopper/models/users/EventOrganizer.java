@@ -1,18 +1,24 @@
 package com.ftn.event_hopper.models.users;
 
 import com.ftn.event_hopper.models.events.Event;
-import com.ftn.event_hopper.models.solutions.Product;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
+
+@Entity
+@Table(name = "event_organizers")
 public class EventOrganizer extends Person{
-    private Collection<Event> events;
-    private Collection<Product> products;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_organizer_id")
+    private Set<Event> events = new HashSet<>();
 }

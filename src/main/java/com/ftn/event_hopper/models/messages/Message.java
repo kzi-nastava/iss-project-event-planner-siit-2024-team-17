@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.models.reports;
+package com.ftn.event_hopper.models.messages;
 
 import com.ftn.event_hopper.models.users.Person;
 import jakarta.persistence.*;
@@ -15,23 +15,24 @@ import java.util.UUID;
 @EqualsAndHashCode
 
 @Entity
-@Table(name = "reports")
-public class Report {
+@Table(name = "messages")
+public class Message {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private String reason;
+    @Column
+    private String content;
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "reporter_id", nullable = false)
-    private Person reporter;
+    @JoinColumn(name = "to_id", nullable = false)
+    private Person to;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "reported_id", nullable = false)
-    private Person reported;
+    @JoinColumn(name = "from_id", nullable = false)
+    private Person from;
 }
