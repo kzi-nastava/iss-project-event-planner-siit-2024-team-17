@@ -19,22 +19,6 @@ public class ReservationController {
     public ResponseEntity<Collection<GetReservationDTO>> getReservations() {
         Collection<GetReservationDTO> reservations = new ArrayList<GetReservationDTO>();
 
-        GetReservationDTO reservation = new GetReservationDTO();
-        reservation.setId(UUID.randomUUID());
-        reservation.setEventId(UUID.randomUUID());
-        reservation.setProductId(UUID.randomUUID());
-        reservation.setTimestamp(LocalDateTime.now());
-        reservation.setFrom(LocalDateTime.now());
-        reservation.setTo(LocalDateTime.now());
-
-        GetReservationDTO reservation2 = new GetReservationDTO();
-        reservation2.setId(UUID.randomUUID());
-        reservation2.setEventId(UUID.randomUUID());
-        reservation2.setProductId(UUID.randomUUID());
-        reservation2.setTimestamp(LocalDateTime.now());
-
-        reservations.add(reservation);
-        reservations.add(reservation2);
 
         return new ResponseEntity<Collection<GetReservationDTO>>(reservations, HttpStatus.OK);
     }
@@ -47,12 +31,7 @@ public class ReservationController {
             return new ResponseEntity<GetReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
-        reservation.setId(id);
-        reservation.setEventId(UUID.randomUUID());
-        reservation.setProductId(UUID.randomUUID());
-        reservation.setTimestamp(LocalDateTime.now());
-        reservation.setFrom(LocalDateTime.now());
-        reservation.setTo(LocalDateTime.now());
+
 
         return new ResponseEntity<GetReservationDTO>(reservation, HttpStatus.OK);
     }
@@ -62,10 +41,6 @@ public class ReservationController {
 
         CreatedReservationProductDTO createdReservation = new CreatedReservationProductDTO();
 
-        createdReservation.setId(UUID.randomUUID());
-        createdReservation.setEventId(reservation.getEventId());
-        createdReservation.setProductId(reservation.getProductId());
-        createdReservation.setTimestamp(LocalDateTime.now());
 
         return new ResponseEntity<CreatedReservationProductDTO>(createdReservation, HttpStatus.CREATED);
     }
@@ -75,12 +50,7 @@ public class ReservationController {
 
         CreatedReservationServiceDTO createdReservation = new CreatedReservationServiceDTO();
 
-        createdReservation.setId(UUID.randomUUID());
-        createdReservation.setEventId(reservation.getEventId());
-        createdReservation.setProductId(reservation.getProductId());
-        createdReservation.setTimestamp(LocalDateTime.now());
-        createdReservation.setFrom(reservation.getFrom());
-        createdReservation.setTo(reservation.getTo());
+
 
         return new ResponseEntity<CreatedReservationServiceDTO>(createdReservation, HttpStatus.CREATED);
     }

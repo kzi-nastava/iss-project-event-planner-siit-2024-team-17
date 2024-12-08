@@ -18,11 +18,13 @@ public class PersonDTOMapper {
 
     private final ModelMapper modelMapper;
     private final LocationDTOMapper locationDTOMapper;
+    private final EventDTOMapper eventDTOMapper;
 
     @Autowired
-    public PersonDTOMapper(ModelMapper modelMapper, LocationDTOMapper locationDTOMapper) {
+    public PersonDTOMapper(ModelMapper modelMapper, LocationDTOMapper locationDTOMapper, EventDTOMapper eventDTOMapper) {
         this.modelMapper = modelMapper;
         this.locationDTOMapper = locationDTOMapper;
+        this.eventDTOMapper = eventDTOMapper;
         configureMappings();
     }
 
@@ -46,30 +48,32 @@ public class PersonDTOMapper {
                 .addMappings(mapper -> mapper.using(locationConverter)
                         .map(Person::getLocation, CreatedPersonDTO::setLocation));
 
-
         // For UpdatePersonDTO (with PersonType)
         modelMapper.typeMap(Person.class, UpdatePersonDTO.class)
                 .addMappings(mapper -> mapper.using(locationConverter)
                         .map(Person::getLocation, UpdatePersonDTO::setLocation));
 
-        // For ProfileInfoForPersonDTO
+        // For ProfileForPersonDTO (attending and favorite events mapped)
         modelMapper.typeMap(Person.class, ProfileForPersonDTO.class)
                 .addMappings(mapper -> {
                     mapper.using(locationConverter).map(Person::getLocation, ProfileForPersonDTO::setLocation);
-                    // Assuming attending events, favorite events and products are set elsewhere (e.g. by service layer)
+                    // Mapping attending and favorite events to SimpleEventDTOs
                     mapper.map(Person::getAttendingEvents, ProfileForPersonDTO::setAttendingEvents);
                     mapper.map(Person::getFavoriteEvents, ProfileForPersonDTO::setFavoriteEvents);
                     mapper.map(Person::getFavoriteProducts, ProfileForPersonDTO::setFavoriteProducts);
                 });
 
-        // For HomepageInfoForPersonDTO
+        // For HomepageForPersonDTO (attending and favorite events mapped)
         modelMapper.typeMap(Person.class, HomepageForPersonDTO.class)
                 .addMappings(mapper -> {
                     mapper.using(locationConverter).map(Person::getLocation, HomepageForPersonDTO::setLocation);
-                    // Assuming favorite events and products are set elsewhere
+                    // Mapping favorite events and products
                     mapper.map(Person::getFavoriteEvents, HomepageForPersonDTO::setFavoriteEvents);
                     mapper.map(Person::getFavoriteProducts, HomepageForPersonDTO::setFavoriteProducts);
                 });
+
+
+
     }
 
     public SimplePersonDTO fromPersonToSimpleDTO(Person person) {
@@ -84,16 +88,25 @@ public class PersonDTOMapper {
         return modelMapper.map(person, CreatedPersonDTO.class);
     }
 
-    public UpdatePersonDTO fromPersonToUpdateDTO(Person person) {
-        return modelMapper.map(person, UpdatePersonDTO.class);
-    }
-
     public ProfileForPersonDTO fromPersonToProfileInfoDTO(Person person) {
-        return modelMapper.map(person, ProfileForPersonDTO.class);
+        // Mapping attending and favorite events to SimpleEventDTOs
+        ProfileForPersonDTO dto = modelMapper.map(person, ProfileForPersonDTO.class);
+        dto.setAttendingEvents(person.getAttendingEvents().stream()
+                .map(eventDTOMapper::fromEventToSimpleDTO)
+                .collect(Collectors.toList()));
+        dto.setFavoriteEvents(person.getFavoriteEvents().stream()
+                .map(eventDTOMapper::fromEventToSimpleDTO)
+                .collect(Collectors.toList()));
+        return dto;
     }
 
     public HomepageForPersonDTO fromPersonToHomepageInfoDTO(Person person) {
-        return modelMapper.map(person, HomepageForPersonDTO.class);
+        // Mapping favorite events to SimpleEventDTOs
+        HomepageForPersonDTO dto = modelMapper.map(person, HomepageForPersonDTO.class);
+        dto.setFavoriteEvents(person.getFavoriteEvents().stream()
+                .map(eventDTOMapper::fromEventToSimpleDTO)
+                .collect(Collectors.toList()));
+        return dto;
     }
 
     public List<SimplePersonDTO> fromPersonListToSimpleDTOList(List<Person> persons) {
@@ -114,5 +127,4 @@ public class PersonDTOMapper {
         person.setLocation(locationDTOMapper.fromLocationDTOToLocation(createPersonDTO.getLocation()));
         return person;
     }
-
 }
