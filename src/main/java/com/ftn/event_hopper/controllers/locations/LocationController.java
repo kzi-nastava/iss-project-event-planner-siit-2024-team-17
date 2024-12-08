@@ -16,18 +16,18 @@ import java.util.UUID;
 public class LocationController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetLocationDTO>> getLocations() {
+    public ResponseEntity<Collection<LocationDTO>> getLocations() {
         // Temporarily faking the data
-        Collection<GetLocationDTO> locations = new ArrayList<>();
+        Collection<LocationDTO> locations = new ArrayList<>();
 
-        GetLocationDTO location1 = new GetLocationDTO();
+        LocationDTO location1 = new LocationDTO();
         location1.setId(UUID.randomUUID());
         location1.setCity("Trebinje");
         location1.setAddress("Ulica 1");
         location1.setLatitude(42.7111);
         location1.setLongitude(18.3444);
         
-        GetLocationDTO location2 = new GetLocationDTO();
+        LocationDTO location2 = new LocationDTO();
         location2.setId(UUID.randomUUID());
         location2.setCity("Trebinje");
         location2.setAddress("Ulica 1");
@@ -41,12 +41,12 @@ public class LocationController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetLocationDTO> getLocation(@PathVariable UUID id) {
+    public ResponseEntity<LocationDTO> getLocation(@PathVariable UUID id) {
         // Temporarily faking the data
-        GetLocationDTO location = new GetLocationDTO();
+        LocationDTO location = new LocationDTO();
 
         if (location == null) {
-            return new ResponseEntity<GetLocationDTO>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<LocationDTO>(HttpStatus.NOT_FOUND);
         }
 
         location.setId(id);

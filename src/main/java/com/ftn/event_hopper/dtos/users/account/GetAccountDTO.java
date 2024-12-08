@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.dtos.users.account;
 
+import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
 import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import lombok.Getter;
@@ -20,7 +21,6 @@ public class GetAccountDTO {
     private boolean isActive;
     private LocalDateTime suspensionTimeStamp;
     private PersonType type;
-    private UUID personId;
-    private UUID registrationRequestId;
+    private SimplePersonDTO person;
 }
 

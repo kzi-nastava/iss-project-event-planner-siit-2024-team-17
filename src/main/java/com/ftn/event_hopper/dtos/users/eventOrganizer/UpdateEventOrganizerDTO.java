@@ -12,6 +12,4 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class UpdateEventOrganizerDTO extends UpdatePersonDTO {
-    private Collection<UUID> eventsIds;
-    private Collection<UUID> productsIds;
 }

@@ -19,56 +19,7 @@ import java.util.UUID;
 public class ServiceProviderController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetServiceProviderDTO>> getServiceProviders() {
-        // temporarily faking the data
-        Collection<GetServiceProviderDTO> providers = new ArrayList<>();
-
-        GetServiceProviderDTO provider1 = new GetServiceProviderDTO();
-        provider1.setId(UUID.randomUUID());
-        provider1.setName("Alice");
-        provider1.setSurname("Johnson");
-        provider1.setPhoneNumber("555-1234");
-        provider1.setType(PersonType.SERVICE_PROVIDER);
-        provider1.setCompanyName("Alice Catering");
-        provider1.setCompanyEmail("contact@alicecatering.com");
-        provider1.setCompanyDescription("High-quality catering services.");
-        provider1.setCompanyPhotos(new String[]{"photo1.jpg", "photo2.jpg"});
-        provider1.setWorkStart(Time.valueOf("08:00:00"));
-        provider1.setWorkEnd(Time.valueOf("18:00:00"));
-        provider1.setCompanyLocationId(UUID.randomUUID());
-        provider1.setProductsIds(new ArrayList<>());
-        provider1.setAccountId(UUID.randomUUID());
-
-        provider1.setNotificationsIds(new ArrayList<>()); // Mock notifications
-        provider1.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
-        provider1.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
-        provider1.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
-
-
-        GetServiceProviderDTO provider2 = new GetServiceProviderDTO();
-        provider2.setId(UUID.randomUUID());
-        provider2.setName("Bob");
-        provider2.setSurname("Smith");
-        provider2.setPhoneNumber("555-5678");
-        provider2.setType(PersonType.SERVICE_PROVIDER);
-        provider2.setCompanyName("Bob Rentals");
-        provider2.setCompanyEmail("info@bobrentals.com");
-        provider2.setCompanyDescription("Event equipment rentals.");
-        provider2.setCompanyPhotos(new String[]{"rental1.jpg", "rental2.jpg"});
-        provider2.setWorkStart(Time.valueOf("09:00:00"));
-        provider2.setWorkEnd(Time.valueOf("17:00:00"));
-        provider2.setCompanyLocationId(UUID.randomUUID()); //  location
-        provider2.setProductsIds(new ArrayList<>());
-        provider2.setAccountId(UUID.randomUUID());
-
-        provider2.setNotificationsIds(new ArrayList<>()); // Mock notifications
-        provider2.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
-        provider2.setFavoriteEventsIds(new ArrayList<>()); // Mock favorite events
-        provider2.setFavoriteProductsIds(new ArrayList<>()); // Mock favorite products
-
-
-        providers.add(provider1);
-        providers.add(provider2);
+    public ResponseEntity<Collection<SimpleServiceProviderDTO>> getServiceProviders() {
 
         return new ResponseEntity<>(providers, HttpStatus.OK);
     }
@@ -95,7 +46,6 @@ public class ServiceProviderController {
         provider.setWorkEnd(Time.valueOf("20:00:00"));
         provider.setCompanyLocationId(UUID.randomUUID());
         provider.setProductsIds(new ArrayList<>());
-        provider.setAccountId(UUID.randomUUID());
 
         provider.setNotificationsIds(new ArrayList<>()); // Mock notifications
         provider.setAttendingEventsIds(new ArrayList<>()); // Mock attending events
@@ -116,7 +66,6 @@ public class ServiceProviderController {
         createdProvider.setProfilePicture(provider.getProfilePicture());
         createdProvider.setPhoneNumber(provider.getPhoneNumber());
         createdProvider.setType(PersonType.SERVICE_PROVIDER);
-        createdProvider.setAccountId(UUID.randomUUID());
 
         createdProvider.setCompanyName(provider.getCompanyName());
         createdProvider.setCompanyEmail(provider.getCompanyEmail());
@@ -125,7 +74,6 @@ public class ServiceProviderController {
         createdProvider.setWorkStart(provider.getWorkStart());
         createdProvider.setCompanyLocationId(provider.getCompanyLocationId());
         createdProvider.setProductsIds(provider.getProductsIds());
-        createdProvider.setAccountId(UUID.randomUUID());
 
         createdProvider.setNotificationsIds(new ArrayList<>()); // Mock notifications
         createdProvider.setAttendingEventsIds(new ArrayList<>()); // Mock attending events

@@ -1,7 +1,6 @@
 package com.ftn.event_hopper.controllers.registration;
 
 
-import com.ftn.event_hopper.dtos.location.GetLocationDTO;
 import com.ftn.event_hopper.dtos.registration.*;
 import com.ftn.event_hopper.models.registration.RegistrationRequestStatus;
 import org.springframework.http.HttpStatus;
@@ -19,16 +18,16 @@ import java.util.UUID;
 public class RegistrationRequestController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetRegistrationRequestDTO>> getRegistrationRequests() {
+    public ResponseEntity<Collection<RegistrationRequestDTO>> getRegistrationRequests() {
         // Temporarily faking the data
-        Collection<GetRegistrationRequestDTO> registrationRequests = new ArrayList<>();
+        Collection<RegistrationRequestDTO> registrationRequests = new ArrayList<>();
 
-        GetRegistrationRequestDTO registrationRequest1 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest1 = new RegistrationRequestDTO();
         registrationRequest1.setId(UUID.randomUUID());
         registrationRequest1.setTimestamp(LocalDateTime.now());
         registrationRequest1.setStatus(RegistrationRequestStatus.PENDING);
 
-        GetRegistrationRequestDTO registrationRequest2 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest2 = new RegistrationRequestDTO();
         registrationRequest2.setId(UUID.randomUUID());
         registrationRequest2.setTimestamp(LocalDateTime.now());
         registrationRequest2.setStatus(RegistrationRequestStatus.ACCEPTED);
@@ -40,16 +39,16 @@ public class RegistrationRequestController {
     }
 
     @GetMapping(value = "/pending", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetRegistrationRequestDTO>> getPendingRegistrationRequests() {
+    public ResponseEntity<Collection<RegistrationRequestDTO>> getPendingRegistrationRequests() {
         // Temporarily faking the data
-        Collection<GetRegistrationRequestDTO> registrationRequests = new ArrayList<>();
+        Collection<RegistrationRequestDTO> registrationRequests = new ArrayList<>();
 
-        GetRegistrationRequestDTO registrationRequest1 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest1 = new RegistrationRequestDTO();
         registrationRequest1.setId(UUID.randomUUID());
         registrationRequest1.setTimestamp(LocalDateTime.now());
         registrationRequest1.setStatus(RegistrationRequestStatus.PENDING);
 
-        GetRegistrationRequestDTO registrationRequest2 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest2 = new RegistrationRequestDTO();
         registrationRequest2.setId(UUID.randomUUID());
         registrationRequest2.setTimestamp(LocalDateTime.now());
         registrationRequest2.setStatus(RegistrationRequestStatus.PENDING);
@@ -61,16 +60,16 @@ public class RegistrationRequestController {
     }
 
     @GetMapping(value = "/accepted", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetRegistrationRequestDTO>> getAcceptedRegistrationRequests() {
+    public ResponseEntity<Collection<RegistrationRequestDTO>> getAcceptedRegistrationRequests() {
         // Temporarily faking the data
-        Collection<GetRegistrationRequestDTO> registrationRequests = new ArrayList<>();
+        Collection<RegistrationRequestDTO> registrationRequests = new ArrayList<>();
 
-        GetRegistrationRequestDTO registrationRequest1 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest1 = new RegistrationRequestDTO();
         registrationRequest1.setId(UUID.randomUUID());
         registrationRequest1.setTimestamp(LocalDateTime.now());
         registrationRequest1.setStatus(RegistrationRequestStatus.ACCEPTED);
 
-        GetRegistrationRequestDTO registrationRequest2 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest2 = new RegistrationRequestDTO();
         registrationRequest2.setId(UUID.randomUUID());
         registrationRequest2.setTimestamp(LocalDateTime.now());
         registrationRequest2.setStatus(RegistrationRequestStatus.ACCEPTED);
@@ -82,16 +81,16 @@ public class RegistrationRequestController {
     }
 
     @GetMapping(value = "/rejected", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetRegistrationRequestDTO>> getRejectedRegistrationRequests() {
+    public ResponseEntity<Collection<RegistrationRequestDTO>> getRejectedRegistrationRequests() {
         // Temporarily faking the data
-        Collection<GetRegistrationRequestDTO> registrationRequests = new ArrayList<>();
+        Collection<RegistrationRequestDTO> registrationRequests = new ArrayList<>();
 
-        GetRegistrationRequestDTO registrationRequest1 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest1 = new RegistrationRequestDTO();
         registrationRequest1.setId(UUID.randomUUID());
         registrationRequest1.setTimestamp(LocalDateTime.now());
         registrationRequest1.setStatus(RegistrationRequestStatus.REJECTED);
 
-        GetRegistrationRequestDTO registrationRequest2 = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest2 = new RegistrationRequestDTO();
         registrationRequest2.setId(UUID.randomUUID());
         registrationRequest2.setTimestamp(LocalDateTime.now());
         registrationRequest2.setStatus(RegistrationRequestStatus.REJECTED);
@@ -103,12 +102,12 @@ public class RegistrationRequestController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetRegistrationRequestDTO> getRegistrationRequest(@PathVariable UUID id) {
+    public ResponseEntity<RegistrationRequestDTO> getRegistrationRequest(@PathVariable UUID id) {
         // Temporarily faking the data
-        GetRegistrationRequestDTO registrationRequest = new GetRegistrationRequestDTO();
+        RegistrationRequestDTO registrationRequest = new RegistrationRequestDTO();
 
         if (registrationRequest == null) {
-            return new ResponseEntity<GetRegistrationRequestDTO>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RegistrationRequestDTO>(HttpStatus.NOT_FOUND);
         }
 
         registrationRequest.setId(UUID.randomUUID());
