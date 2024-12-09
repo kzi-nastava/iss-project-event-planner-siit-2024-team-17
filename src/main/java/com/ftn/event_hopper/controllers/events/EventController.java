@@ -1,16 +1,19 @@
 package com.ftn.event_hopper.controllers.events;
 
 
+import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.events.*;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
 import com.ftn.event_hopper.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,32 +58,24 @@ public class EventController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Collection<GetEventDTO>> searchEvents(
-            @RequestParam(value = "locationId", required = false) UUID locationId,
+    public ResponseEntity<PagedResponse<SimpleEventDTO>> getEventsPage(
+            Pageable page,
+            @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "eventTypeId", required = false) UUID eventTypeId,
-            @RequestParam(value = "startTime", required = false) LocalDateTime startTime,
-            @RequestParam(value = "searchContent", required = false) String searchContent,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            //@RequestParam(value = "sort", defaultValue = "startTime,asc") ArrayList<String> sort,
-            @RequestParam(defaultValue = "true") boolean ascending) {
+            @RequestParam(value = "time", required = false) LocalDateTime time,
+            @RequestParam(value = "searchContent", required = false) String searchContent
+    ) {
 
+        Page<SimpleEventDTO> eventsPage = eventService.findAll(page, city, eventTypeId, time, searchContent);
+        List<SimpleEventDTO> events = eventsPage.getContent();
 
-        Collection<GetEventDTO> filteredEvents = new ArrayList<>();
+        PagedResponse<SimpleEventDTO> response = new PagedResponse<>(
+                events,
+                eventsPage.getTotalPages(),
+                eventsPage.getTotalElements()
+        );
 
-        GetEventDTO event1 = new GetEventDTO();
-
-
-
-
-        GetEventDTO event2 = new GetEventDTO();
-
-
-        filteredEvents.add(event1);
-        filteredEvents.add(event2);
-
-        return new ResponseEntity<Collection<GetEventDTO>>(filteredEvents, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
