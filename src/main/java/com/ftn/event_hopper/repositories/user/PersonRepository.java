@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.repositories;
+package com.ftn.event_hopper.repositories.user;
 
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;

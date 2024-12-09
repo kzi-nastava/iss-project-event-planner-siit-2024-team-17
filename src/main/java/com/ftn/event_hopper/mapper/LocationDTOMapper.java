@@ -54,7 +54,7 @@ public class LocationDTOMapper {
         return modelMapper.map(locationDTO, Location.class);
     }
 
-    public Location fromLocationDTOToLocation(SimpleLocationDTO locationDTO) {
+    public Location fromLocationDTOToLocation(LocationDTO locationDTO) {
         return modelMapper.map(locationDTO, Location.class);
     }
 

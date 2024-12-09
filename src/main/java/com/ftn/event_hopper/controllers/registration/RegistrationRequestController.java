@@ -77,7 +77,7 @@ public class RegistrationRequestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedRegistrationRequestDTO> updateRegistrationRequest(@PathVariable UUID id, @RequestBody UpdateRegistrationRequestDTO registrationRequest) {
-        return new ResponseEntity<>(registrationRequestService.update(id, updateRegistrationRequest()), HttpStatus.OK);
+        return new ResponseEntity<>(registrationRequestService.update(id, registrationRequest), HttpStatus.OK);
     }
 
 }

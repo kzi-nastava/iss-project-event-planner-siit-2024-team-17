@@ -1,5 +1,7 @@
-package com.ftn.event_hopper.mapper;
+package com.ftn.event_hopper.mapper.user;
 
+import com.ftn.event_hopper.mapper.EventDTOMapper;
+import com.ftn.event_hopper.mapper.LocationDTOMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,19 +59,17 @@ public class PersonDTOMapper {
         modelMapper.typeMap(Person.class, ProfileForPersonDTO.class)
                 .addMappings(mapper -> {
                     mapper.using(locationConverter).map(Person::getLocation, ProfileForPersonDTO::setLocation);
-                    // Mapping attending and favorite events to SimpleEventDTOs
                     mapper.map(Person::getAttendingEvents, ProfileForPersonDTO::setAttendingEvents);
                     mapper.map(Person::getFavoriteEvents, ProfileForPersonDTO::setFavoriteEvents);
-                    mapper.map(Person::getFavoriteProducts, ProfileForPersonDTO::setFavoriteProducts);
+                    //mapper.map(Person::getFavoriteProducts, ProfileForPersonDTO::setFavoriteProducts);  IGNORING THIS FOR NOW
                 });
 
         // For HomepageForPersonDTO (attending and favorite events mapped)
         modelMapper.typeMap(Person.class, HomepageForPersonDTO.class)
                 .addMappings(mapper -> {
                     mapper.using(locationConverter).map(Person::getLocation, HomepageForPersonDTO::setLocation);
-                    // Mapping favorite events and products
                     mapper.map(Person::getFavoriteEvents, HomepageForPersonDTO::setFavoriteEvents);
-                    mapper.map(Person::getFavoriteProducts, HomepageForPersonDTO::setFavoriteProducts);
+                    //mapper.map(Person::getFavoriteProducts, HomepageForPersonDTO::setFavoriteProducts); IGNORING THIS FOR NOW
                 });
 
 
@@ -122,15 +122,14 @@ public class PersonDTOMapper {
 
     public Person fromCreatePersonDTOToPerson(CreatePersonDTO createPersonDTO) {
         Person person = modelMapper.map(createPersonDTO, Person.class);
-        // Manually set the Location object since CreatePersonDTO contains LocationDTO
-        person.setLocation(locationDTOMapper.fromLocationDTOToLocation(createPersonDTO.getLocation()));
+        person.setLocation(locationDTOMapper.fromSimpleLocationDTOToLocation(createPersonDTO.getLocation()));
         return person;
     }
 
     public Person fromSimplePersonDTOToPerson(SimplePersonDTO simplePersonDTO) {
         Person person = modelMapper.map(simplePersonDTO, Person.class);
         // Manually set the Location object since CreatePersonDTO contains LocationDTO
-        person.setLocation(locationDTOMapper.fromLocationDTOToLocation(simplePersonDTO.getLocation()));
+        person.setLocation(locationDTOMapper.fromSimpleLocationDTOToLocation(simplePersonDTO.getLocation()));
         return person;
     }
 }

@@ -28,6 +28,15 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/simple",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getSimpleAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllSimpleAccounts();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDTO> getAccount(@RequestBody UUID id) {
         AccountDTO account = accountService.findOneAccount(id);
@@ -46,14 +55,7 @@ public class AccountController {
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/simple",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleAccountDTO>> getSimpleAccounts() {
-        List<SimpleAccountDTO> accounts = accountService.findAllSimpleAccounts();
-        if(accounts == null) {
-            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(accounts, HttpStatus.OK);
-    }
+
 
     @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleAccountDTO>> getVerifiedAccounts() {

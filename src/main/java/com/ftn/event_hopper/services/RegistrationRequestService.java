@@ -2,6 +2,7 @@ package com.ftn.event_hopper.services;
 
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
+import com.ftn.event_hopper.dtos.registration.UpdateRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.registration.UpdatedRegistrationRequestDTO;
 import com.ftn.event_hopper.mapper.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
@@ -41,7 +42,7 @@ public class RegistrationRequestService {
         return registrationRequestRepository.save(request);
     }
 
-    public UpdatedRegistrationRequestDTO update(UUID id, UpdatedRegistrationRequestDTO requestDTO) {
+    public UpdatedRegistrationRequestDTO update(UUID id, UpdateRegistrationRequestDTO requestDTO) {
         RegistrationRequest request = registrationRequestRepository.findById(id).orElseGet(null);
         if(request!= null) {
             request.setStatus(requestDTO.getStatus());

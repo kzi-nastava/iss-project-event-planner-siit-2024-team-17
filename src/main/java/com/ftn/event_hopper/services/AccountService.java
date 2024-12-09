@@ -1,9 +1,9 @@
 package com.ftn.event_hopper.services;
 
 import com.ftn.event_hopper.dtos.users.account.*;
-import com.ftn.event_hopper.mapper.AccountDTOMapper;
+import com.ftn.event_hopper.mapper.user.AccountDTOMapper;
 import com.ftn.event_hopper.models.users.Account;
-import com.ftn.event_hopper.repositories.AccountRepository;
+import com.ftn.event_hopper.repositories.user.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +27,17 @@ public class AccountService {
     }
 
     public List<SimpleAccountDTO> findAllActive() {
-        List<Account> accounts = accountRepository.findByActive(true);
+        List<Account> accounts = accountRepository.findByIsActive(true);
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
     public List<SimpleAccountDTO> findAllVerified(){
-        List<Account> accounts = accountRepository.findByVerified(true);
+        List<Account> accounts = accountRepository.findByIsVerified(true);
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
     public List<SimpleAccountDTO> findAllInactive() {
-        List<Account> accounts = accountRepository.findByActive(false);
+        List<Account> accounts = accountRepository.findByIsActive(false);
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 

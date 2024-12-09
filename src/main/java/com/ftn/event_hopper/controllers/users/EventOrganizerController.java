@@ -13,6 +13,7 @@ import java.util.UUID;
 @RequestMapping("/api/event-organizers")
 public class EventOrganizerController {
 
+    /*
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GetEventOrganizerDTO>> getEventOrganizers() {
 
@@ -41,9 +42,12 @@ public class EventOrganizerController {
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteEventOrganizer(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteEventOrganizer(@PathVariable UUID id) {}
 
 
         return new ResponseEntity<>("Event Organizer with ID " + id + " deleted successfully.", HttpStatus.NO_CONTENT);
     }
+
+
+     */
 }
