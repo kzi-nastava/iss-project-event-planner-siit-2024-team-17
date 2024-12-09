@@ -72,10 +72,9 @@ VALUES
 
 INSERT INTO categories (is_deleted, status, id, description, name)
 VALUES
-    (FALSE, 0, 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', 'Category for technology', 'Technology'),
+    (FALSE, 1, 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', 'Category for technology', 'Technology'),
     (FALSE, 1, 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'Category for arts and culture', 'Arts'),
-    (TRUE, 2, 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'Deprecated category', 'Legacy');
-
+    (FALSE, 0, 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'Deprecated category', 'Legacy');
 
 INSERT INTO reports ("timestamp", id, reported_id, reporter_id, reason)
 VALUES
@@ -102,8 +101,7 @@ INSERT INTO category_event_types (category_id, event_type_id)
 VALUES
     ('b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a'),
     ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', '5de088d0-7bff-44f5-b144-51d6a24e740b'),
-    ('c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'f0dcab26-9656-491e-bcce-bf23f723e998');
-
+    ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'f0dcab26-9656-491e-bcce-bf23f723e998');
 
 INSERT INTO company_pictures (service_provider_id, picture_url)
 VALUES
@@ -116,7 +114,11 @@ INSERT INTO events (max_attendance, privacy, "time", event_type_id, event_organi
 VALUES
     (100, 0, '2024-12-10 10:00:00', 'f0dcab26-9656-491e-bcce-bf23f723e998', '57c05a8a-dd8b-4da8-af73-90961e423f42', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Annual gathering', 'Tech Meetup', 'https://example.com/tech.jpg'),
     (200, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Holiday party', 'Winter Fest', 'https://example.com/winter.jpg'),
-    (50, 0, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair', 'https://example.com/spring.jpg');
+    (300, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '8c216a1f-6d65-4256-95e0-6a820d5fb902', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', 'Birthday', 'https://example.com/winter.jpg'),
+    (100, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Anniversary party', 'Anniversary', 'https://example.com/winter.jpg'),
+    (50, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '6915ce46-d213-424b-a3c4-035767714df0', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Halloween party', 'halloween', 'https://example.com/winter.jpg'),
+    (400, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'f1ad3604-fef5-439a-8adb-45776a019a55', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', ' Birthday', 'https://example.com/winter.jpg'),
+    (800, 0, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair', 'https://example.com/spring.jpg');
 
 
 INSERT INTO persons_attending_events (event_id, person_id)
@@ -156,10 +158,9 @@ VALUES
 
 INSERT INTO products (cancellation_window_days, duration_minutes, is_auto_accept, is_available, is_deleted, is_visible, reservation_window_days, status, edit_timestamp, category_id, id, service_provider_id, type, description, name)
 VALUES
-    (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'service', 'A professional IT consultation', 'Tech Consultation'),
-    (5, 180, false, true, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'product', 'A cleaning service for offices', 'Office Cleaning'),
-    (10, 90, true, false, false, false, 3, 2, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'service', 'A professional cleaning service for homes', 'Home Cleaning');
-
+    (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
+    (5, 180, false, true, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning'),
+    (10, 90, true, false, false, false, 3, 2, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES

@@ -12,6 +12,9 @@ import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.locations.Location;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class EventDTOMapper {
     private final ModelMapper modelMapper;
@@ -39,6 +42,14 @@ public class EventDTOMapper {
     }
 
     public SimpleEventDTO fromEventToSimpleDTO(Event event) {
+
         return modelMapper.map(event, SimpleEventDTO.class);
+    }
+
+    public List<SimpleEventDTO> fromEventListToSimpleDTOList(List<Event> events) {
+
+        return events.stream()
+                .map(this::fromEventToSimpleDTO)
+                .collect(Collectors.toList());
     }
 }
