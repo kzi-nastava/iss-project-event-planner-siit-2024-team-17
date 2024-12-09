@@ -1,48 +1,74 @@
 package com.ftn.event_hopper.services;
 
-
-import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
-import com.ftn.event_hopper.mapper.PersonDTOMapper;
+import com.ftn.event_hopper.dtos.users.person.*;
+import com.ftn.event_hopper.mapper.user.PersonDTOMapper;
+import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
-import com.ftn.event_hopper.repositories.PersonRepository;
+import com.ftn.event_hopper.repositories.user.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
     private PersonDTOMapper personDTOMapper;
 
-    public Person findOne(UUID id) {
-        return personRepository.findById(id).orElseGet(null);
+    public SimplePersonDTO findOne(UUID id) {
+        Person person = personRepository.findById(id).orElseGet(null);
+        return personDTOMapper.fromPersonToSimpleDTO(person);
     }
 
     public List<SimplePersonDTO> findAll() {
         List<Person> persons = personRepository.findAll();
-
-        // Map the list of Person entities to a list of SimplePersonDTOs
-        return persons.stream()
-                .map(personDTOMapper::fromPersonToDTO)
-                .collect(Collectors.toList());
+        return personDTOMapper.fromPersonListToSimpleDTOList(persons);
     }
 
-    public Page<Person> findAll(Pageable page) {
-        return personRepository.findAll(page);
+    public List<SimplePersonDTO> findByType(PersonType type) {
+        List<Person> persons = personRepository.findByType(type);
+        return personDTOMapper.fromPersonListToSimpleDTOList(persons);
     }
 
-    public Person findByType(PersonType type) {
-        return personRepository.findByType(type);
+    public CreatedPersonDTO create(CreatePersonDTO personDTO){
+        Person person = personDTOMapper.fromCreatePersonDTOToPerson(personDTO);
+        this.save(person);
+        return personDTOMapper.fromPersonToCreatedDTO(person);
+    }
+
+    public UpdatedPersonDTO update(UUID id, UpdatePersonDTO personDTO){
+        Person person = personRepository.findById(id).orElseGet(null);
+        if(person!= null){
+            person.setName(personDTO.getName());
+            person.setSurname(personDTO.getSurname());
+            person.setProfilePicture(personDTO.getProfilePicture());
+            person.setPhoneNumber(personDTO.getPhoneNumber());
+            person.setType(personDTO.getType());
+            Location location = person.getLocation();
+            location.setCity(personDTO.getLocation().getCity());
+            location.setAddress(personDTO.getLocation().getAddress());
+            this.save(person);
+        }
+        return personDTOMapper.fromPersonToUpdatedDTO(person);
     }
 
     public Person save(Person person) {
         return personRepository.save(person);
     }
+
+    public HomepageForPersonDTO getHomepage(UUID id){
+        Person person = personRepository.findById(id).orElseGet(null);
+        return personDTOMapper.fromPersonToHomepageInfoDTO(person);
+    }
+
+    public ProfileForPersonDTO getProfile(UUID id){
+        Person person = personRepository.findById(id).orElseGet(null);
+        return personDTOMapper.fromPersonToProfileInfoDTO(person);
+    }
+
+    // person doesnt have remove/delete
 }

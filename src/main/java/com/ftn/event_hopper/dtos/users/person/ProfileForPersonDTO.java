@@ -13,7 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ProfileInfoForPersonDTO {
+/*Main difference between this and simple is that the favorite events/products are included, as well as
+ * the attending events necessary for the calendar*/
+public class ProfileForPersonDTO {
     private UUID id;
     private String name;
     private String surname;

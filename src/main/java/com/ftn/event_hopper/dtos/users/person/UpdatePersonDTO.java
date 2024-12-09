@@ -13,7 +13,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class UpdatePersonDTO {
-    private UUID id;
     private String name;
     private String surname;
     private String profilePicture;

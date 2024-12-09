@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class HomepageInfoForPersonDTO {
+public class HomepageForPersonDTO {
     private String name;
     private String surname;
     private SimpleLocationDTO location;
