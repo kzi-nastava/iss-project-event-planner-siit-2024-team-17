@@ -31,6 +31,11 @@ public class AccountService {
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
+    public List<SimpleAccountDTO> findAllVerified(){
+        List<Account> accounts = accountRepository.findByVerified(true);
+        return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
+    }
+
     public List<SimpleAccountDTO> findAllInactive() {
         List<Account> accounts = accountRepository.findByActive(false);
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
@@ -50,10 +55,6 @@ public class AccountService {
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
-    public List<SimpleAccountDTO> getAllVerified(){
-        List<Account> accounts = accountRepository.findByVerified(true);
-        return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
-    }
 
     public CreatedAccountDTO create(CreateAccountDTO accountDTO){
         Account account = accountDTOMapper.fromCreateDTOToAccount(accountDTO);

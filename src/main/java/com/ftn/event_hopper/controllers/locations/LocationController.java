@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.controllers.locations;
 
 import com.ftn.event_hopper.dtos.location.*;
+import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
 import com.ftn.event_hopper.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,12 +32,20 @@ public class LocationController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LocationDTO> getLocation(@PathVariable UUID id) {
-        return new ResponseEntity<>(locationService.findOneLocation(id), HttpStatus.OK);
+        LocationDTO location = locationService.findOneLocation(id);
+        if (location == null) {
+            return new ResponseEntity<LocationDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/simple", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleLocationDTO> getSimpleLocation(@PathVariable UUID id) {
-        return new ResponseEntity<>(locationService.findOneSimpleLocation(id), HttpStatus.OK);
+        SimpleLocationDTO location = locationService.findOneSimpleLocation(id);
+        if (location == null) {
+            return new ResponseEntity<SimpleLocationDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
 

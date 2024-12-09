@@ -7,6 +7,7 @@ import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.Person;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class AccountDTOMapper {
     private final ModelMapper modelMapper;
     private final PersonDTOMapper personDTOMapper;
 
+    @Autowired
     public AccountDTOMapper(ModelMapper modelMapper, PersonDTOMapper personDTOMapper) {
         this.modelMapper = modelMapper;
         this.personDTOMapper = personDTOMapper;

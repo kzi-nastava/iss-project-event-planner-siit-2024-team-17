@@ -1,5 +1,7 @@
 package com.ftn.event_hopper.controllers.users;
 
+import com.ftn.event_hopper.dtos.users.account.AccountDTO;
+import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,23 +22,39 @@ public class PersonController {
     private PersonService personService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SimplePersonDTO>> getPersons() {
-        return new ResponseEntity<>(personService.findAll(), HttpStatus.OK);
+    public ResponseEntity<Collection<SimplePersonDTO>> getPersons() {
+        List<SimplePersonDTO> accounts = personService.findAll();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimplePersonDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/homepage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HomepageForPersonDTO> getHomepage(@PathVariable UUID id) {
-        return new ResponseEntity<>(personService.getHomepage(id), HttpStatus.OK);
+        HomepageForPersonDTO homePageForPerson = personService.getHomepage(id);
+        if (homePageForPerson == null) {
+            return new ResponseEntity<HomepageForPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(homePageForPerson, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileForPersonDTO> getProfile(@PathVariable UUID id) {
-        return new ResponseEntity<>(personService.getProfile(id), HttpStatus.OK);
+        ProfileForPersonDTO profileForPerson = personService.getProfile(id);
+        if (profileForPerson == null) {
+            return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimplePersonDTO> getPerson(@PathVariable UUID id) {
-        return new ResponseEntity<>(personService.findOne(id), HttpStatus.OK);
+        SimplePersonDTO person = personService.findOne(id);
+        if (person == null) {
+            return new ResponseEntity<SimplePersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(person , HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

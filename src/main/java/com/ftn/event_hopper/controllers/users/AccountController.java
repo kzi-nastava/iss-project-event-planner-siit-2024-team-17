@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
+import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,42 +21,74 @@ public class AccountController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccountDTO>> getAccounts() {
-        return new ResponseEntity<>(accountService.findAllAccounts(), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/simple",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleAccountDTO>> getSimpleAccounts() {
-        return new ResponseEntity<>(accountService.findAllSimpleAccounts(), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleAccountDTO>> getVerifiedAccounts() {
-        return new ResponseEntity<>(accountService.getAllVerified(), HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleAccountDTO> getLoginAccount(@RequestBody LoginDTO loginDTO) {
-        return new ResponseEntity<>(accountService.findByEmailAndPassword(loginDTO), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/active", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleAccountDTO>> getActiveAccounts() {
-        return new ResponseEntity<>(accountService.findAllActive(), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleAccountDTO>> getInactiveAccounts() {
-        return new ResponseEntity<>(accountService.findAllInactive(), HttpStatus.OK);
+        List<AccountDTO> accounts = accountService.findAllAccounts();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<AccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDTO> getAccount(@RequestBody UUID id) {
-        return new ResponseEntity<>(accountService.findOneAccount(id) , HttpStatus.NOT_FOUND);
+        AccountDTO account = accountService.findOneAccount(id);
+        if (account == null) {
+            return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/simple", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleAccountDTO> getSimpleAccount(@RequestBody UUID id) {
-        return new ResponseEntity<>(accountService.findOneSimpleAccount(id) , HttpStatus.NOT_FOUND);
+        SimpleAccountDTO account = accountService.findOneSimpleAccount(id);
+        if (account == null) {
+            return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/simple",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getSimpleAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllSimpleAccounts();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getVerifiedAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllVerified();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleAccountDTO> getLoginAccount(@RequestBody LoginDTO loginDTO) {
+        SimpleAccountDTO account = accountService.findByEmailAndPassword(loginDTO);
+        if(account == null) {
+            return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/active", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getActiveAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllActive();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getInactiveAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllInactive();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,6 +98,10 @@ public class AccountController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdateAccountDTO accountDTO) {
+        UpdatedAccountDTO updatedAccount = accountService.update(id, accountDTO);
+        if(updatedAccount == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(accountService.update(id, accountDTO), HttpStatus.OK);
     }
 
