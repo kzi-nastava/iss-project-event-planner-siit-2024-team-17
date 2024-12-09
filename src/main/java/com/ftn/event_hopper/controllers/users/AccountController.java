@@ -38,7 +38,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountDTO> getAccount(@RequestBody UUID id) {
+    public ResponseEntity<AccountDTO> getAccount(@PathVariable UUID id) {
         AccountDTO account = accountService.findOneAccount(id);
         if (account == null) {
             return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
@@ -47,7 +47,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "/{id}/simple", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleAccountDTO> getSimpleAccount(@RequestBody UUID id) {
+    public ResponseEntity<SimpleAccountDTO> getSimpleAccount(@PathVariable UUID id) {
         SimpleAccountDTO account = accountService.findOneSimpleAccount(id);
         if (account == null) {
             return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
