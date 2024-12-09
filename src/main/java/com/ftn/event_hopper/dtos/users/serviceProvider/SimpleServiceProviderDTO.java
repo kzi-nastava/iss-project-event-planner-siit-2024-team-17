@@ -5,7 +5,7 @@ import com.ftn.event_hopper.dtos.location.LocationDTO;
 import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
 import lombok.*;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -18,8 +18,8 @@ public class SimpleServiceProviderDTO extends SimplePersonDTO {
     private String companyEmail;
     private String companyDescription;
     private List<String> companyPhotos;
-    private Time workStart;
-    private Time workEnd;
+    private LocalTime workStart;
+    private LocalTime workEnd;
 
     private LocationDTO companyLocation;
 }

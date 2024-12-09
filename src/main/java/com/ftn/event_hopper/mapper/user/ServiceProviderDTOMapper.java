@@ -1,11 +1,9 @@
 package com.ftn.event_hopper.mapper.user;
 
-import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.SimpleServiceProviderDTO;
 import com.ftn.event_hopper.dtos.location.LocationDTO;
 import com.ftn.event_hopper.mapper.LocationDTOMapper;
 import com.ftn.event_hopper.models.locations.Location;
-import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Converter;

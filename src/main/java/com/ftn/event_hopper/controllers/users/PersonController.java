@@ -1,7 +1,5 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.users.account.AccountDTO;
-import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/persons")
 public class PersonController {
-
     @Autowired
     private PersonService personService;
 

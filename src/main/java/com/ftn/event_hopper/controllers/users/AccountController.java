@@ -1,6 +1,5 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

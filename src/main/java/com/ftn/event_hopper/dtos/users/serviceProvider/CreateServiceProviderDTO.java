@@ -6,7 +6,7 @@ import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.users.person.CreatePersonDTO;
 import lombok.*;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class CreateServiceProviderDTO extends CreatePersonDTO {
     private String companyEmail;
     private String companyDescription;
     private List<String> companyPhotos;
-    private Time workStart;
+    private LocalTime workStart;
 
     private LocationDTO companyLocation;
     private Set<SimpleProductDTO> products;

@@ -5,10 +5,8 @@ import com.ftn.event_hopper.dtos.location.LocationDTO;
 import com.ftn.event_hopper.dtos.users.person.CreatedPersonDTO;
 import lombok.*;
 
-import java.sql.Time;
-import java.util.Collection;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,6 +18,6 @@ public class CreatedServiceProviderDTO extends CreatedPersonDTO {
     private String companyEmail;
     private String companyDescription;
     private List<String> companyPhotos;
-    private Time workStart;
+    private LocalTime workStart;
     private LocationDTO companyLocation;
 }
