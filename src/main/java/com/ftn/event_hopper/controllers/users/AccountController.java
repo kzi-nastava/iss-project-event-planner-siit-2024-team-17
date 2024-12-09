@@ -103,7 +103,7 @@ public class AccountController {
         if(updatedAccount == null) {
             return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(accountService.update(id, accountDTO), HttpStatus.OK);
+        return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

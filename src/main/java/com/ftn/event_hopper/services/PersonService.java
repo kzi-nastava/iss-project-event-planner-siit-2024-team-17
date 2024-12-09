@@ -51,6 +51,7 @@ public class PersonService {
             Location location = person.getLocation();
             location.setCity(personDTO.getLocation().getCity());
             location.setAddress(personDTO.getLocation().getAddress());
+            person.setLocation(location);
             this.save(person);
         }
         return personDTOMapper.fromPersonToUpdatedDTO(person);

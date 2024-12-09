@@ -1,15 +1,12 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.users.serviceProvider.SimpleServiceProviderDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.*;
 import com.ftn.event_hopper.services.ServiceProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +36,29 @@ public class ServiceProviderController {
         return new ResponseEntity<>(provider, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/{id}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileForServiceProviderDTO> getProfile(@PathVariable UUID id) {
+        ProfileForServiceProviderDTO profile = serviceProviderService.getProfile(id);
+        if (profile == null) {
+            return new ResponseEntity<ProfileForServiceProviderDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(profile, HttpStatus.OK);
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedServiceProviderDTO> createServiceProvider(@RequestBody CreateServiceProviderDTO providerDTO) {
+        return new ResponseEntity<>(serviceProviderService.create(providerDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedServiceProviderDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdateServiceProviderDTO providerDTO) {
+        UpdatedServiceProviderDTO updatedProvider = serviceProviderService.update(id, providerDTO);
+        if(updatedProvider == null) {
+            return new ResponseEntity<UpdatedServiceProviderDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedProvider, HttpStatus.OK);
+    }
 
 
 }

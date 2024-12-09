@@ -1,6 +1,6 @@
 package com.ftn.event_hopper.mapper.user;
 
-import com.ftn.event_hopper.dtos.users.serviceProvider.SimpleServiceProviderDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.*;
 import com.ftn.event_hopper.dtos.location.LocationDTO;
 import com.ftn.event_hopper.mapper.LocationDTOMapper;
 import com.ftn.event_hopper.models.locations.Location;
@@ -35,14 +35,44 @@ public class ServiceProviderDTOMapper {
         // Custom mapping for ServiceProvider -> SimpleServiceProviderDTO
         modelMapper.typeMap(ServiceProvider.class, SimpleServiceProviderDTO.class)
                 .addMappings(mapper -> {
-                    mapper.map(ServiceProvider::getCompanyName, SimpleServiceProviderDTO::setCompanyName);
-                    mapper.map(ServiceProvider::getCompanyEmail, SimpleServiceProviderDTO::setCompanyEmail);
-                    mapper.map(ServiceProvider::getCompanyDescription, SimpleServiceProviderDTO::setCompanyDescription);
-                    mapper.map(ServiceProvider::getCompanyPhotos, SimpleServiceProviderDTO::setCompanyPhotos);
-                    mapper.map(ServiceProvider::getWorkStart, SimpleServiceProviderDTO::setWorkStart);
-                    mapper.map(ServiceProvider::getWorkEnd, SimpleServiceProviderDTO::setWorkEnd);
                     mapper.using(locationConverter)
                             .map(ServiceProvider::getCompanyLocation, SimpleServiceProviderDTO::setCompanyLocation);
+                });
+
+
+        // Custom mapping for ServiceProvider -> CreatedServiceProviderDTO
+        modelMapper.typeMap(ServiceProvider.class, CreatedServiceProviderDTO.class)
+                .addMappings(mapper -> {
+                    mapper.using(locationConverter)
+                            .map(ServiceProvider::getCompanyLocation, CreatedServiceProviderDTO::setCompanyLocation);
+                });
+
+        // Custom mapping for ServiceProvider -> CreateServiceProviderDTO
+        modelMapper.typeMap(ServiceProvider.class, CreateServiceProviderDTO.class)
+                .addMappings(mapper -> {
+                    mapper.using(locationConverter)
+                            .map(ServiceProvider::getCompanyLocation, CreateServiceProviderDTO::setCompanyLocation);
+                });
+
+        // Custom mapping for ServiceProvider -> ProfileForServiceProviderDTO
+        modelMapper.typeMap(ServiceProvider.class, ProfileForServiceProviderDTO.class)
+                .addMappings(mapper -> {
+                    mapper.using(locationConverter)
+                            .map(ServiceProvider::getCompanyLocation, ProfileForServiceProviderDTO::setCompanyLocation);
+                });
+
+        // Custom mapping for ServiceProvider -> UpdatedServiceProviderDTO
+        modelMapper.typeMap(ServiceProvider.class, UpdatedServiceProviderDTO.class)
+                .addMappings(mapper -> {
+                    mapper.using(locationConverter)
+                            .map(ServiceProvider::getCompanyLocation, UpdatedServiceProviderDTO::setCompanyLocation);
+                });
+
+        // Custom mapping for ServiceProvider -> UpdateServiceProviderDTO
+        modelMapper.typeMap(ServiceProvider.class, UpdateServiceProviderDTO.class)
+                .addMappings(mapper -> {
+                    mapper.using(locationConverter)
+                            .map(ServiceProvider::getCompanyLocation, UpdateServiceProviderDTO::setCompanyLocation);
                 });
     }
 
@@ -50,7 +80,34 @@ public class ServiceProviderDTOMapper {
         return modelMapper.map(serviceProvider, SimpleServiceProviderDTO.class);
     }
 
+    public CreateServiceProviderDTO fromServiceProviderToCreateDTO(ServiceProvider serviceProvider) {
+        return modelMapper.map(serviceProvider, CreateServiceProviderDTO.class);
+    }
+
+    public CreatedServiceProviderDTO fromServiceProviderToCreatedDTO(ServiceProvider serviceProvider) {
+        return modelMapper.map(serviceProvider, CreatedServiceProviderDTO.class);
+    }
+
+    public ProfileForServiceProviderDTO fromServiceProviderToProfileDTO(ServiceProvider serviceProvider) {
+        return modelMapper.map(serviceProvider, ProfileForServiceProviderDTO.class);
+    }
+
+    public UpdateServiceProviderDTO fromServiceProviderToUpdateDTO(ServiceProvider serviceProvider) {
+        return modelMapper.map(serviceProvider, UpdateServiceProviderDTO.class);
+    }
+
+    public UpdatedServiceProviderDTO fromServiceProviderToUpdatedDTO(ServiceProvider serviceProvider) {
+        return modelMapper.map(serviceProvider, UpdatedServiceProviderDTO.class);
+    }
+
+
     public ServiceProvider fromSimpleServiceProviderDTOToServiceProvider(SimpleServiceProviderDTO dto) {
+        ServiceProvider serviceProvider = modelMapper.map(dto, ServiceProvider.class);
+        serviceProvider.setCompanyLocation(locationDTOMapper.fromLocationDTOToLocation(dto.getCompanyLocation()));
+        return serviceProvider;
+    }
+
+    public ServiceProvider fromCreateServiceProviderDTOToServiceProvider(CreateServiceProviderDTO dto) {
         ServiceProvider serviceProvider = modelMapper.map(dto, ServiceProvider.class);
         serviceProvider.setCompanyLocation(locationDTOMapper.fromLocationDTOToLocation(dto.getCompanyLocation()));
         return serviceProvider;

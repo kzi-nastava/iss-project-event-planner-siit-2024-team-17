@@ -65,6 +65,10 @@ public class LocationController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedLocationDTO> updateLocation(@PathVariable UUID id, @RequestBody UpdateLocationDTO locationDTO) {
-        return new ResponseEntity<>(locationService.update(id, locationDTO), HttpStatus.OK);
+        UpdatedLocationDTO updatedLocation = locationService.update(id, locationDTO);
+        if(updatedLocation == null) {
+            return new ResponseEntity<UpdatedLocationDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
     }
 }
