@@ -1,14 +1,7 @@
-package com.ftn.event_hopper.services;
+package com.ftn.event_hopper.services.user;
 
-import com.ftn.event_hopper.dtos.users.account.AccountDTO;
-import com.ftn.event_hopper.dtos.users.account.CreateAccountDTO;
-import com.ftn.event_hopper.dtos.users.account.CreatedAccountDTO;
-import com.ftn.event_hopper.dtos.users.account.UpdatedAccountDTO;
 import com.ftn.event_hopper.dtos.users.eventOrganizer.*;
-import com.ftn.event_hopper.dtos.users.serviceProvider.UpdateServiceProviderDTO;
-import com.ftn.event_hopper.dtos.users.serviceProvider.UpdatedServiceProviderDTO;
 import com.ftn.event_hopper.mapper.user.EventOrganizerDTOMapper;
-import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.repositories.user.EventOrganizerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
