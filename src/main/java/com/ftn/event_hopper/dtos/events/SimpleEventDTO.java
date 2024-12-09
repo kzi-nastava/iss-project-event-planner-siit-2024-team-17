@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.dtos.events;
 
+import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -72,9 +72,9 @@ VALUES
 
 INSERT INTO categories (is_deleted, status, id, description, name)
 VALUES
-    (FALSE, 0, 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', 'Category for technology', 'Technology'),
+    (FALSE, 1, 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', 'Category for technology', 'Technology'),
     (FALSE, 1, 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'Category for arts and culture', 'Arts'),
-    (TRUE, 2, 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'Deprecated category', 'Legacy');
+    (FALSE, 0, 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'Deprecated category', 'Legacy');
 
 
 INSERT INTO reports ("timestamp", id, reported_id, reporter_id, reason)
@@ -102,7 +102,7 @@ INSERT INTO category_event_types (category_id, event_type_id)
 VALUES
     ('b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a'),
     ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', '5de088d0-7bff-44f5-b144-51d6a24e740b'),
-    ('c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'f0dcab26-9656-491e-bcce-bf23f723e998');
+    ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'f0dcab26-9656-491e-bcce-bf23f723e998');
 
 
 INSERT INTO company_pictures (service_provider_id, picture_url)
@@ -156,9 +156,9 @@ VALUES
 
 INSERT INTO products (cancellation_window_days, duration_minutes, is_auto_accept, is_available, is_deleted, is_visible, reservation_window_days, status, edit_timestamp, category_id, id, service_provider_id, type, description, name)
 VALUES
-    (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'service', 'A professional IT consultation', 'Tech Consultation'),
-    (5, 180, false, true, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'product', 'A cleaning service for offices', 'Office Cleaning'),
-    (10, 90, true, false, false, false, 3, 2, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'service', 'A professional cleaning service for homes', 'Home Cleaning');
+    (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
+    (5, 180, false, true, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning'),
+    (10, 90, true, false, false, false, 3, 2, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
 
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
