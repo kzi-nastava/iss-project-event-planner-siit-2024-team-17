@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -22,12 +23,20 @@ public class LocationController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<LocationDTO>> getLocations() {
-        return new ResponseEntity<>(locationService.findAllLocations(), HttpStatus.OK);
+        List<LocationDTO> locations = locationService.findAllLocations();
+        if(locations == null) {
+            return new ResponseEntity<Collection<LocationDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(locations, HttpStatus.OK);
     }
 
     @GetMapping(value = "/simple", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleLocationDTO>> getSimpleLocations() {
-        return new ResponseEntity<>(locationService.findAllSimpleLocations(), HttpStatus.OK);
+        List<SimpleLocationDTO> locations = locationService.findAllSimpleLocations();
+        if (locations == null) {
+            return new ResponseEntity<Collection<SimpleLocationDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(locations, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,6 +67,4 @@ public class LocationController {
     public ResponseEntity<UpdatedLocationDTO> updateLocation(@PathVariable UUID id, @RequestBody UpdateLocationDTO locationDTO) {
         return new ResponseEntity<>(locationService.update(id, locationDTO), HttpStatus.OK);
     }
-
 }
-

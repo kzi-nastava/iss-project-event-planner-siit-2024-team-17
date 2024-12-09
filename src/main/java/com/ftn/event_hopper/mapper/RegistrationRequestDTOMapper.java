@@ -42,7 +42,6 @@ public class RegistrationRequestDTOMapper {
         return modelMapper.map(requestDto, UpdateRegistrationRequestDTO.class);
     }
 
-
     public List<RegistrationRequestDTO> fromRegistrationRequestListToDTOList(List<RegistrationRequest> requests) {
         return requests.stream()
                 .map(this::fromRegistrationRequestToDTO)

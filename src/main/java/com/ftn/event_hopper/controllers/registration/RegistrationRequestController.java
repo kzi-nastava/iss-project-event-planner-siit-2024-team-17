@@ -39,7 +39,7 @@ public class RegistrationRequestController {
         if (registrationRequest == null) {
             return new ResponseEntity<RegistrationRequestDTO>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(registrationRequestService.findOne(id), HttpStatus.OK);
+        return new ResponseEntity<>(registrationRequest, HttpStatus.OK);
     }
 
     @GetMapping(value = "/pending", produces = MediaType.APPLICATION_JSON_VALUE)

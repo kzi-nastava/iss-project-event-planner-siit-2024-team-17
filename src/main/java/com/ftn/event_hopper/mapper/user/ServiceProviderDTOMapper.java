@@ -37,6 +37,12 @@ public class ServiceProviderDTOMapper {
         // Custom mapping for ServiceProvider -> SimpleServiceProviderDTO
         modelMapper.typeMap(ServiceProvider.class, SimpleServiceProviderDTO.class)
                 .addMappings(mapper -> {
+                    mapper.map(ServiceProvider::getCompanyName, SimpleServiceProviderDTO::setCompanyName);
+                    mapper.map(ServiceProvider::getCompanyEmail, SimpleServiceProviderDTO::setCompanyEmail);
+                    mapper.map(ServiceProvider::getCompanyDescription, SimpleServiceProviderDTO::setCompanyDescription);
+                    mapper.map(ServiceProvider::getCompanyPhotos, SimpleServiceProviderDTO::setCompanyPhotos);
+                    mapper.map(ServiceProvider::getWorkStart, SimpleServiceProviderDTO::setWorkStart);
+                    mapper.map(ServiceProvider::getWorkEnd, SimpleServiceProviderDTO::setWorkEnd);
                     mapper.using(locationConverter)
                             .map(ServiceProvider::getCompanyLocation, SimpleServiceProviderDTO::setCompanyLocation);
                 });
