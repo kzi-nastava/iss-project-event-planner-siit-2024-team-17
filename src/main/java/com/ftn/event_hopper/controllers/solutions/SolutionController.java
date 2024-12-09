@@ -3,6 +3,7 @@ package com.ftn.event_hopper.controllers.solutions;
 import com.ftn.event_hopper.dtos.reports.GetReportDTO;
 import com.ftn.event_hopper.dtos.solutions.GetProductDTO;
 import com.ftn.event_hopper.dtos.solutions.GetServiceDTO;
+import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,119 +20,32 @@ import java.util.UUID;
 public class SolutionController{
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetProductDTO>> getSolutions(){
-        Collection<GetProductDTO> solutions = new ArrayList<>();
+    public ResponseEntity<Collection<SimpleProductDTO>> getSolutions(){
+        Collection<SimpleProductDTO> solutions = new ArrayList<>();
 
-        GetProductDTO productDTO = new GetProductDTO();
-        productDTO.setId(UUID.randomUUID());
-        productDTO.setName("Test Product");
-        productDTO.setDescription("Test Description");
-        productDTO.setPictures(new ArrayList<>());
-        productDTO.setAvailable(true);
-        productDTO.setVisible(true);
-        productDTO.setStatus(ProductStatus.APPROVED);
-        productDTO.setRatingsIds(new ArrayList<>());
-        productDTO.setCommentsIds(new ArrayList<>());
-        productDTO.setPriceId(UUID.randomUUID());
-        productDTO.setServiceProviderId(UUID.randomUUID());
-        productDTO.setCategoryId(UUID.randomUUID());
-        productDTO.setEventTypesIds(new ArrayList<>());
 
-        GetServiceDTO serviceDTO = new GetServiceDTO();
-        serviceDTO.setId(UUID.randomUUID());
-        serviceDTO.setName("Test Product");
-        serviceDTO.setDescription("Test Description");
-        serviceDTO.setPictures(new ArrayList<>());
-        serviceDTO.setAvailable(true);
-        serviceDTO.setVisible(true);
-        serviceDTO.setStatus(ProductStatus.APPROVED);
-        serviceDTO.setRatingsIds(new ArrayList<>());
-        serviceDTO.setCommentsIds(new ArrayList<>());
-        serviceDTO.setPriceId(UUID.randomUUID());
-        serviceDTO.setServiceProviderId(UUID.randomUUID());
-        serviceDTO.setCategoryId(UUID.randomUUID());
-        serviceDTO.setEventTypesIds(new ArrayList<>());
-        serviceDTO.setDurationMinutes(600);
-        serviceDTO.setReservationWindowDays(50);
-        serviceDTO.setCancellationWindowDays(5);
-        serviceDTO.setAutoAccept(false);
-
-        solutions.add(productDTO);
-        solutions.add(serviceDTO);
-
-        return new ResponseEntity<Collection<GetProductDTO>>(solutions, HttpStatus.OK);
+        return new ResponseEntity<>(solutions, HttpStatus.OK);
 
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetProductDTO> getSolution(@PathVariable UUID id){
-        GetProductDTO solution = new GetProductDTO();
+    public ResponseEntity<SimpleProductDTO> getSolution(@PathVariable UUID id){
+        SimpleProductDTO solution = new SimpleProductDTO();
 
         if (solution == null){
-            return new ResponseEntity<GetProductDTO>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        GetProductDTO productDTO = new GetProductDTO();
 
-        productDTO.setId(id);
-        productDTO.setName("Test Product");
-        productDTO.setDescription("Test Description");
-        productDTO.setPictures(new ArrayList<>());
-        productDTO.setAvailable(true);
-        productDTO.setVisible(true);
-        productDTO.setStatus(ProductStatus.APPROVED);
-        productDTO.setRatingsIds(new ArrayList<>());
-        productDTO.setCommentsIds(new ArrayList<>());
-        productDTO.setPriceId(UUID.randomUUID());
-        productDTO.setServiceProviderId(UUID.randomUUID());
-        productDTO.setCategoryId(UUID.randomUUID());
-        productDTO.setEventTypesIds(new ArrayList<>());
-
-        return new ResponseEntity<GetProductDTO>(solution, HttpStatus.OK);
+        return new ResponseEntity<>(solution, HttpStatus.OK);
     }
 
     @GetMapping(value = "/persons-top-5/{usersId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GetProductDTO>> getTop5Solutions(@PathVariable UUID usersId){
         Collection<GetProductDTO> top5Solutions= new ArrayList<>();
 
-        GetProductDTO productDTO = new GetProductDTO();
-        productDTO.setId(UUID.randomUUID());
-        productDTO.setName("Test Product");
-        productDTO.setDescription("Test Description");
-        productDTO.setPictures(new ArrayList<>());
-        productDTO.setAvailable(true);
-        productDTO.setVisible(true);
-        productDTO.setStatus(ProductStatus.APPROVED);
-        productDTO.setRatingsIds(new ArrayList<>());
-        productDTO.setCommentsIds(new ArrayList<>());
-        productDTO.setPriceId(UUID.randomUUID());
-        productDTO.setServiceProviderId(UUID.randomUUID());
-        productDTO.setCategoryId(UUID.randomUUID());
-        productDTO.setEventTypesIds(new ArrayList<>());
 
-        GetServiceDTO serviceDTO = new GetServiceDTO();
-        serviceDTO.setId(UUID.randomUUID());
-        serviceDTO.setName("Test Product");
-        serviceDTO.setDescription("Test Description");
-        serviceDTO.setPictures(new ArrayList<>());
-        serviceDTO.setAvailable(true);
-        serviceDTO.setVisible(true);
-        serviceDTO.setStatus(ProductStatus.APPROVED);
-        serviceDTO.setRatingsIds(new ArrayList<>());
-        serviceDTO.setCommentsIds(new ArrayList<>());
-        serviceDTO.setPriceId(UUID.randomUUID());
-        serviceDTO.setServiceProviderId(UUID.randomUUID());
-        serviceDTO.setCategoryId(UUID.randomUUID());
-        serviceDTO.setEventTypesIds(new ArrayList<>());
-        serviceDTO.setDurationMinutes(600);
-        serviceDTO.setReservationWindowDays(50);
-        serviceDTO.setCancellationWindowDays(5);
-        serviceDTO.setAutoAccept(false);
-
-        top5Solutions.add(productDTO);
-        top5Solutions.add(serviceDTO);
-
-        return new ResponseEntity<Collection<GetProductDTO>>(top5Solutions, HttpStatus.OK);
+        return new ResponseEntity<>(top5Solutions, HttpStatus.OK);
     }
 
     @GetMapping("/search")
