@@ -157,8 +157,13 @@ VALUES
 INSERT INTO products (cancellation_window_days, duration_minutes, is_auto_accept, is_available, is_deleted, is_visible, reservation_window_days, status, edit_timestamp, category_id, id, service_provider_id, type, description, name)
 VALUES
     (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
-    (5, 180, false, true, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning'),
+    (5, 180, false, true, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning product for offices', 'Office Cleaning Machine'),
+    (7, 100, false, true, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','60a40bb5-5769-46dc-934d-16efae389ff7', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning mop for offices', 'Office Mop Cleaner'),
     (10, 90, true, false, false, false, 3, 2, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
+
+
+
+
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES
@@ -197,9 +202,11 @@ VALUES
 
 INSERT INTO persons_favorite_products (person_id, product_id)
 VALUES
-    ('d7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
+    ('d7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
+    ('d7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
     ('4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
-    ('b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '935e1b52-6180-419a-bbe8-909db6cd6cbc');
+    ('4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
+    ('b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '60a40bb5-5769-46dc-934d-16efae389ff7');
 
 
 INSERT INTO comments (status, author_id, id, product_id, content)

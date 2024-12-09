@@ -6,6 +6,7 @@ import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,6 +17,6 @@ public class HomepageForPersonDTO {
     private String name;
     private String surname;
     private SimpleLocationDTO location;
-    private List<SimpleEventDTO> favoriteEvents;
-    private List<SimpleProductDTO> favoriteProducts;
+    private Set<SimpleEventDTO> favoriteEvents;
+    private Set<SimpleProductDTO> favoriteProducts;
 }
