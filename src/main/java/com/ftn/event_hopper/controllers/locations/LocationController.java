@@ -1,7 +1,6 @@
 package com.ftn.event_hopper.controllers.locations;
 
 import com.ftn.event_hopper.dtos.location.*;
-import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
 import com.ftn.event_hopper.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -65,6 +63,10 @@ public class LocationController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedLocationDTO> updateLocation(@PathVariable UUID id, @RequestBody UpdateLocationDTO locationDTO) {
-        return new ResponseEntity<>(locationService.update(id, locationDTO), HttpStatus.OK);
+        UpdatedLocationDTO updatedLocation = locationService.update(id, locationDTO);
+        if(updatedLocation == null) {
+            return new ResponseEntity<UpdatedLocationDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
     }
 }

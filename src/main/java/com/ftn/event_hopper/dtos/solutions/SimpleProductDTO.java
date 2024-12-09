@@ -1,8 +1,6 @@
 package com.ftn.event_hopper.dtos.solutions;
 
 import com.ftn.event_hopper.dtos.categories.SimpleCategoryDTO;
-import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
-import com.ftn.event_hopper.dtos.users.eventOrganizer.SimpleEventOrganizerDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +17,4 @@ public class SimpleProductDTO {
     private String description;
     private List<String> pictures;
     private SimpleCategoryDTO category;
-    private SimpleLocationDTO location;
-    private SimpleEventOrganizerDTO eventOrganizer;
 }

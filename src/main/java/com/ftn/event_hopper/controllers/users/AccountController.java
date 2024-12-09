@@ -1,8 +1,7 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
-import com.ftn.event_hopper.services.AccountService;
+import com.ftn.event_hopper.services.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -104,7 +103,7 @@ public class AccountController {
         if(updatedAccount == null) {
             return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(accountService.update(id, accountDTO), HttpStatus.OK);
+        return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

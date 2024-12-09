@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     List<Category> findByStatus(CategoryStatus categoryStatus);
+
+    List<Category> findByStatusAndIsDeletedFalse(CategoryStatus categoryStatus);
 }

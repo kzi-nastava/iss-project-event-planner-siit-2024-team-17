@@ -1,9 +1,7 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.users.account.AccountDTO;
-import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.dtos.users.person.*;
-import com.ftn.event_hopper.services.PersonService;
+import com.ftn.event_hopper.services.user.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +15,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/persons")
 public class PersonController {
-
     @Autowired
     private PersonService personService;
 
@@ -28,6 +25,15 @@ public class PersonController {
             return new ResponseEntity<Collection<SimplePersonDTO>>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimplePersonDTO> getPerson(@PathVariable UUID id) {
+        SimplePersonDTO person = personService.findOne(id);
+        if (person == null) {
+            return new ResponseEntity<SimplePersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(person , HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/homepage", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,15 +54,6 @@ public class PersonController {
         return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimplePersonDTO> getPerson(@PathVariable UUID id) {
-        SimplePersonDTO person = personService.findOne(id);
-        if (person == null) {
-            return new ResponseEntity<SimplePersonDTO>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(person , HttpStatus.OK);
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedPersonDTO> createPerson(@RequestBody CreatePersonDTO personDTO) {
         return new ResponseEntity<>(personService.create(personDTO), HttpStatus.CREATED);
@@ -64,7 +61,11 @@ public class PersonController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedPersonDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdatePersonDTO person) {
-        return new ResponseEntity<>(personService.update(id, person), HttpStatus.OK);
+        UpdatedPersonDTO updatedPersonDTO = personService.update(id, person);
+        if(updatedPersonDTO == null){
+            return new ResponseEntity<UpdatedPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedPersonDTO, HttpStatus.OK);
     }
     
 }

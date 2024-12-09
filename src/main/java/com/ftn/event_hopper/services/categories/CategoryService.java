@@ -31,7 +31,7 @@ public class CategoryService {
     private EventTypeRepository eventTypeRepository;
 
     public List<CategoryDTO> findAllApproved() {
-        List<Category> categories = categoryRepository.findByStatus(CategoryStatus.APPROVED);
+        List<Category> categories = categoryRepository.findByStatusAndIsDeletedFalse(CategoryStatus.APPROVED);
         return categoryMapper.fromCategoryListToCategoryDTOList(categories);
     }
 
@@ -112,7 +112,7 @@ public class CategoryService {
 
     public boolean deleteCategory(UUID id) {
         Category existing = categoryRepository.findById(id).orElse(null);
-        if (existing == null) {
+        if (existing == null && !existing.isDeleted() && existing.getEventTypes().isEmpty()) {
             return false;
         }
 

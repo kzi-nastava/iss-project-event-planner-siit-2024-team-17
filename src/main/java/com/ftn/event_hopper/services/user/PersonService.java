@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.services;
+package com.ftn.event_hopper.services.user;
 
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.mapper.user.PersonDTOMapper;
@@ -51,6 +51,7 @@ public class PersonService {
             Location location = person.getLocation();
             location.setCity(personDTO.getLocation().getCity());
             location.setAddress(personDTO.getLocation().getAddress());
+            person.setLocation(location);
             this.save(person);
         }
         return personDTOMapper.fromPersonToUpdatedDTO(person);
