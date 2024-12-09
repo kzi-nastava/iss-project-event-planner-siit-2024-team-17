@@ -13,6 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Component
 public class ProductDTOMapper {
@@ -41,5 +44,11 @@ public class ProductDTOMapper {
 
     public SimpleProductDTO fromProductToSimpleDTO(Product product) {
         return modelMapper.map(product, SimpleProductDTO.class);
+    }
+
+    public List<SimpleProductDTO> fromProductListToSimpleDTOList(List<Product> products) {
+        return products.stream()
+                .map(this::fromProductToSimpleDTO)
+                .collect(Collectors.toList());
     }
 }

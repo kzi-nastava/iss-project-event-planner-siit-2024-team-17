@@ -70,36 +70,12 @@ public class EventController {
         Collection<GetEventDTO> filteredEvents = new ArrayList<>();
 
         GetEventDTO event1 = new GetEventDTO();
-        event1.setId(UUID.randomUUID());
-        event1.setName("Event 1");
-        event1.setDescription("Event Description");
-        event1.setMaxAttendance(80);
-        event1.setEventPrivacyType(EventPrivacyType.PRIVATE);
-        event1.setStartTime(LocalDateTime.now());
-        event1.setPicture("picture.jpg");
-        event1.setEventTypeId(UUID.randomUUID());
-        event1.setAgendaActivityId(UUID.randomUUID());
-        event1.setLocationId(UUID.randomUUID());
-        event1.setProductsIds(new ArrayList<>());
-        event1.setInvitationsIds(new ArrayList<>());
-        event1.setEventOrganizerId(UUID.randomUUID());
+
 
 
 
         GetEventDTO event2 = new GetEventDTO();
-        event2.setId(UUID.randomUUID());
-        event2.setName("Event 2");
-        event2.setDescription("Event Description 2");
-        event2.setMaxAttendance(80);
-        event2.setEventPrivacyType(EventPrivacyType.PRIVATE);
-        event2.setStartTime(LocalDateTime.now());
-        event2.setPicture("picture2.jpg");
-        event2.setEventTypeId(UUID.randomUUID());
-        event2.setAgendaActivityId(UUID.randomUUID());
-        event2.setLocationId(UUID.randomUUID());
-        event2.setProductsIds(new ArrayList<>());
-        event2.setInvitationsIds(new ArrayList<>());
-        event2.setEventOrganizerId(UUID.randomUUID());
+
 
         filteredEvents.add(event1);
         filteredEvents.add(event2);
@@ -110,18 +86,7 @@ public class EventController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedEventDTO> createEvent(@RequestBody CreateEventDTO event){
         CreatedEventDTO createdEvent = new CreatedEventDTO();
-        createdEvent.setId(UUID.randomUUID());
-        createdEvent.setName(event.getName());
-        createdEvent.setDescription(event.getDescription());
-        createdEvent.setMaxAttendance(event.getMaxAttendance());
-        createdEvent.setEventPrivacyType(event.getEventPrivacyType());
-        createdEvent.setStartTime(event.getStartTime());
-        createdEvent.setEventTypeId(event.getEventTypeId());
-        createdEvent.setLocationId(event.getLocationId());
-        createdEvent.setAgendaActivityId(event.getAgendaActivityId());
-        createdEvent.setProductsIds(event.getProductsIds());
-        createdEvent.setInvitationsIds(event.getInvitationsIds());
-        createdEvent.setEventOrganizerId(event.getEventOrganizerId());
+
 
         return new ResponseEntity<CreatedEventDTO>(createdEvent, HttpStatus.CREATED);
     }

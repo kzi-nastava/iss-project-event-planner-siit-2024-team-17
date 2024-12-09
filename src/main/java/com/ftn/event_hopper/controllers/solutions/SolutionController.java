@@ -1,10 +1,14 @@
 package com.ftn.event_hopper.controllers.solutions;
 
+import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.reports.GetReportDTO;
 import com.ftn.event_hopper.dtos.solutions.GetProductDTO;
 import com.ftn.event_hopper.dtos.solutions.GetServiceDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.models.shared.ProductStatus;
+import com.ftn.event_hopper.services.solutions.ProductService;
+import com.ftn.event_hopper.services.solutions.ServiceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +23,19 @@ import java.util.UUID;
 @RequestMapping("/api/solutions")
 public class SolutionController{
 
+    @Autowired
+    private ServiceService serviceService;
+
+    @Autowired
+    private ProductService productService;
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleProductDTO>> getSolutions(){
-        Collection<SimpleProductDTO> solutions = new ArrayList<>();
+        Collection<SimpleProductDTO> solutions = productService.findAll();
 
+        if(solutions == null){
+            return new ResponseEntity<Collection<SimpleProductDTO>>(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(solutions, HttpStatus.OK);
 
@@ -30,20 +43,22 @@ public class SolutionController{
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleProductDTO> getSolution(@PathVariable UUID id){
-        SimpleProductDTO solution = new SimpleProductDTO();
+        SimpleProductDTO solution = productService.findById(id);
 
         if (solution == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<SimpleProductDTO>(HttpStatus.NOT_FOUND);
         }
-
 
         return new ResponseEntity<>(solution, HttpStatus.OK);
     }
 
     @GetMapping(value = "/persons-top-5/{usersId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetProductDTO>> getTop5Solutions(@PathVariable UUID usersId){
-        Collection<GetProductDTO> top5Solutions= new ArrayList<>();
+    public ResponseEntity<Collection<SimpleProductDTO>> getTop5Solutions(@PathVariable UUID usersId){
+        Collection<SimpleProductDTO> top5Solutions= productService.findTop5(usersId);
 
+        if(top5Solutions == null){
+            return new ResponseEntity<Collection<SimpleProductDTO>>(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(top5Solutions, HttpStatus.OK);
     }

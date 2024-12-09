@@ -18,7 +18,7 @@ public class SimpleEventDTO {
     private UUID id;
     private String name;
     private String description;
-    private LocalDateTime startTime;
+    private LocalDateTime time;
     private String picture;
     private SimpleEventTypeDTO eventType;
     private SimpleLocationDTO location;

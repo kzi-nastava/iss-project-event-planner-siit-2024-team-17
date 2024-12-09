@@ -11,6 +11,7 @@ import com.ftn.event_hopper.repositories.user.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class EventService {
     public Collection<SimpleEventDTO> findTop5(UUID userId) {
 
         Person person = personRepository.findById(userId).orElseGet(null);
-        List<Event> top5Events = eventRepository.findTop5ByLocationIdAndPrivacyOrderByMaxAttendanceDesc(person.getLocation().getId(), EventPrivacyType.PUBLIC);
+        List<Event> top5Events = eventRepository.findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(person.getLocation().getCity(), EventPrivacyType.PUBLIC, LocalDateTime.now());
         return eventDTOMapper.fromEventListToSimpleDTOList(top5Events);
     }
 }
