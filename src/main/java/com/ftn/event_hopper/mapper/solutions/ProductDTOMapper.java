@@ -1,0 +1,36 @@
+package com.ftn.event_hopper.mapper.solutions;
+
+import com.ftn.event_hopper.dtos.categories.SimpleCategoryDTO;
+import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
+import com.ftn.event_hopper.models.categories.Category;
+import com.ftn.event_hopper.models.solutions.Product;
+import org.modelmapper.Converter;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ProductDTOMapper {
+    private final ModelMapper modelMapper;
+    private final CategoryDTOMapper categoryDTOMapper;
+
+    public ProductDTOMapper(ModelMapper modelMapper, CategoryDTOMapper categoryDTOMapper) {
+        this.modelMapper = modelMapper;
+        this.categoryDTOMapper = categoryDTOMapper;
+        configureMappings();
+    }
+
+    private void configureMappings() {
+        Converter<Category, SimpleCategoryDTO> productConverter = context ->
+                categoryDTOMapper.fromCategoryToSimpleCategoryDTO(context.getSource());
+
+        // Custom mapping for Product -> ProductDTO
+        modelMapper.typeMap(Product.class, SimpleProductDTO.class)
+                .addMappings(mapper -> mapper.using(productConverter)
+                        .map(Product::getCategory, SimpleProductDTO::setCategory));
+    }
+
+    public SimpleProductDTO fromProductToSimpleProductDTO(Product product) {
+        return modelMapper.map(product, SimpleProductDTO.class);
+    }
+}

@@ -2,6 +2,7 @@ package com.ftn.event_hopper.services.categories;
 
 import com.ftn.event_hopper.dtos.categories.*;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
+import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.shared.CategoryStatus;
@@ -23,6 +24,9 @@ public class CategoryService {
 
     @Autowired
     private CategoryDTOMapper categoryMapper;
+
+    @Autowired
+    private ProductDTOMapper productMapper;
 
     @Autowired
     private ProductRepository productRepository;
@@ -68,8 +72,7 @@ public class CategoryService {
 
         for (CategorySuggestionDTO suggestion : suggestions) {
             Product product = productRepository.findByCategory_Id(suggestion.getId());
-            suggestion.setForProductId(product.getId());
-            suggestion.setForProductName(product.getName());
+            suggestion.setProduct(productMapper.fromProductToSimpleProductDTO(product));
         }
 
         return suggestions;

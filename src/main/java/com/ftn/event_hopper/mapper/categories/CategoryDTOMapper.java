@@ -82,4 +82,8 @@ public class CategoryDTOMapper {
     public UpdatedCategorySuggestionDTO fromCategoryToUpdatedCategorySuggestionDTO(Category updated) {
         return modelMapper.map(updated, UpdatedCategorySuggestionDTO.class);
     }
+
+    public SimpleCategoryDTO fromCategoryToSimpleCategoryDTO(Category category) {
+        return modelMapper.map(category, SimpleCategoryDTO.class);
+    }
 }
