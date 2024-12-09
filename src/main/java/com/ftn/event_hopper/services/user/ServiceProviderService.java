@@ -1,6 +1,5 @@
-package com.ftn.event_hopper.services;
+package com.ftn.event_hopper.services.user;
 
-import com.ftn.event_hopper.dtos.users.person.CreatedPersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.*;
 import com.ftn.event_hopper.mapper.user.ServiceProviderDTOMapper;
 import com.ftn.event_hopper.models.locations.Location;

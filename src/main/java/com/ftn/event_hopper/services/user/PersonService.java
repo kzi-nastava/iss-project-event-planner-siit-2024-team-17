@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.services;
+package com.ftn.event_hopper.services.user;
 
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.mapper.user.PersonDTOMapper;
@@ -6,6 +6,7 @@ import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.repositories.user.PersonRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,10 @@ public class PersonService {
 
     public SimplePersonDTO findOne(UUID id) {
         Person person = personRepository.findById(id).orElseGet(null);
+
+        Hibernate.initialize(person.getFavoriteEvents());
+        Hibernate.initialize(person.getAttendingEvents());
+        Hibernate.initialize(person.getFavoriteProducts());
         return personDTOMapper.fromPersonToSimpleDTO(person);
     }
 

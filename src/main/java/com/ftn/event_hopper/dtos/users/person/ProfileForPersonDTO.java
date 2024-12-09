@@ -6,6 +6,7 @@ import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -22,7 +23,7 @@ public class ProfileForPersonDTO {
     private String profilePicture;
     private String phoneNumber;
     private SimpleLocationDTO location;
-    private List<SimpleEventDTO> attendingEvents;
-    private List<SimpleEventDTO> favoriteEvents;
-    private List<SimpleProductDTO> favoriteProducts;
+    private Set<SimpleEventDTO> attendingEvents;
+    private Set<SimpleEventDTO> favoriteEvents;
+    private Set<SimpleProductDTO> favoriteProducts;
 }
