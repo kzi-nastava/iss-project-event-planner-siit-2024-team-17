@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreatedCategoryDTO {
+public class CategoryDTO {
     private UUID id;
     private String name;
     private String description;

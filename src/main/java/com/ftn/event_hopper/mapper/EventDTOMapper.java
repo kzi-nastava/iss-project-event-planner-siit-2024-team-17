@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.events.SimpleEventTypeDTO;
+import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.locations.Location;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class EventDTOMapper {
@@ -39,6 +42,14 @@ public class EventDTOMapper {
     }
 
     public SimpleEventDTO fromEventToSimpleDTO(Event event) {
+
         return modelMapper.map(event, SimpleEventDTO.class);
+    }
+
+    public List<SimpleEventDTO> fromEventListToSimpleDTOList(List<Event> events) {
+
+        return events.stream()
+                .map(this::fromEventToSimpleDTO)
+                .collect(Collectors.toList());
     }
 }

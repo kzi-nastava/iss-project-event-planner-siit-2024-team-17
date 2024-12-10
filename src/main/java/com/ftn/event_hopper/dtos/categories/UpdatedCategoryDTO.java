@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.dtos.categories;
 
+import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.models.shared.CategoryStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,5 @@ public class UpdatedCategoryDTO {
     private String name;
     private String description;
     private CategoryStatus status;
-    private Collection<UUID> eventTypesIds;
+    private Collection<SimpleEventTypeDTO> eventTypes;
 }

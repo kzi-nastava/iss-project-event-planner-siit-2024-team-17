@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.dtos.events;
 
+import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class SimpleEventDTO {
     private UUID id;
     private String name;
     private String description;
-    private LocalDateTime startTime;
+    private LocalDateTime time;
     private String picture;
     private SimpleEventTypeDTO eventType;
     private SimpleLocationDTO location;

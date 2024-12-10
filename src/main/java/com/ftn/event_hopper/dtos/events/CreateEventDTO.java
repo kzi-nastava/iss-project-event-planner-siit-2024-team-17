@@ -21,7 +21,7 @@ public class CreateEventDTO {
     private int maxAttendance;
     private String description;
     private EventPrivacyType eventPrivacyType;
-    private LocalDateTime startTime;
+    private LocalDateTime time;
     private String picture;
     private UUID eventTypeId;
     private UUID agendaActivityId;
