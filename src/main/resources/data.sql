@@ -190,6 +190,7 @@ INSERT INTO product_prices (price_id, product_id)
 VALUES
     ('5d2f4a3b-c7a9-4e1a-b8f6-3e7a5c9d2b4f', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
     ('c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
+    ('c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c', '314c1838-8cbe-471c-9403-dc49baad1977'),
     ('9d6b7c5e-a4f2-4a9b-b6c1-3e5f7d2b8a4f', '2eed4933-2477-487e-8b99-c39a9ac939dd');
 
 
