@@ -66,6 +66,7 @@ public class EventController {
             @RequestParam(value = "searchContent", required = false) String searchContent
     ) {
 
+
         Page<SimpleEventDTO> eventsPage = eventService.findAll(page, city, eventTypeId, time, searchContent);
         List<SimpleEventDTO> events = eventsPage.getContent();
 

@@ -14,13 +14,16 @@ import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.user.PersonRepository;
 import com.ftn.event_hopper.repositories.user.ServiceProviderRepository;
 import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,62 +83,64 @@ public class ProductService {
 
     public Page<SimpleProductDTO> findAll(Pageable page, boolean isProduct, boolean isService, UUID categoryId, ArrayList<UUID> eventTypeIds, Double minPrice, Double maxPrice, String searchContent) {
 
-        Page<Product> solutionsPage = productRepository.findAll(page);
-        List<Product> products = solutionsPage.getContent();
+        Specification<Product> specification = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("isDeleted"), false),
+                        criteriaBuilder.equal(root.get("isVisible"), true),
+                        criteriaBuilder.equal(root.get("status"), ProductStatus.APPROVED)
+                ));
 
-        products = products.stream()
-                .filter(product -> !product.isDeleted()) // Exclude deleted products
-                .filter(Product::isVisible)             // Include only visible products
-                .filter(product -> product.getStatus() == ProductStatus.APPROVED) // Include only approved products
-                .collect(Collectors.toList());
+
 
         if (isProduct || isService) {
-            products = products.stream()
-                    .filter(product -> {
-                        String discriminatorValue = product.getClass().getAnnotation(DiscriminatorValue.class).value();
-                        return (isProduct && "PRODUCT".equals(discriminatorValue)) ||
-                                (isService && "SERVICE".equals(discriminatorValue));
-                    })
-                    .collect(Collectors.toList());
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                // Pretpostavljamo da se diskriminatorna vrednost nalazi u koloni "DTYPE"
+                Predicate productPredicate = criteriaBuilder.equal(root.get("type"), "PRODUCT");
+                Predicate servicePredicate = criteriaBuilder.equal(root.get("type"), "SERVICE");
+
+                // Kombinovanje uslova za isProduct i isService
+                if (isProduct && isService) {
+                    return criteriaBuilder.or(productPredicate, servicePredicate);
+                } else if (isProduct) {
+                    return productPredicate;
+                } else {
+                    return servicePredicate;
+                }
+            });
         }
+
 
 
         if (categoryId != null) {
-            products = products.stream()
-                    .filter(product -> product.getCategory() != null && product.getCategory().getId().equals(categoryId))
-                    .collect(Collectors.toList());
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("category").get("id"), categoryId));
         }
 
         if (eventTypeIds != null && !eventTypeIds.isEmpty()) {
-            products = products.stream()
-                    .filter(product -> product.getEventTypes().stream()
-                    .anyMatch(eventType -> eventTypeIds.contains(eventType.getId())))
-                    .collect(Collectors.toList());
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    root.get("eventTypes").get("id").in(eventTypeIds));
         }
 
-        if (minPrice != null || maxPrice != null) {
-            products = products.stream()
-                    .filter(product -> {
-                        Price price = product.getPrices().get(product.getPrices().size() - 1);
-                        boolean matchesMin = (minPrice == null || price.getFinalPrice() >= minPrice);
-                        boolean matchesMax = (maxPrice == null || price.getFinalPrice() <= maxPrice);
-                        return matchesMin && matchesMax;
-                    })
-                    .collect(Collectors.toList());
+        if (minPrice != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
         }
 
-        if (searchContent != null && !searchContent.isEmpty()) {
-            String searchLower = searchContent.toLowerCase();
-            products = products.stream()
-                    .filter(product -> product.getName().toLowerCase().contains(searchLower) ||
-                    (product.getDescription() != null && product.getDescription().toLowerCase().contains(searchLower)))
-                    .collect(Collectors.toList());
+        if (maxPrice != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
         }
 
-        List<SimpleProductDTO> filteredSolutions = productDTOMapper.fromProductListToSimpleDTOList(products);
+        if (StringUtils.hasText(searchContent)) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchContent.toLowerCase() + "%"),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchContent.toLowerCase() + "%")
+                    ));
+        }
 
 
-        return new PageImpl<>(filteredSolutions, page, filteredSolutions.size());
+            return productDTOMapper.fromProductPageToSimpleProductDTOPage(productRepository.findAll(specification, page));
 
-    }
+        }
 }
