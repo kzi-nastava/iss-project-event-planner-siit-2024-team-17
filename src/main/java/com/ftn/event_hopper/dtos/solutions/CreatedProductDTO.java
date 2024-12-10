@@ -25,7 +25,6 @@ public class CreatedProductDTO {
     private Collection<UUID> ratingsIds;
     private Collection<UUID> commentsIds;
     private UUID priceId;
-    private UUID serviceProviderId;
     private UUID categoryId;
     private Collection<UUID> eventTypesIds;
 }

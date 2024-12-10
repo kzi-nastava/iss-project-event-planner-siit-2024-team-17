@@ -56,11 +56,12 @@ public class Product {
     @Column(nullable = false)
     private boolean isDeleted;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "product_prices",
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id")
+
     )
     private List<Price> prices = new ArrayList<>();
 

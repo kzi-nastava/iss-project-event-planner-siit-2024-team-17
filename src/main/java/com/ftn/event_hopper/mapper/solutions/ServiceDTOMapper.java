@@ -1,6 +1,8 @@
 package com.ftn.event_hopper.mapper.solutions;
 
 import com.ftn.event_hopper.dtos.categories.SimpleCategoryDTO;
+import com.ftn.event_hopper.dtos.solutions.CreateServiceDTO;
+import com.ftn.event_hopper.dtos.solutions.CreatedServiceDTO;
 import com.ftn.event_hopper.dtos.solutions.ServiceManagementDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
@@ -39,5 +41,13 @@ public class ServiceDTOMapper {
 
     private ServiceManagementDTO fromServiceToServiceManagementDTO(Service service) {
         return modelMapper.map(service, ServiceManagementDTO.class);
+    }
+
+    public Service fromCreateServiceDTOToService(CreateServiceDTO service) {
+        return modelMapper.map(service, Service.class);
+    }
+
+    public CreatedServiceDTO fromServiceToCreatedServiceDTO(Service newService) {
+        return modelMapper.map(newService, CreatedServiceDTO.class);
     }
 }

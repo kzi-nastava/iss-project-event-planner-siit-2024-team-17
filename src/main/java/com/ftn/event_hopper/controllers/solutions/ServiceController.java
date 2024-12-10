@@ -65,27 +65,7 @@ public class ServiceController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedServiceDTO> createProduct(@RequestBody CreateServiceDTO service) {
-
-        CreatedServiceDTO createdService = new CreatedServiceDTO();
-
-        createdService.setId(UUID.randomUUID());
-        createdService.setName(service.getName());
-        createdService.setDescription(service.getDescription());
-        createdService.setPictures(service.getPictures());
-        createdService.setAvailable(service.isAvailable());
-        createdService.setVisible(service.isVisible());
-        createdService.setStatus(ProductStatus.APPROVED);
-        createdService.setEditTimestamp(LocalDateTime.now());
-        createdService.setRatingsIds(new ArrayList<>());
-        createdService.setCommentsIds(new ArrayList<>());
-        createdService.setServiceProviderId(service.getServiceProviderId());
-        createdService.setCategoryId(service.getCategoryId());
-        createdService.setEventTypesIds(service.getEventTypesIds());
-        createdService.setDurationMinutes(service.getDurationMinutes());
-        createdService.setReservationWindowDays(service.getReservationWindowDays());
-        createdService.setCancellationWindowDays(service.getCancellationWindowDays());
-        createdService.setAutoAccept(service.isAutoAccept());
-        createdService.setDeleted(false);
+        CreatedServiceDTO createdService = serviceService.create(service);
 
         return new ResponseEntity<CreatedServiceDTO>(createdService, HttpStatus.CREATED);
     }

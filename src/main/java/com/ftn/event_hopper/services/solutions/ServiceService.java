@@ -1,10 +1,15 @@
 package com.ftn.event_hopper.services.solutions;
 
+import com.ftn.event_hopper.dtos.solutions.CreateServiceDTO;
+import com.ftn.event_hopper.dtos.solutions.CreatedServiceDTO;
 import com.ftn.event_hopper.dtos.solutions.ServiceManagementDTO;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ServiceDTOMapper;
 import com.ftn.event_hopper.models.prices.Price;
+import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Service;
+import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
+import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,9 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 public class ServiceService {
@@ -26,6 +30,12 @@ public class ServiceService {
 
     @Autowired
     private PriceDTOMapper priceDTOMapper;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private EventTypeRepository eventTypeRepository;
 
 
     public boolean deleteService(UUID id) {
@@ -102,5 +112,30 @@ public class ServiceService {
 
         return all;
 
+    }
+
+    public CreatedServiceDTO create(CreateServiceDTO service) {
+        Service newService = serviceDTOMapper.fromCreateServiceDTOToService(service);
+
+        newService.setId(null);
+        newService.setDeleted(false);
+        newService.setEditTimestamp(LocalDateTime.now());
+        newService.setStatus(ProductStatus.APPROVED);
+
+        newService.setCategory(categoryRepository.findById(service.getCategoryId()).orElse(null));
+
+        newService.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(service.getEventTypesIds())));
+
+        Price price = new Price(null, service.getBasePrice(), service.getDiscount(), service.getFinalPrice(), LocalDateTime.now());
+        List<Price> prices = new ArrayList<>();
+        prices.add(price);
+        newService.setPrices(prices);
+
+        newService = serviceRepository.save(newService);
+        serviceRepository.flush();
+
+        //TODO: Assign new service to ServiceProvider
+        //TODO: Pictures
+        return serviceDTOMapper.fromServiceToCreatedServiceDTO(newService);
     }
 }
