@@ -11,6 +11,7 @@ import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.user.PersonRepository;
 import com.ftn.event_hopper.repositories.user.ServiceProviderRepository;
 import jakarta.persistence.DiscriminatorValue;
@@ -33,6 +34,8 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ServiceRepository serviceRepository;
     @Autowired
     private PersonRepository personRepository;
     @Autowired
@@ -94,11 +97,13 @@ public class ProductService {
 
         if (isProduct || isService) {
             specification = specification.and((root, query, criteriaBuilder) -> {
-                // Pretpostavljamo da se diskriminatorna vrednost nalazi u koloni "DTYPE"
-                Predicate productPredicate = criteriaBuilder.equal(root.get("type"), "PRODUCT");
-                Predicate servicePredicate = criteriaBuilder.equal(root.get("type"), "SERVICE");
+                List<UUID> productIds = productRepository.findProductIds();
+                List<UUID> serviceIds = serviceRepository.findServiceIds();
 
-                // Kombinovanje uslova za isProduct i isService
+                Predicate productPredicate = root.get("id").in(productIds);
+                Predicate servicePredicate = root.get("id").in(serviceIds);
+
+                // Combining conditions for isProduct and isService
                 if (isProduct && isService) {
                     return criteriaBuilder.or(productPredicate, servicePredicate);
                 } else if (isProduct) {
