@@ -33,7 +33,7 @@ public class ServiceProvider extends Person{
     @Column(nullable = false)
     private LocalTime workStart;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalTime workEnd;
 
     @ElementCollection
@@ -41,7 +41,7 @@ public class ServiceProvider extends Person{
     @Column(name = "picture_url")
     private List<String> companyPhotos = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false,  cascade = CascadeType.PERSIST)
     @JoinColumn(name = "company_location_id", nullable = false)
     private Location companyLocation;
 

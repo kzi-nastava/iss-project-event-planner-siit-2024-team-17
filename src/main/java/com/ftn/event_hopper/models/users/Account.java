@@ -39,7 +39,7 @@ public class Account {
     @Column(nullable = false)
     private PersonType type;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "person_id", nullable = true)
     private Person person;
 

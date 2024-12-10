@@ -39,7 +39,7 @@ public class Person {
     @Column(nullable = false)
     private PersonType type;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 

@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.mapper.user;
 
+import com.ftn.event_hopper.dtos.users.person.CreatePersonDTO;
 import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
 import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
@@ -29,6 +30,9 @@ public class AccountDTOMapper {
         Converter<Person, SimplePersonDTO> personConverter = context ->
                 personDTOMapper.fromPersonToSimpleDTO(context.getSource());
 
+        Converter<Person, CreatePersonDTO> createPersonConverter = context ->
+                personDTOMapper.fromPersonToCreateDTO(context.getSource());
+
         // Custom mapping for Account -> SimpleAccountDTO
         modelMapper.typeMap(Account.class, SimpleAccountDTO.class)
                 .addMappings(mapper -> mapper.using(personConverter)
@@ -41,7 +45,7 @@ public class AccountDTOMapper {
 
         // Custom mapping for Account -> CreateAccountDTO
         modelMapper.typeMap(Account.class, CreateAccountDTO.class)
-                .addMappings(mapper -> mapper.using(personConverter)
+                .addMappings(mapper -> mapper.using(createPersonConverter)
                         .map(Account::getPerson, CreateAccountDTO::setPerson));
 
         // Custom mapping for Account -> CreatedAccountDTO
@@ -81,7 +85,7 @@ public class AccountDTOMapper {
 
     public Account fromCreateDTOToAccount(CreateAccountDTO createAccountDTO){
         Account account = modelMapper.map(createAccountDTO, Account.class);
-        account.setPerson(personDTOMapper.fromSimplePersonDTOToPerson(createAccountDTO.getPerson()));
+        account.setPerson(personDTOMapper.fromCreatePersonDTOToPerson(createAccountDTO.getPerson()));
         return account;
     }
 
