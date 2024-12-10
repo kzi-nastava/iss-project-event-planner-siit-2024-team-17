@@ -27,11 +27,7 @@ public class EventOrganizerService {
     }
 
     public CreatedEventOrganizerDTO create(CreateEventOrganizerDTO organizerDTO){
-        Location location = new Location();
-        location.setCity(organizerDTO.getLocation().getCity());
-        location.setAddress(organizerDTO.getLocation().getAddress());
         EventOrganizer organizer = eventOrganizerDTOMapper.fromCreateDTOToEventOrganizer(organizerDTO);
-        organizer.setLocation(location);
         this.save(organizer);
         return eventOrganizerDTOMapper.fromEventOrganizerToCreatedDTO(organizer);
     }

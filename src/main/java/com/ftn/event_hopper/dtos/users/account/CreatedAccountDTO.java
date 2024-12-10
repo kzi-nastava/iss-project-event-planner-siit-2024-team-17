@@ -18,7 +18,6 @@ import java.util.UUID;
 public class CreatedAccountDTO {
     private UUID id;
     private String email;
-    private String password;
     private boolean isVerified;
     private boolean isActive;
     private LocalDateTime suspensionTimeStamp;

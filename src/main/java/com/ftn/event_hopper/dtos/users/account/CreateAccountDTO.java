@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.dtos.users.account;
 
+import com.ftn.event_hopper.dtos.registration.CreateRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.person.CreatePersonDTO;
 import com.ftn.event_hopper.models.users.PersonType;
@@ -20,5 +21,5 @@ public class CreateAccountDTO {
     private LocalDateTime suspensionTimeStamp;
     private PersonType type;
     private CreatePersonDTO person;
-    private RegistrationRequestDTO registrationRequest;
+    private CreateRegistrationRequestDTO registrationRequest;
 }

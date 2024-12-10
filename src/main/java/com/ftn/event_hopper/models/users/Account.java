@@ -43,7 +43,7 @@ public class Account {
     @JoinColumn(name = "person_id", nullable = true)
     private Person person;
 
-    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "registration_request_id", nullable = true)
     private RegistrationRequest registrationRequest;
 }
