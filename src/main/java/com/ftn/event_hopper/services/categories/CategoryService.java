@@ -72,7 +72,7 @@ public class CategoryService {
 
         for (CategorySuggestionDTO suggestion : suggestions) {
             Product product = productRepository.findByCategory_Id(suggestion.getId());
-            suggestion.setProduct(productMapper.fromProductToSimpleProductDTO(product));
+            suggestion.setProduct(productMapper.fromProductToSimpleDTO(product));
         }
 
         return suggestions;

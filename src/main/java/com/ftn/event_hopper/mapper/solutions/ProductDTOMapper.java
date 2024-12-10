@@ -9,6 +9,9 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class ProductDTOMapper {
     private final ModelMapper modelMapper;
@@ -30,7 +33,13 @@ public class ProductDTOMapper {
                         .map(Product::getCategory, SimpleProductDTO::setCategory));
     }
 
-    public SimpleProductDTO fromProductToSimpleProductDTO(Product product) {
+    public SimpleProductDTO fromProductToSimpleDTO(Product product) {
         return modelMapper.map(product, SimpleProductDTO.class);
+    }
+
+    public List<SimpleProductDTO> fromProductListToSimpleDTOList(List<Product> products) {
+        return products.stream()
+                .map(this::fromProductToSimpleDTO)
+                .collect(Collectors.toList());
     }
 }
