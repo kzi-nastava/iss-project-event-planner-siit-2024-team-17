@@ -1,8 +1,6 @@
 package com.ftn.event_hopper.services.solutions;
 
-import com.ftn.event_hopper.dtos.solutions.CreateServiceDTO;
-import com.ftn.event_hopper.dtos.solutions.CreatedServiceDTO;
-import com.ftn.event_hopper.dtos.solutions.ServiceManagementDTO;
+import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ServiceDTOMapper;
 import com.ftn.event_hopper.models.prices.Price;
@@ -137,5 +135,27 @@ public class ServiceService {
         //TODO: Assign new service to ServiceProvider
         //TODO: Pictures
         return serviceDTOMapper.fromServiceToCreatedServiceDTO(newService);
+    }
+
+    public UpdatedServiceDTO update(UpdateServiceDTO service, UUID id) {
+        Service existing = serviceRepository.findById(id).orElse(null);
+        if (existing == null || existing.isDeleted()) {
+            return null;
+        }
+
+        existing.setName(service.getName());
+        existing.setDescription(service.getDescription());
+        existing.setPictures((List<String>) service.getPictures());
+        existing.setAvailable(service.isAvailable());
+        existing.setVisible(service.isVisible());
+        existing.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(service.getEventTypesIds())));
+        existing.setDurationMinutes(service.getDurationMinutes());
+        existing.setReservationWindowDays(service.getReservationWindowDays());
+        existing.setCancellationWindowDays(service.getCancellationWindowDays());
+        existing.setAutoAccept(service.isAutoAccept());
+
+        Service updated = serviceRepository.save(existing);
+        serviceRepository.flush();
+        return serviceDTOMapper.fromServiceToUpdatedServiceDTO(updated);
     }
 }

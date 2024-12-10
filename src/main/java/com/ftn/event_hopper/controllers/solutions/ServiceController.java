@@ -2,7 +2,6 @@ package com.ftn.event_hopper.controllers.solutions;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.solutions.*;
-import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.services.solutions.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,6 +64,9 @@ public class ServiceController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedServiceDTO> createProduct(@RequestBody CreateServiceDTO service) {
         CreatedServiceDTO createdService = serviceService.create(service);
+        if (createdService == null) {
+            return new ResponseEntity<CreatedServiceDTO>(HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<CreatedServiceDTO>(createdService, HttpStatus.CREATED);
     }
@@ -73,21 +74,7 @@ public class ServiceController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedServiceDTO> updateProduct(@RequestBody UpdateServiceDTO service, @PathVariable UUID id) {
 
-        UpdatedServiceDTO updatedService = new UpdatedServiceDTO();
-
-        updatedService.setId(id);
-        updatedService.setName(service.getName());
-        updatedService.setDescription(service.getDescription());
-        updatedService.setPictures(service.getPictures());
-        updatedService.setAvailable(service.isAvailable());
-        updatedService.setVisible(service.isVisible());
-        updatedService.setStatus(ProductStatus.APPROVED);
-        updatedService.setEditTimestamp(LocalDateTime.now());
-        updatedService.setEventTypesIds(service.getEventTypesIds());
-        updatedService.setDurationMinutes(service.getDurationMinutes());
-        updatedService.setReservationWindowDays(service.getReservationWindowDays());
-        updatedService.setCancellationWindowDays(service.getCancellationWindowDays());
-        updatedService.setAutoAccept(service.isAutoAccept());
+        UpdatedServiceDTO updatedService = serviceService.update(service, id);
 
         return new ResponseEntity<UpdatedServiceDTO>(updatedService, HttpStatus.OK);
     }

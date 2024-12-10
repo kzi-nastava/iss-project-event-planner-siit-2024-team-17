@@ -188,7 +188,7 @@ public class ProductController {
         updatedProduct.setPictures(product.getPictures());
         updatedProduct.setAvailable(product.isAvailable());
         updatedProduct.setVisible(product.isVisible());
-        updatedProduct.setPriceId(product.getPriceId());
+//        updatedProduct.setPriceId(product.getPriceId());
         updatedProduct.setEventTypesIds(product.getEventTypesIds());
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
