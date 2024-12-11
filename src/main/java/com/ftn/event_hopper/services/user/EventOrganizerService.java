@@ -2,6 +2,7 @@ package com.ftn.event_hopper.services.user;
 
 import com.ftn.event_hopper.dtos.users.eventOrganizer.*;
 import com.ftn.event_hopper.mapper.user.EventOrganizerDTOMapper;
+import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.repositories.user.EventOrganizerRepository;
 import org.springframework.beans.factory.annotation.Autowired;

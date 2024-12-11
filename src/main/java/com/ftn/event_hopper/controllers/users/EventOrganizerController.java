@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/event-organizers")
+@CrossOrigin(origins = "*")
 public class EventOrganizerController {
     @Autowired
     private EventOrganizerService eventOrganizerService;

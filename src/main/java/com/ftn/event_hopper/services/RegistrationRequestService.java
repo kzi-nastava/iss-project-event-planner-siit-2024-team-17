@@ -1,9 +1,6 @@
 package com.ftn.event_hopper.services;
 
-import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
-import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
-import com.ftn.event_hopper.dtos.registration.UpdateRegistrationRequestDTO;
-import com.ftn.event_hopper.dtos.registration.UpdatedRegistrationRequestDTO;
+import com.ftn.event_hopper.dtos.registration.*;
 import com.ftn.event_hopper.mapper.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.registration.RegistrationRequestStatus;
@@ -56,6 +53,14 @@ public class RegistrationRequestService {
         request.setTimestamp(LocalDateTime.now());
         request.setStatus(RegistrationRequestStatus.PENDING);
         this.save(request);
+        return registrationRequestDTOMapper.fromRegistrationRequestToCreatedDTO(request);
+    }
+
+
+    public CreatedRegistrationRequestDTO create(CreateRegistrationRequestDTO requestDTO){
+        RegistrationRequest request = new RegistrationRequest();
+        request.setTimestamp(LocalDateTime.now());
+        request.setStatus(RegistrationRequestStatus.PENDING);
         return registrationRequestDTOMapper.fromRegistrationRequestToCreatedDTO(request);
     }
 
