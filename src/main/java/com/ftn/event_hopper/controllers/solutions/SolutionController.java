@@ -25,6 +25,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/solutions")
+@CrossOrigin(origins = "*")
+
 public class SolutionController{
 
     @Autowired

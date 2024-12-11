@@ -66,7 +66,7 @@ VALUES
 INSERT INTO service_providers (type, work_end, work_start, company_location_id, id, location_id, company_description, company_email, company_name, name, phone_number, profile_picture, surname)
 VALUES
     (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe'),
-    (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Providing top-tier consultancy services', 'contact@bizconsult.com', 'BizConsult', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith'),
+    (1, '17:00:00', '08:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Providing top-tier consultancy services', 'contact@bizconsult.com', 'BizConsult', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith'),
     (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing', 'support@creativehub.com', 'CreativeHub', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown');
 
 
@@ -118,7 +118,11 @@ VALUES
     (100, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Anniversary party', 'Anniversary', 'https://example.com/winter.jpg'),
     (50, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '6915ce46-d213-424b-a3c4-035767714df0', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Halloween party', 'halloween', 'https://example.com/winter.jpg'),
     (400, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'f1ad3604-fef5-439a-8adb-45776a019a55', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', ' Birthday', 'https://example.com/winter.jpg'),
-    (800, 0, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair', 'https://example.com/spring.jpg');
+    (800, 1, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair', 'https://example.com/spring.jpg'),
+    (800, 1, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c1b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair2', 'https://example.com/spring.jpg'),
+    (800, 1, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5b9d7f6e3c1b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair3', 'https://example.com/spring.jpg'),
+    (800, 1, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5c9d7f6e3c1b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair4', 'https://example.com/spring.jpg'),
+    (800, 1, '2024-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c5b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Local festival', 'Spring Fair5', 'https://example.com/spring.jpg');
 
 
 INSERT INTO persons_attending_events (event_id, person_id)
