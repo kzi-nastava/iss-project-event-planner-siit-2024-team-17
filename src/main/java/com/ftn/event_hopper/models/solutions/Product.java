@@ -56,11 +56,12 @@ public class Product {
     @Column(nullable = false)
     private boolean isDeleted;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "product_prices",
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id")
+
     )
     private List<Price> prices = new ArrayList<>();
 
@@ -83,4 +84,10 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "event_type_id", referencedColumnName = "id")
     )
     private Set<EventType> eventTypes = new HashSet<EventType>();
+
+    public Price getCurrentPrice() {
+        return prices.stream()
+                .max(Comparator.comparing(Price::getTimestamp))
+                .orElse(null);
+    }
 }

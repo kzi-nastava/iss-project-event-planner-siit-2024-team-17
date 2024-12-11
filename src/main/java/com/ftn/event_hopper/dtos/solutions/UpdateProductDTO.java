@@ -16,6 +16,5 @@ public class UpdateProductDTO {
     private Collection<String> pictures;
     private boolean isAvailable;
     private boolean isVisible;
-    private UUID priceId;
     private Collection<UUID> eventTypesIds;
 }

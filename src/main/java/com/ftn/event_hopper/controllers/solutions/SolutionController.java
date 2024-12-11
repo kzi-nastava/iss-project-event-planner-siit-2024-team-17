@@ -1,12 +1,7 @@
 package com.ftn.event_hopper.controllers.solutions;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
-import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.reports.GetReportDTO;
-import com.ftn.event_hopper.dtos.solutions.GetProductDTO;
-import com.ftn.event_hopper.dtos.solutions.GetServiceDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
-import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.services.solutions.ProductService;
 import com.ftn.event_hopper.services.solutions.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
