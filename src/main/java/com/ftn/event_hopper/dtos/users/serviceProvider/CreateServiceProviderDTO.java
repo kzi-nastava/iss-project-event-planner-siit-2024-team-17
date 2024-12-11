@@ -17,7 +17,7 @@ public class CreateServiceProviderDTO extends CreatePersonDTO {
     private String companyName;
     private String companyEmail;
     private String companyDescription;
+    private String companyPhoneNumber;
     private List<String> companyPhotos;
-    private LocalTime workStart;
     private CreateLocationDTO companyLocation;
 }

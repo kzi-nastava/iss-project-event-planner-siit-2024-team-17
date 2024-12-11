@@ -1,10 +1,7 @@
 package com.ftn.event_hopper.mapper;
 
 
-import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
-import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
-import com.ftn.event_hopper.dtos.registration.UpdateRegistrationRequestDTO;
-import com.ftn.event_hopper.dtos.registration.UpdatedRegistrationRequestDTO;
+import com.ftn.event_hopper.dtos.registration.*;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +39,19 @@ public class RegistrationRequestDTOMapper {
         return modelMapper.map(requestDto, UpdateRegistrationRequestDTO.class);
     }
 
+    public RegistrationRequest fromCreateDTOToRegistrationRequest(CreateRegistrationRequestDTO requestDto) {
+        return modelMapper.map(requestDto, RegistrationRequest.class);
+    }
+
+    public RegistrationRequest fromCreatedDTOToRegistrationRequest(CreatedRegistrationRequestDTO requestDto) {
+        return modelMapper.map(requestDto, RegistrationRequest.class);
+    }
+
     public List<RegistrationRequestDTO> fromRegistrationRequestListToDTOList(List<RegistrationRequest> requests) {
         return requests.stream()
                 .map(this::fromRegistrationRequestToDTO)
                 .collect(Collectors.toList());
     }
+
+
 }

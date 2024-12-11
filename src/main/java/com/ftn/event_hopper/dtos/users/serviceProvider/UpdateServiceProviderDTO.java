@@ -15,6 +15,7 @@ import java.util.List;
 @ToString(callSuper = true)
 public class UpdateServiceProviderDTO extends UpdatePersonDTO {
     private String companyDescription;
+    private String companyPhoneNumber;
     private List<String> companyPhotos;
     private LocalTime workStart;
     private LocalTime workEnd;

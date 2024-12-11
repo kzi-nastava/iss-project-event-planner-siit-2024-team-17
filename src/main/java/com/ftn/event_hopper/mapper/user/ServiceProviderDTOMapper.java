@@ -11,6 +11,8 @@ import org.modelmapper.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -113,6 +115,7 @@ public class ServiceProviderDTOMapper {
 
     public ServiceProvider fromCreateServiceProviderDTOToServiceProvider(CreateServiceProviderDTO dto) {
         ServiceProvider serviceProvider = modelMapper.map(dto, ServiceProvider.class);
+        serviceProvider.setWorkStart(LocalTime.now());
         serviceProvider.setCompanyLocation(locationDTOMapper.fromCreateDTOToLocation(dto.getCompanyLocation()));
         return serviceProvider;
     }

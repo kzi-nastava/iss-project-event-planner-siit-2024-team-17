@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.account.*;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -93,9 +94,19 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedAccountDTO> createAccount(@RequestBody CreateAccountDTO accountDTO) {
-        return new ResponseEntity<>(accountService.create(accountDTO), HttpStatus.CREATED);
+    @PostMapping(value = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedAccountDTO> createAccount(@RequestBody CreatePersonAccountDTO accountDTO) {
+        return new ResponseEntity<>(accountService.createPerson(accountDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/event-organizer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedEventOrganizerAccountDTO> createAccount(@RequestBody CreateEventOrganizerAccountDTO accountDTO) {
+        return new ResponseEntity<>(accountService.createEventOrganizer(accountDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/service-provider", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedServiceProviderAccountDTO> createAccount(@RequestBody CreateServiceProviderAccountDTO accountDTO) {
+        return new ResponseEntity<>(accountService.createServiceProvider(accountDTO), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

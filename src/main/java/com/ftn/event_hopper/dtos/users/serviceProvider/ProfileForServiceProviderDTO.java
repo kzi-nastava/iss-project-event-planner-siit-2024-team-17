@@ -18,6 +18,7 @@ import java.util.List;
 public class ProfileForServiceProviderDTO extends ProfileForPersonDTO {
     private String companyName;
     private String companyEmail;
+    private String companyPhoneNumber;
     private String companyDescription;
     private List<String> companyPhotos;
     private LocalTime workStart;

@@ -16,6 +16,7 @@ import java.util.List;
 public class SimpleServiceProviderDTO extends SimplePersonDTO {
     private String companyName;
     private String companyEmail;
+    private String companyPhoneNumber;
     private String companyDescription;
     private List<String> companyPhotos;
     private LocalTime workStart;

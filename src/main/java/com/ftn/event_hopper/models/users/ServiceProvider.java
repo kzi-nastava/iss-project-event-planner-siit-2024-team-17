@@ -27,10 +27,13 @@ public class ServiceProvider extends Person{
     @Column(nullable = false)
     private String companyEmail;
 
+    @Column(nullable = false)
+    private String companyPhoneNumber;
+
     @Column
     private String companyDescription;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalTime workStart;
 
     @Column(nullable = true)
