@@ -3,7 +3,9 @@ package com.ftn.event_hopper.services.solutions;
 import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ServiceDTOMapper;
+import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.prices.Price;
+import com.ftn.event_hopper.models.shared.CategoryStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Service;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
@@ -175,9 +177,15 @@ public class ServiceService {
         newService.setId(null);
         newService.setDeleted(false);
         newService.setEditTimestamp(LocalDateTime.now());
-        newService.setStatus(ProductStatus.APPROVED);
 
-        newService.setCategory(categoryRepository.findById(service.getCategoryId()).orElse(null));
+        Category category = categoryRepository.findById(service.getCategoryId()).orElse(null);
+
+        newService.setCategory(category);
+
+        newService.setStatus(ProductStatus.APPROVED);
+        if (category != null && category.getStatus() == CategoryStatus.PENDING) {
+            newService.setStatus(ProductStatus.PENDING);
+        }
 
         newService.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(service.getEventTypesIds())));
 
