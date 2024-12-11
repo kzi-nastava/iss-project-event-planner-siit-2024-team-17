@@ -87,7 +87,9 @@ public class ServiceController {
             @RequestParam(value = "minPrice", required = false) Double minPrice,
             @RequestParam(value = "maxPrice", required = false) Double maxPrice,
             @RequestParam(value = "isAvailable", required = false) Boolean isAvailable,
-            @RequestParam(value = "searchContent", required = false) String searchContent
+            @RequestParam(value = "searchContent", required = false) String searchContent,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false, defaultValue = "asc") String sortDirection
     ){
 
         Page<ServiceManagementDTO> paged = serviceService.searchServicesForManagement(
@@ -97,7 +99,9 @@ public class ServiceController {
                 minPrice,
                 maxPrice,
                 isAvailable,
-                searchContent
+                searchContent,
+                sortField,
+                sortDirection
         );
         List<ServiceManagementDTO> services = paged.getContent();
 

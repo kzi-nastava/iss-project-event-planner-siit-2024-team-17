@@ -15,7 +15,9 @@ import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -62,7 +64,10 @@ public class ServiceService {
                                                                   Double minPrice,
                                                                   Double maxPrice,
                                                                   Boolean isAvailable,
-                                                                  String searchContent) {
+                                                                  String searchContent,
+                                                                  String sortField,
+                                                                  String sortDirection
+    ) {
 
         Specification<Service> specification = Specification.where((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("isDeleted"), false));
@@ -77,6 +82,7 @@ public class ServiceService {
                     root.join("eventTypes").get("id").in(eventTypeIds));
         }
 
+        // handle list of prices in Product and make comparing to the newest one
         if (minPrice != null) {
             specification = specification.and((root, query, criteriaBuilder) -> {
                 Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
@@ -93,6 +99,7 @@ public class ServiceService {
             });
         }
 
+        // handle list of prices in Product and make comparing to the newest one
         if (maxPrice != null) {
             specification = specification.and((root, query, criteriaBuilder) -> {
                 Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
@@ -122,10 +129,28 @@ public class ServiceService {
                     ));
         }
 
-        Page<Service> filteredServices = serviceRepository.findAll(specification, page);
+        // handle sorting and convert field accordingly to the field in the database
+        Sort sort = Sort.unsorted();
+        if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
+            sort = switch (sortField) {
+                case "basePrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
+                case "discount" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
+                case "finalPrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
+                default ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+            };
+        }
+
+        Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+
+        Page<Service> filteredServices = serviceRepository.findAll(specification, pageableWithSort);
 
         Page<ServiceManagementDTO> all = serviceDTOMapper.fromServicePageToServiceManagementDTOPage(filteredServices);
 
+        // map list of prices to the newest one
         for (ServiceManagementDTO dto : all) {
             Service service = filteredServices.stream()
                     .filter(s -> s.getId().equals(dto.getId()))
