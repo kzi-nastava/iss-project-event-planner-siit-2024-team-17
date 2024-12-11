@@ -16,7 +16,6 @@ public class CreateServiceProviderAccountDTO {
     private String email;
     private String password;
     private boolean isVerified;
-    private boolean isActive;
     private LocalDateTime suspensionTimeStamp;
     private PersonType type;
     private CreateServiceProviderDTO person;
