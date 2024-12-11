@@ -3,6 +3,8 @@ package com.ftn.event_hopper.models.users;
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.solutions.Product;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -25,9 +27,11 @@ public class ServiceProvider extends Person{
     private String companyName;
 
     @Column(nullable = false)
+    @Email(message = "Company email must be in a valid format")
     private String companyEmail;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^\\+?\\d{8,}$", message = "Company phone number must be at least 8 digits long and may optionally start with a '+'")
     private String companyPhoneNumber;
 
     @Column

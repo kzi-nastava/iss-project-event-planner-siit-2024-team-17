@@ -2,6 +2,9 @@ package com.ftn.event_hopper.models.users;
 
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,9 +25,13 @@ public class Account {
     private UUID id;
 
     @Column(nullable = false, unique = true)
+    @Email(message = "Email must be in a valid format")
     private String email;
 
+
     @Column(nullable = false)
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).*$", message = "Password must include at least one uppercase letter and one number")
     private String password;
 
     @Column(nullable = false)

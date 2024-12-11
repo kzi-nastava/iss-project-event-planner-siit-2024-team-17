@@ -6,7 +6,7 @@ import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.solutions.Product;
 import jakarta.persistence.*;
 import lombok.*;
-
+import jakarta.validation.constraints.Pattern;
 import java.util.*;
 
 @Getter
@@ -25,15 +25,18 @@ public class Person {
     private UUID id;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^[A-Za-z]+$", message = "Name must contain only alphabetic characters")
     private String name;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^[A-Za-z]+$", message = "Surname must contain only alphabetic characters")
     private String surname;
 
     @Column(nullable = false)
     private String profilePicture;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^\\+?\\d{8,}$", message = "Phone number must be at least 8 digits long and may optionally start with a '+'")
     private String phoneNumber;
 
     @Column(nullable = false)
