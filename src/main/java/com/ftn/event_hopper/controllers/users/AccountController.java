@@ -1,7 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.account.*;
-import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,14 +66,6 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleAccountDTO> getLoginAccount(@RequestBody LoginDTO loginDTO) {
-        SimpleAccountDTO account = accountService.findByEmailAndPassword(loginDTO);
-        if(account == null) {
-            return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(account, HttpStatus.OK);
-    }
 
     @GetMapping(value = "/active", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleAccountDTO>> getActiveAccounts() {
