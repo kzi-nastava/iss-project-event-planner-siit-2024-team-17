@@ -16,6 +16,7 @@ import java.util.List;
 public class UpdatedServiceProviderDTO extends UpdatedPersonDTO {
     private String companyName;
     private String companyEmail;
+    private String companyPhoneNumber;
     private String companyDescription;
     private List<String> companyPhotos;
     private LocalTime workStart;

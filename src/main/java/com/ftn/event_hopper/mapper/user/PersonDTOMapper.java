@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.mapper.user;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.location.CreateLocationDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.mapper.EventDTOMapper;
 import com.ftn.event_hopper.mapper.LocationDTOMapper;
@@ -11,8 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.hibernate.collection.spi.PersistentSet;
-
 
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.locations.Location;
@@ -44,6 +43,9 @@ public class PersonDTOMapper {
         // Custom converter for nested Location to SimpleLocationDTO
         Converter<Location, SimpleLocationDTO> locationConverter = context ->
                 locationDTOMapper.fromLocationToSimpleDTO(context.getSource());
+
+        Converter<Location, CreateLocationDTO> createLocationConverter = context ->
+                locationDTOMapper.fromLocationToCreateDTO(context.getSource());
 
         Converter<Event, SimpleEventDTO> eventConverter = context ->
                 eventDTOMapper.fromEventToSimpleDTO(context.getSource());
@@ -78,6 +80,11 @@ public class PersonDTOMapper {
                 .addMappings(mapper -> mapper.using(locationConverter)
                         .map(Person::getLocation, CreatedPersonDTO::setLocation));
 
+        // For CreatePersonDTO
+        modelMapper.typeMap(Person.class, CreatePersonDTO.class)
+                .addMappings(mapper -> mapper.using(createLocationConverter)
+                        .map(Person::getLocation, CreatePersonDTO::setLocation));
+
         // For UpdatePersonDTO (with PersonType)
         modelMapper.typeMap(Person.class, UpdatePersonDTO.class)
                 .addMappings(mapper -> mapper.using(locationConverter)
@@ -109,6 +116,10 @@ public class PersonDTOMapper {
 
     public UpdatedPersonDTO fromPersonToUpdatedDTO(Person person) {
         return modelMapper.map(person, UpdatedPersonDTO.class);
+    }
+
+    public CreatePersonDTO fromPersonToCreateDTO(Person person) {
+        return modelMapper.map(person, CreatePersonDTO.class);
     }
 
     public CreatedPersonDTO fromPersonToCreatedDTO(Person person) {
@@ -150,7 +161,7 @@ public class PersonDTOMapper {
 
     public Person fromCreatePersonDTOToPerson(CreatePersonDTO createPersonDTO) {
         Person person = modelMapper.map(createPersonDTO, Person.class);
-        person.setLocation(locationDTOMapper.fromSimpleLocationDTOToLocation(createPersonDTO.getLocation()));
+        person.setLocation(locationDTOMapper.fromCreateDTOToLocation(createPersonDTO.getLocation()));
         return person;
     }
 

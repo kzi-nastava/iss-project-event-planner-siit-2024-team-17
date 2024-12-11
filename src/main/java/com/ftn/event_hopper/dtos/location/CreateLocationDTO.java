@@ -10,7 +10,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class CreateLocationDTO {
-    private UUID id;
     private String city;
     private String address;
     private double latitude;

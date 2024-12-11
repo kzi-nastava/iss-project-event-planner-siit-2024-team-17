@@ -5,17 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Collection;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetCategoryDTO {
+public class UpdatedCategorySuggestionDTO {
     private UUID id;
     private String name;
-    private String description;
     private CategoryStatus status;
-    private Collection<UUID> eventTypesIds;
-
 }

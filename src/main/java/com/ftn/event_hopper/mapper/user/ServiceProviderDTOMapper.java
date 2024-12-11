@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.mapper.user;
 
+import com.ftn.event_hopper.dtos.location.CreateLocationDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.*;
 import com.ftn.event_hopper.dtos.location.LocationDTO;
 import com.ftn.event_hopper.mapper.LocationDTOMapper;
@@ -10,6 +11,8 @@ import org.modelmapper.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,9 @@ public class ServiceProviderDTOMapper {
         Converter<Location, LocationDTO> locationConverter = context ->
                 locationDTOMapper.fromLocationToLocationDTO(context.getSource());
 
+        Converter<Location, CreateLocationDTO> createLocationConverter = context ->
+                locationDTOMapper.fromLocationToCreateDTO(context.getSource());
+
 
         // Custom mapping for ServiceProvider -> SimpleServiceProviderDTO
         modelMapper.typeMap(ServiceProvider.class, SimpleServiceProviderDTO.class)
@@ -50,7 +56,7 @@ public class ServiceProviderDTOMapper {
         // Custom mapping for ServiceProvider -> CreateServiceProviderDTO
         modelMapper.typeMap(ServiceProvider.class, CreateServiceProviderDTO.class)
                 .addMappings(mapper -> {
-                    mapper.using(locationConverter)
+                    mapper.using(createLocationConverter)
                             .map(ServiceProvider::getCompanyLocation, CreateServiceProviderDTO::setCompanyLocation);
                 });
 
@@ -109,7 +115,8 @@ public class ServiceProviderDTOMapper {
 
     public ServiceProvider fromCreateServiceProviderDTOToServiceProvider(CreateServiceProviderDTO dto) {
         ServiceProvider serviceProvider = modelMapper.map(dto, ServiceProvider.class);
-        serviceProvider.setCompanyLocation(locationDTOMapper.fromLocationDTOToLocation(dto.getCompanyLocation()));
+        serviceProvider.setWorkStart(LocalTime.now());
+        serviceProvider.setCompanyLocation(locationDTOMapper.fromCreateDTOToLocation(dto.getCompanyLocation()));
         return serviceProvider;
     }
 

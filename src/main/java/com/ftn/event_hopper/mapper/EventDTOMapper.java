@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.events.SimpleEventTypeDTO;
+import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.locations.Location;

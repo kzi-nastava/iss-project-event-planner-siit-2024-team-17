@@ -1,6 +1,5 @@
 package com.ftn.event_hopper.repositories.solutions;
 
-
 import com.ftn.event_hopper.models.solutions.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +21,10 @@ public interface ProductRepository extends JpaRepository<Product, UUID> , JpaSpe
 
     @Query("SELECT p.id FROM Product p")
     List<UUID> findProductIds();
+
+    public Product findByCategory_Id(UUID categoryId);
+
+    Page<Product> findAll(Pageable page);
+
+
 }

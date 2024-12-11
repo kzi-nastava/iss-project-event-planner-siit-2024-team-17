@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.dtos.events;
+package com.ftn.event_hopper.dtos.eventTypes;
 
 
 import lombok.AllArgsConstructor;
@@ -15,4 +15,5 @@ import java.util.UUID;
 public class SimpleEventTypeDTO {
     private UUID id;
     private String name;
+    private String description;
 }
