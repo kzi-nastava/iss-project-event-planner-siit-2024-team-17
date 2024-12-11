@@ -84,4 +84,10 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "event_type_id", referencedColumnName = "id")
     )
     private Set<EventType> eventTypes = new HashSet<EventType>();
+
+    public Price getCurrentPrice() {
+        return prices.stream()
+                .max(Comparator.comparing(Price::getTimestamp))
+                .orElse(null);
+    }
 }

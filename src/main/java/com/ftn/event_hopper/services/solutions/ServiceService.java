@@ -9,6 +9,10 @@ import com.ftn.event_hopper.models.solutions.Service;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +56,13 @@ public class ServiceService {
         return serviceRepository.save(service);
     }
 
-    public Page<ServiceManagementDTO> searchServicesForManagement(Pageable page, UUID categoryId, List<UUID> eventTypeIds, Double minPrice, Double maxPrice, Boolean isAvailable, String searchContent) {
+    public Page<ServiceManagementDTO> searchServicesForManagement(Pageable page,
+                                                                  UUID categoryId,
+                                                                  List<UUID> eventTypeIds,
+                                                                  Double minPrice,
+                                                                  Double maxPrice,
+                                                                  Boolean isAvailable,
+                                                                  String searchContent) {
 
         Specification<Service> specification = Specification.where((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("isDeleted"), false));
@@ -64,17 +74,39 @@ public class ServiceService {
 
         if (eventTypeIds != null && !eventTypeIds.isEmpty()) {
             specification = specification.and((root, query, criteriaBuilder) ->
-                    root.get("eventTypes").get("id").in(eventTypeIds));
+                    root.join("eventTypes").get("id").in(eventTypeIds));
         }
 
         if (minPrice != null) {
-            specification = specification.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Service> subRoot = subquery.from(Service.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.greaterThanOrEqualTo(pricesJoin.get("finalPrice"), minPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
         }
 
         if (maxPrice != null) {
-            specification = specification.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Service> subRoot = subquery.from(Service.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.lessThanOrEqualTo(pricesJoin.get("finalPrice"), maxPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
         }
 
         if (isAvailable != null) {
