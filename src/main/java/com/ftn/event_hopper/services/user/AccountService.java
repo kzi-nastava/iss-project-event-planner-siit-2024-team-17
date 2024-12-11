@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -49,9 +50,11 @@ public class AccountService {
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
-    public SimpleAccountDTO findByEmailAndPassword(LoginDTO loginDTO) {
-        return accountDTOMapper.fromAccountToSimpleDTO(accountRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword()));
+    public Optional<SimpleAccountDTO> findByEmailAndPassword(LoginDTO loginDTO) {
+        Optional<Account> accountOptional = accountRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+        return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO);
     }
+
 
     public List<AccountDTO> findAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
