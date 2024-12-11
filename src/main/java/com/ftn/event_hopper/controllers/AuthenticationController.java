@@ -25,6 +25,4 @@ public class AuthenticationController {
         return account.map(simpleAccountDTO -> new ResponseEntity<>(simpleAccountDTO, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-
 }
