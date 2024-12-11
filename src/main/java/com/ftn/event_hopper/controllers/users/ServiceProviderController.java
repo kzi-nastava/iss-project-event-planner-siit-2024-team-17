@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/service-providers")
+@CrossOrigin(origins = "*")
 public class ServiceProviderController {
     @Autowired
     private ServiceProviderService serviceProviderService;

@@ -30,6 +30,10 @@ public class LocationDTOMapper {
         return modelMapper.map(location, LocationDTO.class);
     }
 
+    public CreateLocationDTO fromLocationToCreateDTO(Location location) {
+        return modelMapper.map(location, CreateLocationDTO.class);
+    }
+
     public CreatedLocationDTO fromLocationToCreatedDTO(Location location) {
         return modelMapper.map(location, CreatedLocationDTO.class);
     }

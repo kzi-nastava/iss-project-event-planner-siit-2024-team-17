@@ -1,26 +1,24 @@
 package com.ftn.event_hopper.dtos.users.account;
 
-import com.ftn.event_hopper.dtos.registration.RegistrationRequestDTO;
-import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
+import com.ftn.event_hopper.dtos.registration.CreateRegistrationRequestDTO;
+import com.ftn.event_hopper.dtos.users.person.CreatePersonDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.CreateServiceProviderDTO;
 import com.ftn.event_hopper.models.users.PersonType;
-import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateAccountDTO {
+public class CreatePersonAccountDTO {
     private String email;
     private String password;
     private boolean isVerified;
-    private boolean isActive;
     private LocalDateTime suspensionTimeStamp;
     private PersonType type;
-    private SimplePersonDTO person;
-    private RegistrationRequestDTO registrationRequest;
+    private CreatePersonDTO person;
+    private CreateRegistrationRequestDTO registrationRequest;
 }

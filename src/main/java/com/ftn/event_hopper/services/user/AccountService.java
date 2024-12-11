@@ -1,9 +1,13 @@
 package com.ftn.event_hopper.services.user;
 
+import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
+import com.ftn.event_hopper.mapper.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.mapper.user.AccountDTOMapper;
+import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.repositories.user.AccountRepository;
+import com.ftn.event_hopper.services.RegistrationRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,10 @@ public class AccountService {
     private AccountRepository accountRepository;
     @Autowired
     private AccountDTOMapper accountDTOMapper;
+    @Autowired
+    private RegistrationRequestService registrationRequestService;
+    @Autowired
+    private RegistrationRequestDTOMapper registrationRequestDTOMapper;
 
     public AccountDTO findOneAccount(UUID id) {
         return accountDTOMapper.fromAccountToAccountDTO(accountRepository.findById(id).orElseGet(null));
@@ -55,9 +63,31 @@ public class AccountService {
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
+    public CreatedServiceProviderAccountDTO createServiceProvider(CreateServiceProviderAccountDTO accountDTO){
+        Account account = accountDTOMapper.fromCreateServiceProviderDTOToAccount(accountDTO);
+        CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
+        RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
+        account.setRegistrationRequest(request);
+        this.save(account);
+        return accountDTOMapper.fromAccountToCreatedServiceProviderDTO(account);
+    }
 
-    public CreatedAccountDTO create(CreateAccountDTO accountDTO){
-        Account account = accountDTOMapper.fromCreateDTOToAccount(accountDTO);
+
+    public CreatedEventOrganizerAccountDTO createEventOrganizer(CreateEventOrganizerAccountDTO accountDTO){
+        Account account = accountDTOMapper.fromCreateOrganizerDTOToAccount(accountDTO);
+        CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
+        RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
+        account.setRegistrationRequest(request);
+        System.out.println(account);
+        this.save(account);
+        return accountDTOMapper.fromAccountToCreatedEventOrganizerDTO(account);
+    }
+
+    public CreatedAccountDTO createPerson(CreatePersonAccountDTO accountDTO){
+        Account account = accountDTOMapper.fromCreatePersonDTOToAccount(accountDTO);
+        CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
+        RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
+        account.setRegistrationRequest(request);
         this.save(account);
         return accountDTOMapper.fromAccountToCreatedDTO(account);
     }

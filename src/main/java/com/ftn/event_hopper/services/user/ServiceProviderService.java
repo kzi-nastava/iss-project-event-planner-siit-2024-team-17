@@ -31,6 +31,7 @@ public class ServiceProviderService {
 
     public CreatedServiceProviderDTO create(CreateServiceProviderDTO providerDTO){
         ServiceProvider provider = serviceProviderDTOMapper.fromCreateServiceProviderDTOToServiceProvider(providerDTO);
+        provider.setWorkStart(LocalTime.now());
         this.save(provider);
         return serviceProviderDTOMapper.fromServiceProviderToCreatedDTO(provider);
     }

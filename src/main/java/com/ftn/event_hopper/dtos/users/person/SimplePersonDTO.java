@@ -17,6 +17,6 @@ public class SimplePersonDTO {
     private String surname;
     private String profilePicture;
     private String phoneNumber;
-    private PersonType personType;
+    private PersonType type;
     private SimpleLocationDTO location;
 }
