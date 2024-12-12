@@ -7,6 +7,7 @@ import com.ftn.event_hopper.mapper.EventDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
+import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.repositories.EventRepository;
@@ -72,8 +73,11 @@ public class EventService {
             ) {
 
 
-        Specification<Event> specification = Specification.where(null);
-
+        Specification<Event> specification = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.greaterThan(root.get("time"), LocalDateTime.now()),
+                        criteriaBuilder.equal(root.get("privacy"), 1)
+                ));
 
         if (city != null) {
             specification = specification.and((root, query, criteriaBuilder) ->
