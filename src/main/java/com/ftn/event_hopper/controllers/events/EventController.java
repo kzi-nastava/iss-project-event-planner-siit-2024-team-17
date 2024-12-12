@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,12 +65,15 @@ public class EventController {
             Pageable page,
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "eventTypeId", required = false) UUID eventTypeId,
-            @RequestParam(value = "time", required = false) LocalDateTime time,
-            @RequestParam(value = "searchContent", required = false) String searchContent
+            @RequestParam(value = "time", required = false) LocalDate time,             //pretrazuje se po datumu, ne i po vremenu
+            @RequestParam(value = "searchContent", required = false) String searchContent,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false, defaultValue = "asc") String sortDirection
+
     ) {
 
 
-        Page<SimpleEventDTO> eventsPage = eventService.findAll(page, city, eventTypeId, time, searchContent);
+        Page<SimpleEventDTO> eventsPage = eventService.findAll(page, city, eventTypeId, time, searchContent, sortField, sortDirection);
         List<SimpleEventDTO> events = eventsPage.getContent();
 
         PagedResponse<SimpleEventDTO> response = new PagedResponse<>(

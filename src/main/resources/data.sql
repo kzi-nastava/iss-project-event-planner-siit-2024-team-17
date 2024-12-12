@@ -49,6 +49,7 @@ VALUES
 ;
 
 
+
 INSERT INTO event_types (is_deactivated, id, description, name)
 VALUES
     (FALSE, 'f0dcab26-9656-491e-bcce-bf23f723e998', 'Outdoor events', 'Outdoor'),
@@ -63,11 +64,11 @@ VALUES
     (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown');
 
 
-INSERT INTO service_providers (type, work_end, work_start, company_location_id, id, location_id, company_description, company_email, company_name, name, phone_number, profile_picture, surname)
+INSERT INTO service_providers (type, work_end, work_start, company_location_id, id, location_id, company_description, company_email, company_name, name, phone_number, profile_picture, surname, company_phone_number)
 VALUES
-    (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe'),
-    (1, '17:00:00', '08:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Providing top-tier consultancy services', 'contact@bizconsult.com', 'BizConsult', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith'),
-    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing', 'support@creativehub.com', 'CreativeHub', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown');
+    (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe', '1234567890'),
+    (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Providing top-tier consultancy services', 'contact@bizconsult.com', 'BizConsult', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith', '1234567890'),
+    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing', 'support@creativehub.com', 'CreativeHub', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown', '1234567890');
 
 
 INSERT INTO categories (is_deleted, status, id, description, name)
@@ -165,10 +166,10 @@ VALUES
     (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning1'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','df9a2350-c532-4a75-9cbf-5d5ea6fc807d', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning2'),
-    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','1237e35c-80ff-4a2a-8245-2728cb45ee11', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning3'),
+    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','1237e35c-80ff-4a2a-8245-2728cb45ee11', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'AOffice Cleaning3'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','45067d8d-9d86-4104-97cd-7054c48cbbc6', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning4'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','314c1838-8cbe-471c-9403-dc49baad1977', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A cleaning service for offices', 'Office Cleaning5'),
-    (5, 180, false, false, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
+    (5, 180, false, false, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
     (10, 90, true, false, false, false, 3, 2, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)

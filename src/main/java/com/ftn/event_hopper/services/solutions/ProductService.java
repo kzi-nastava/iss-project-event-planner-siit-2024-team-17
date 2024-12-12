@@ -2,7 +2,9 @@ package com.ftn.event_hopper.services.solutions;
 
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.solutions.ServiceManagementDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.shared.ProductStatus;
@@ -15,17 +17,15 @@ import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.user.PersonRepository;
 import com.ftn.event_hopper.repositories.user.ServiceProviderRepository;
 import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,10 +38,12 @@ public class ProductService {
     private ServiceRepository serviceRepository;
     @Autowired
     private PersonRepository personRepository;
+
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private ProductDTOMapper productDTOMapper;
+
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -84,7 +86,17 @@ public class ProductService {
         return productDTOMapper.fromProductListToSimpleDTOList(top5Products);
     }
 
-    public Page<SimpleProductDTO> findAll(Pageable page, boolean isProduct, boolean isService, UUID categoryId, ArrayList<UUID> eventTypeIds, Double minPrice, Double maxPrice, String searchContent) {
+    public Page<SimpleProductDTO> findAll(Pageable page,
+                                          Boolean isProduct,
+                                          Boolean isService,
+                                          UUID categoryId,
+                                          ArrayList<UUID> eventTypeIds,
+                                          Double minPrice,
+                                          Double maxPrice,
+                                          Boolean isAvailable,
+                                          String searchContent,
+                                          String sortField,
+                                          String sortDirection) {
 
         Specification<Product> specification = Specification.where((root, query, criteriaBuilder) ->
                 criteriaBuilder.and(
@@ -100,16 +112,22 @@ public class ProductService {
                 List<UUID> productIds = productRepository.findProductIds();
                 List<UUID> serviceIds = serviceRepository.findServiceIds();
 
+                for (UUID serviceId : serviceIds) {
+                    productIds.remove(serviceId);
+                }
+
                 Predicate productPredicate = root.get("id").in(productIds);
                 Predicate servicePredicate = root.get("id").in(serviceIds);
 
                 // Combining conditions for isProduct and isService
                 if (isProduct && isService) {
                     return criteriaBuilder.or(productPredicate, servicePredicate);
-                } else if (isProduct) {
+                } else if (isProduct && !isService) {
                     return productPredicate;
-                } else {
+                } else if (isService && !isProduct) {
                     return servicePredicate;
+                }else{
+                    return criteriaBuilder.or(productPredicate, servicePredicate);
                 }
             });
         }
@@ -127,13 +145,41 @@ public class ProductService {
         }
 
         if (minPrice != null) {
-            specification = specification.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Product> subRoot = subquery.from(Product.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.greaterThanOrEqualTo(pricesJoin.get("finalPrice"), minPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
         }
 
+        // handle list of prices in Product and make comparing to the newest one
         if (maxPrice != null) {
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Product> subRoot = subquery.from(Product.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.lessThanOrEqualTo(pricesJoin.get("finalPrice"), maxPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
+        }
+
+        if (isAvailable != null) {
             specification = specification.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+                    criteriaBuilder.equal(root.get("isAvailable"), isAvailable));
         }
 
         if (StringUtils.hasText(searchContent)) {
@@ -145,7 +191,27 @@ public class ProductService {
         }
 
 
-            return productDTOMapper.fromProductPageToSimpleProductDTOPage(productRepository.findAll(specification, page));
+        Sort sort = Sort.unsorted();
+        if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
+            sort = switch (sortField) {
+                case "basePrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
+                case "discount" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
+                case "finalPrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
+                default ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+            };
+        }
 
+        Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+
+        Page<Product> filteredProducts = productRepository.findAll(specification, pageableWithSort);
+
+        Page<SimpleProductDTO> all = productDTOMapper.fromProductPageToSimpleProductDTOPage(filteredProducts);
+
+
+        return all;
         }
 }

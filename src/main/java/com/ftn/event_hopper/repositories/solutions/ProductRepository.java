@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> , JpaSpe
 
     Page<Product> findAll(Specification<Product> specification, Pageable page);
 
-    @Query("SELECT p.id FROM Product p")
+    @Query("SELECT p.id FROM Product p ")
     List<UUID> findProductIds();
 
     public Product findByCategory_Id(UUID categoryId);

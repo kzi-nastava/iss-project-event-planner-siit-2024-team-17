@@ -2,23 +2,24 @@ package com.ftn.event_hopper.services;
 
 import com.ftn.event_hopper.dtos.events.GetEventDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.mapper.EventDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
+import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.repositories.EventRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.user.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +58,15 @@ public class EventService {
     }
 
 
-    public Page<SimpleEventDTO> findAll(Pageable page, String city, UUID eventTypeId, LocalDateTime time, String searchContent) {
+    public Page<SimpleEventDTO> findAll(
+            Pageable page,
+            String city,
+            UUID eventTypeId,
+            LocalDate time,
+            String searchContent,
+            String sortField,
+            String sortDirection
+            ) {
 
 
         Specification<Event> specification = Specification.where(null);
@@ -75,8 +84,18 @@ public class EventService {
 
         if (time != null) {
             specification = specification.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("time"), time));
+                    criteriaBuilder.equal(
+                            criteriaBuilder.function("DATE", LocalDate.class, root.get("datum")), // Izvlači samo datum iz LocalDateTime
+                            time
+                    ));
         }
+
+
+
+//        if (time != null) {
+//            specification = specification.and((root, query, criteriaBuilder) ->
+//                    criteriaBuilder.equal(root.get("time")., time));
+//        }
 
         if (StringUtils.hasText(searchContent)) {
             specification = specification.and((root, query, criteriaBuilder) ->
@@ -86,8 +105,27 @@ public class EventService {
                     ));
         }
 
+        Sort sort = Sort.unsorted();
+        if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
+            sort = switch (sortField) {
+                case "basePrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
+                case "discount" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
+                case "finalPrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
+                default ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+            };
+        }
 
-        return eventDTOMapper.fromEventPageToSimpleEventDTOPage(eventRepository.findAll(specification, page));
+        Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
+        Page<Event> filteredEvents = eventRepository.findAll(specification, pageableWithSort);
+
+        Page<SimpleEventDTO> all = eventDTOMapper.fromEventPageToSimpleEventDTOPage(filteredEvents);
+
+
+        return all;
     }
 }
