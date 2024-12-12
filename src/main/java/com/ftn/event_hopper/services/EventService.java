@@ -12,6 +12,7 @@ import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.repositories.EventRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.user.PersonRepository;
+import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +22,8 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -83,9 +86,17 @@ public class EventService {
         }
 
         if (time != null) {
-            specification = specification.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.between(root.get("time"), LocalDateTime.parse(time), LocalDateTime.parse(time).plusDays(1)));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            LocalDate parsedDate = LocalDate.parse(time, formatter);
+
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Expression<LocalDate> eventDate = criteriaBuilder.function(
+                        "date", LocalDate.class, root.get("time"));
+                return criteriaBuilder.equal(eventDate, parsedDate);
+            });
         }
+
+
 
 
 
