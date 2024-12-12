@@ -65,9 +65,9 @@ public class EventController {
             Pageable page,
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "eventTypeId", required = false) UUID eventTypeId,
-            @RequestParam(value = "time", required = false) LocalDate time,             //pretrazuje se po datumu, ne i po vremenu
+            @RequestParam(value = "time", required = false) String time,             //pretrazuje se po datumu, ne i po vremenu
             @RequestParam(value = "searchContent", required = false) String searchContent,
-            @RequestParam(required = false) String sortField,
+            @RequestParam(value = "sortField", required = false) String sortField,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection
 
     ) {

@@ -62,7 +62,7 @@ public class EventService {
             Pageable page,
             String city,
             UUID eventTypeId,
-            LocalDate time,
+            String time,
             String searchContent,
             String sortField,
             String sortDirection
@@ -84,10 +84,7 @@ public class EventService {
 
         if (time != null) {
             specification = specification.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(
-                            criteriaBuilder.function("DATE", LocalDate.class, root.get("datum")), // Izvlači samo datum iz LocalDateTime
-                            time
-                    ));
+                    criteriaBuilder.between(root.get("time"), LocalDateTime.parse(time), LocalDateTime.parse(time).plusDays(1)));
         }
 
 
@@ -106,17 +103,8 @@ public class EventService {
         }
 
         Sort sort = Sort.unsorted();
-        if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
-            sort = switch (sortField) {
-                case "basePrice" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
-                case "discount" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
-                case "finalPrice" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
-                default ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
-            };
+        if (StringUtils.hasText(sortField)) {
+            Sort.by(Sort.Direction.ASC , sortField);
         }
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
