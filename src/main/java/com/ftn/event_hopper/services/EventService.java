@@ -99,12 +99,6 @@ public class EventService {
 
 
 
-
-//        if (time != null) {
-//            specification = specification.and((root, query, criteriaBuilder) ->
-//                    criteriaBuilder.equal(root.get("time")., time));
-//        }
-
         if (StringUtils.hasText(searchContent)) {
             specification = specification.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.or(
@@ -114,8 +108,13 @@ public class EventService {
         }
 
         Sort sort = Sort.unsorted();
-        if (StringUtils.hasText(sortField)) {
-            Sort.by(Sort.Direction.ASC , sortField);
+        if (sortField != null && !sortField.isEmpty()) {
+            Sort.Direction direction = Sort.Direction.ASC; // Podrazumevani smer sortiranja je rastući
+            if ("desc".equalsIgnoreCase(sortDirection)) {
+                direction = Sort.Direction.DESC;
+            }
+
+            sort = Sort.by(direction, sortField); // Sortira po izabranom polju i smeru
         }
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
