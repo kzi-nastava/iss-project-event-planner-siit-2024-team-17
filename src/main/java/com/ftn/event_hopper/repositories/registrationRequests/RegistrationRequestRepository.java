@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.repositories;
+package com.ftn.event_hopper.repositories.registrationRequests;
 
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.registration.RegistrationRequestStatus;

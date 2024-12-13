@@ -1,10 +1,9 @@
-package com.ftn.event_hopper.services.user;
+package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.users.eventOrganizer.*;
-import com.ftn.event_hopper.mapper.user.EventOrganizerDTOMapper;
-import com.ftn.event_hopper.models.locations.Location;
+import com.ftn.event_hopper.mapper.users.EventOrganizerDTOMapper;
 import com.ftn.event_hopper.models.users.EventOrganizer;
-import com.ftn.event_hopper.repositories.user.EventOrganizerRepository;
+import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

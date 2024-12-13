@@ -1,18 +1,14 @@
-package com.ftn.event_hopper.services;
+package com.ftn.event_hopper.services.events;
 
-import com.ftn.event_hopper.dtos.events.GetEventDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
-import com.ftn.event_hopper.mapper.EventDTOMapper;
+import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
-import com.ftn.event_hopper.models.shared.ProductStatus;
-import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Person;
-import com.ftn.event_hopper.repositories.EventRepository;
+import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
-import com.ftn.event_hopper.repositories.user.PersonRepository;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
 import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -23,12 +19,10 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService {

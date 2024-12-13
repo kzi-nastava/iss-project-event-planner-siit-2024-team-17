@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.mapper;
+package com.ftn.event_hopper.mapper.registrationRequests;
 
 
 import com.ftn.event_hopper.dtos.registration.*;
