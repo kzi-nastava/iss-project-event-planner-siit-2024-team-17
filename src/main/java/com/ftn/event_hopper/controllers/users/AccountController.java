@@ -56,7 +56,6 @@ public class AccountController {
     }
 
 
-
     @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleAccountDTO>> getVerifiedAccounts() {
         List<SimpleAccountDTO> accounts = accountService.findAllVerified();
@@ -83,6 +82,14 @@ public class AccountController {
             return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> changePassword(@PathVariable UUID id, @RequestBody ChangePasswordDTO newPasswordDTO) {
+        if(accountService.changePassword(id, newPasswordDTO.getNewPassword())) {
+            return new ResponseEntity<>("Password changed successfully", HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>("Password couldn't be changed, account not found", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

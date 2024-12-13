@@ -97,7 +97,6 @@ public class AccountService {
     public UpdatedAccountDTO update(UUID id, UpdateAccountDTO accountDTO){
         Account account = accountRepository.findById(id).orElseGet(null);
         if(account!= null){
-            account.setPassword(accountDTO.getPassword());
             account.setVerified(accountDTO.isVerified());
             account.setActive(accountDTO.isActive());
             account.setSuspensionTimestamp(accountDTO.getSuspensionTimeStamp());
@@ -106,6 +105,16 @@ public class AccountService {
             this.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
+    }
+
+    public boolean changePassword(UUID id, String newPassword){
+        Account account = accountRepository.findById(id).orElseGet(null);
+        if(account!= null){
+            account.setPassword(newPassword);
+            this.save(account);
+            return true;
+        }
+        return false;
     }
 
     public SimpleAccountDTO deactivate(UUID accountId){
