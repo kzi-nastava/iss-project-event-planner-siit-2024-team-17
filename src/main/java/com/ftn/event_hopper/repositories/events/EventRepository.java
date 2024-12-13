@@ -1,8 +1,7 @@
-package com.ftn.event_hopper.repositories;
+package com.ftn.event_hopper.repositories.events;
 
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
-import com.ftn.event_hopper.models.solutions.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;

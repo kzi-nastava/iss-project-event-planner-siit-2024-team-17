@@ -2,18 +2,14 @@ package com.ftn.event_hopper.controllers.registration;
 
 
 import com.ftn.event_hopper.dtos.registration.*;
-import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
-import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.registration.RegistrationRequestStatus;
-import com.ftn.event_hopper.services.RegistrationRequestService;
+import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;

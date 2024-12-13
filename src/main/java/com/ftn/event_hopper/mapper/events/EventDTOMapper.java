@@ -1,5 +1,6 @@
-package com.ftn.event_hopper.mapper;
+package com.ftn.event_hopper.mapper.events;
 
+import com.ftn.event_hopper.mapper.locations.LocationDTOMapper;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Converter;

@@ -1,12 +1,8 @@
 package com.ftn.event_hopper.services.solutions;
 
 
-import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.solutions.ServiceManagementDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
-import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
-import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Person;
@@ -14,9 +10,8 @@ import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
-import com.ftn.event_hopper.repositories.user.PersonRepository;
-import com.ftn.event_hopper.repositories.user.ServiceProviderRepository;
-import jakarta.persistence.DiscriminatorValue;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
+import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -27,7 +22,6 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {

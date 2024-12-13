@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.repositories;
+package com.ftn.event_hopper.repositories.locations;
 
 import com.ftn.event_hopper.models.locations.Location;
 import org.springframework.data.jpa.repository.JpaRepository;

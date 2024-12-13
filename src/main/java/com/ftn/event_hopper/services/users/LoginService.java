@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.services.user;
+package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.users.account.LoginDTO;
 import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;

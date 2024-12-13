@@ -1,10 +1,10 @@
-package com.ftn.event_hopper.services;
+package com.ftn.event_hopper.services.registrationRequests;
 
 import com.ftn.event_hopper.dtos.registration.*;
-import com.ftn.event_hopper.mapper.RegistrationRequestDTOMapper;
+import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.registration.RegistrationRequestStatus;
-import com.ftn.event_hopper.repositories.RegistrationRequestRepository;
+import com.ftn.event_hopper.repositories.registrationRequests.RegistrationRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

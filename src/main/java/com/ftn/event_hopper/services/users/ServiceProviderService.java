@@ -1,12 +1,12 @@
-package com.ftn.event_hopper.services.user;
+package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.users.serviceProvider.*;
-import com.ftn.event_hopper.mapper.user.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ftn.event_hopper.repositories.user.ServiceProviderRepository;
+import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 
 import java.time.LocalTime;
 import java.util.List;
