@@ -25,10 +25,10 @@ VALUES
 
 INSERT INTO persons (type, id, location_id, name, phone_number, profile_picture, surname)
 VALUES
-    (3, 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe'),
-    (3, '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith'),
-    (3, 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown'),
-    (0, '20343059-c4dd-4608-81aa-104f415e8085', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Admin', '+1122334455', 'https://example.com/emma.jpg', 'Admin');
+    (3, 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'John', '+1234567890', 'https://i.imgur.com/xgY56h0.png', 'Doe'),
+    (3, '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '+9876543210', 'https://i.imgur.com/xgY56h0.png', 'Smith'),
+    (3, 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Emma', '+1122334455', 'https://i.imgur.com/xgY56h0.png', 'Brown'),
+    (0, '20343059-c4dd-4608-81aa-104f415e8085', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Admin', '+1122334455', 'https://i.imgur.com/xgY56h0.png', 'Admin');
 
 
 INSERT INTO accounts (is_active, is_verified, type, suspension_timestamp, id, person_id, registration_request_id, email, password)
@@ -58,9 +58,9 @@ VALUES
 
 INSERT INTO event_organizers (type, id, location_id, name, phone_number, profile_picture, surname)
 VALUES
-    (2, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe'),
-    (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith'),
-    (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown');
+    (2, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'John', '+1234567890', 'https://i.imgur.com/xgY56h0.png', 'Doe'),
+    (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '+9876543210', 'https://i.imgur.com/xgY56h0.png', 'Smith'),
+    (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Emma', '+1122334455', 'https://i.imgur.com/xgY56h0.png', 'Brown');
 
 
 INSERT INTO service_providers (type, work_end, work_start, company_location_id, id, location_id, company_description, company_email, company_name, name, phone_number, profile_picture, surname, company_phone_number)
@@ -207,7 +207,8 @@ INSERT INTO product_pictures (product_id, picture_url)
 VALUES
     ('935e1b52-6180-419a-bbe8-909db6cd6cbc', 'https://example.com/images/product1.jpg'),
     ('11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'https://example.com/images/product2.jpg'),
-    ('2eed4933-2477-487e-8b99-c39a9ac939dd', 'https://example.com/images/product3.jpg');
+    ('2eed4933-2477-487e-8b99-c39a9ac939dd', 'https://i.imgur.com/ARrm8Ja.jpeg'),
+    ('2eed4933-2477-487e-8b99-c39a9ac939dd', 'https://i.imgur.com/jqcgAdK.jpeg');
 
 
 INSERT INTO persons_favorite_products (person_id, product_id)
