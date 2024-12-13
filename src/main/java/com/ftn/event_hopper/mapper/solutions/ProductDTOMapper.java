@@ -7,6 +7,8 @@ import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.solutions.Product;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -42,4 +44,9 @@ public class ProductDTOMapper {
                 .map(this::fromProductToSimpleDTO)
                 .collect(Collectors.toList());
     }
+
+    public Page<SimpleProductDTO> fromProductPageToSimpleProductDTOPage(Page<Product> all) {
+        return all.map(this::fromProductToSimpleDTO);
+    }
+
 }

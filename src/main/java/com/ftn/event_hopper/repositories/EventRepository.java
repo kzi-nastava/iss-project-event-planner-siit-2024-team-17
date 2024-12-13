@@ -2,17 +2,23 @@ package com.ftn.event_hopper.repositories;
 
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
+import com.ftn.event_hopper.models.solutions.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface EventRepository extends JpaRepository<Event, UUID> {
+@Repository
+public interface EventRepository extends JpaRepository<Event, UUID> , JpaSpecificationExecutor<Event> {
     List<Event> findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(String city, EventPrivacyType privacyType, LocalDateTime now);
 
-    Page<Event> findAll(Pageable page);
 
+    Page<Event> findAll(Specification<Event> specification, Pageable page);
 }

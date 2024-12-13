@@ -19,6 +19,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/solutions")
+@CrossOrigin(origins = "*")
+
 public class SolutionController{
 
     @Autowired
@@ -65,17 +67,20 @@ public class SolutionController{
     public ResponseEntity<PagedResponse<SimpleProductDTO>> getSolutionsPage(
             //kako da odvojim za checkbox product ili sevrice
             Pageable page,
-            @RequestParam(value = "isProduct", required = false) boolean isProduct,
-            @RequestParam(value = "isService", required = false) boolean isService,
+            @RequestParam(value = "isProduct", required = true) boolean isProduct,
+            @RequestParam(value = "isService", required = true) boolean isService,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
             @RequestParam(value = "eventTypeIds", required = false) ArrayList<UUID> eventTypeIds,
             @RequestParam(value = "minPrice", required = false) Double minPrice,
             @RequestParam(value = "maxPrice", required = false) Double maxPrice,
-            @RequestParam(value = "searchContent", required = false) String searchContent
+            @RequestParam(value = "isAvailable", required = false) Boolean isAvailable,
+            @RequestParam(value = "searchContent", required = false) String searchContent,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false, defaultValue = "asc") String sortDirection
             ) {
 
 
-        Page<SimpleProductDTO> solutionsPage = productService.findAll(page, isProduct, isService, categoryId, eventTypeIds, minPrice, maxPrice, searchContent);
+        Page<SimpleProductDTO> solutionsPage = productService.findAll(page, isProduct, isService, categoryId, eventTypeIds, minPrice, maxPrice,isAvailable, searchContent,sortField, sortDirection);
         List<SimpleProductDTO> solutions = solutionsPage.getContent();
 
         PagedResponse<SimpleProductDTO> response = new PagedResponse<>(

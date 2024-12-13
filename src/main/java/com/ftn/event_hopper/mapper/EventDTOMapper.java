@@ -4,6 +4,7 @@ import com.ftn.event_hopper.models.eventTypes.EventType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
@@ -51,5 +52,9 @@ public class EventDTOMapper {
         return events.stream()
                 .map(this::fromEventToSimpleDTO)
                 .collect(Collectors.toList());
+    }
+
+    public Page<SimpleEventDTO> fromEventPageToSimpleEventDTOPage (Page<Event> all){
+        return all.map(this::fromEventToSimpleDTO);
     }
 }

@@ -2,19 +2,29 @@ package com.ftn.event_hopper.services;
 
 import com.ftn.event_hopper.dtos.events.GetEventDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.mapper.EventDTOMapper;
+import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
+import com.ftn.event_hopper.models.shared.ProductStatus;
+import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.repositories.EventRepository;
+import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.user.PersonRepository;
+import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +38,10 @@ public class EventService {
     private PersonRepository personRepository;
     @Autowired
     private EventDTOMapper eventDTOMapper;
+    @Autowired
+    private ProductDTOMapper productDTOMapper;
+    @Autowired
+    private ProductRepository productRepository;
 
     public List<SimpleEventDTO> findAll(){
         List<Event> events = eventRepository.findAll();
@@ -47,36 +61,73 @@ public class EventService {
         return eventDTOMapper.fromEventListToSimpleDTOList(top5Events);
     }
 
-    public Page<SimpleEventDTO> findAll(Pageable page, String city, UUID eventTypeId, LocalDateTime time, String searchContent) {
-        Page<Event> eventsPage = eventRepository.findAll(page);
-        List<Event> events = eventsPage.getContent();
+
+    public Page<SimpleEventDTO> findAll(
+            Pageable page,
+            String city,
+            UUID eventTypeId,
+            String time,
+            String searchContent,
+            String sortField,
+            String sortDirection
+            ) {
+
+
+        Specification<Event> specification = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.greaterThan(root.get("time"), LocalDateTime.now()),
+                        criteriaBuilder.equal(root.get("privacy"), 1)
+                ));
 
         if (city != null) {
-            events = events.stream()
-                    .filter(event -> event.getLocation().getCity().equalsIgnoreCase(city))
-                    .collect(Collectors.toList());
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("location").get("city"), city));
         }
 
         if (eventTypeId != null) {
-            events = events.stream()
-                    .filter(event -> event.getEventType().getId().equals(eventTypeId))
-                    .collect(Collectors.toList());
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("eventType").get("id"), eventTypeId));
         }
 
         if (time != null) {
-            events = events.stream()
-                    .filter(event -> event.getTime().equals(time))
-                    .collect(Collectors.toList());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            LocalDate parsedDate = LocalDate.parse(time, formatter);
+
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Expression<LocalDate> eventDate = criteriaBuilder.function(
+                        "date", LocalDate.class, root.get("time"));
+                return criteriaBuilder.equal(eventDate, parsedDate);
+            });
         }
 
-        if (searchContent != null && !searchContent.isEmpty()) {
-            events = events.stream()
-                    .filter(event -> event.getName().toLowerCase().contains(searchContent.toLowerCase()))
-                    .collect(Collectors.toList());
+
+
+
+        if (StringUtils.hasText(searchContent)) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchContent.toLowerCase() + "%"),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchContent.toLowerCase() + "%")
+                    ));
         }
-        List<SimpleEventDTO> filteredEvents = eventDTOMapper.fromEventListToSimpleDTOList(events);
+
+        Sort sort = Sort.unsorted();
+        if (sortField != null && !sortField.isEmpty()) {
+            Sort.Direction direction = Sort.Direction.ASC; // Podrazumevani smer sortiranja je rastući
+            if ("desc".equalsIgnoreCase(sortDirection)) {
+                direction = Sort.Direction.DESC;
+            }
+
+            sort = Sort.by(direction, sortField); // Sortira po izabranom polju i smeru
+        }
+
+        Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+
+        Page<Event> filteredEvents = eventRepository.findAll(specification, pageableWithSort);
+
+        Page<SimpleEventDTO> all = eventDTOMapper.fromEventPageToSimpleEventDTOPage(filteredEvents);
 
 
-        return new PageImpl<>(filteredEvents, page, filteredEvents.size());
+        return all;
     }
 }
