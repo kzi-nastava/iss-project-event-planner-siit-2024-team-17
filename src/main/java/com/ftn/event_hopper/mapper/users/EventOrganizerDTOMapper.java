@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.mapper.user;
+package com.ftn.event_hopper.mapper.users;
 
 import com.ftn.event_hopper.dtos.users.eventOrganizer.*;
 import com.ftn.event_hopper.models.users.EventOrganizer;

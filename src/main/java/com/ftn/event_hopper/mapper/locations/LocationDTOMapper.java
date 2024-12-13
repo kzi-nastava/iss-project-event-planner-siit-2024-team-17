@@ -1,8 +1,6 @@
-package com.ftn.event_hopper.mapper;
+package com.ftn.event_hopper.mapper.locations;
 
 import com.ftn.event_hopper.dtos.location.*;
-import com.ftn.event_hopper.dtos.users.person.SimplePersonDTO;
-import com.ftn.event_hopper.models.users.Person;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.account.*;
-import com.ftn.event_hopper.services.user.AccountService;
+import com.ftn.event_hopper.services.users.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

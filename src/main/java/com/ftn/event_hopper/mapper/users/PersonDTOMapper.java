@@ -1,10 +1,10 @@
-package com.ftn.event_hopper.mapper.user;
+package com.ftn.event_hopper.mapper.users;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.location.CreateLocationDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
-import com.ftn.event_hopper.mapper.EventDTOMapper;
-import com.ftn.event_hopper.mapper.LocationDTOMapper;
+import com.ftn.event_hopper.mapper.events.EventDTOMapper;
+import com.ftn.event_hopper.mapper.locations.LocationDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.solutions.Product;

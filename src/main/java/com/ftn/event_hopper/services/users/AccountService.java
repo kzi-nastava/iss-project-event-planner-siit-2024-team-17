@@ -1,13 +1,13 @@
-package com.ftn.event_hopper.services.user;
+package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
-import com.ftn.event_hopper.mapper.RegistrationRequestDTOMapper;
-import com.ftn.event_hopper.mapper.user.AccountDTOMapper;
+import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
+import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.users.Account;
-import com.ftn.event_hopper.repositories.user.AccountRepository;
-import com.ftn.event_hopper.services.RegistrationRequestService;
+import com.ftn.event_hopper.repositories.users.AccountRepository;
+import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

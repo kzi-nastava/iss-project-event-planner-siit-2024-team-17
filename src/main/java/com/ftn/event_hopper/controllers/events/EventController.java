@@ -3,8 +3,7 @@ package com.ftn.event_hopper.controllers.events;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.events.*;
-import com.ftn.event_hopper.models.shared.EventPrivacyType;
-import com.ftn.event_hopper.services.EventService;
+import com.ftn.event_hopper.services.events.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;

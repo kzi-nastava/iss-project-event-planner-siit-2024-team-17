@@ -18,16 +18,6 @@ public class RatingController {
     public ResponseEntity<Collection<GetRatingDTO>> getRatings() {
         Collection<GetRatingDTO> ratings = new ArrayList<GetRatingDTO>();
 
-        GetRatingDTO rating = new GetRatingDTO();
-        rating.setId(UUID.randomUUID());
-        rating.setValue(5);
-
-        GetRatingDTO rating2 = new GetRatingDTO();
-        rating2.setId(UUID.randomUUID());
-        rating2.setValue(4);
-
-        ratings.add(rating);
-        ratings.add(rating2);
 
         return new ResponseEntity<Collection<GetRatingDTO>>(ratings, HttpStatus.OK);
     }
@@ -40,8 +30,6 @@ public class RatingController {
             return new ResponseEntity<GetRatingDTO>(HttpStatus.NOT_FOUND);
         }
 
-        rating.setId(id);
-        rating.setValue(5);
 
         return new ResponseEntity<GetRatingDTO>(rating, HttpStatus.OK);
     }
@@ -49,9 +37,7 @@ public class RatingController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedRatingDTO> createRating(@RequestBody CreateRatingDTO rating) {
         CreatedRatingDTO createdRating = new CreatedRatingDTO();
-        createdRating.setId(UUID.randomUUID());
-        createdRating.setValue(rating.getValue());
-        createdRating.setEventId(rating.getEventId());
+
 
         return new ResponseEntity<CreatedRatingDTO>(createdRating, HttpStatus.CREATED);
     }

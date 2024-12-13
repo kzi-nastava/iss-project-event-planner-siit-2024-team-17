@@ -1,7 +1,7 @@
 package com.ftn.event_hopper.controllers.locations;
 
 import com.ftn.event_hopper.dtos.location.*;
-import com.ftn.event_hopper.services.LocationService;
+import com.ftn.event_hopper.services.locations.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

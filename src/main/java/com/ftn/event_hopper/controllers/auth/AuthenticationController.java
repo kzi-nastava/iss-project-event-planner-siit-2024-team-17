@@ -1,9 +1,9 @@
-package com.ftn.event_hopper.controllers;
+package com.ftn.event_hopper.controllers.auth;
 
 
 import com.ftn.event_hopper.dtos.users.account.LoginDTO;
 import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
-import com.ftn.event_hopper.services.user.LoginService;
+import com.ftn.event_hopper.services.users.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

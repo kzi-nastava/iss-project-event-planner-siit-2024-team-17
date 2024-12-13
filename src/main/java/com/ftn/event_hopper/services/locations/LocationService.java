@@ -1,11 +1,11 @@
-package com.ftn.event_hopper.services;
+package com.ftn.event_hopper.services.locations;
 
 import com.ftn.event_hopper.dtos.location.*;
 import com.ftn.event_hopper.models.locations.Location;
-import com.ftn.event_hopper.repositories.LocationRepository;
+import com.ftn.event_hopper.repositories.locations.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ftn.event_hopper.mapper.LocationDTOMapper;
+import com.ftn.event_hopper.mapper.locations.LocationDTOMapper;
 
 import java.util.List;
 import java.util.UUID;
