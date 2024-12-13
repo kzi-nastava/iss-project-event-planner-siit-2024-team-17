@@ -50,9 +50,8 @@ public class AccountService {
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
-    public Optional<SimpleAccountDTO> findByEmailAndPassword(LoginDTO loginDTO) {
-        Optional<Account> accountOptional = accountRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
-        return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO);
+    public Optional<Account> findByEmailAndPassword(LoginDTO loginDTO) {
+        return accountRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
     }
 
 
