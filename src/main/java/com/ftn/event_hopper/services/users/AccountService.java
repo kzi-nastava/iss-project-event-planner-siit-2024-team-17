@@ -144,6 +144,7 @@ public class AccountService {
         if(account!= null){
             account.setActive(false);
             this.save(account);
+            return;
         }
         throw new RuntimeException("Account not found.");
     }

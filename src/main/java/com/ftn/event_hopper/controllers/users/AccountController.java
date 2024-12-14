@@ -109,7 +109,8 @@ public class AccountController {
     public ResponseEntity<?> deactivate(@PathVariable UUID id) {
         try {
             accountService.deactivate(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Success
+            System.out.println("Account deactivated");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // Success
         } catch (RuntimeException ex) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("message", ex.getMessage());
