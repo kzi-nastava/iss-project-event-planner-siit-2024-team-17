@@ -25,7 +25,7 @@ public class AuthenticationController {
         LoginResponse response = loginService.login(loginDTO);
 
         if (response.isSuccess()) {
-            return ResponseEntity.ok(response.getAccount()); // Successful login
+            return ResponseEntity.ok(response); // Successful login
         }
 
         // Return error message with BAD_REQUEST status
