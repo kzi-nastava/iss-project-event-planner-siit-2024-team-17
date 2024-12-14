@@ -1,12 +1,16 @@
 package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.users.serviceProvider.*;
+import com.ftn.event_hopper.mapper.comments.CommentDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.locations.Location;
+import com.ftn.event_hopper.models.ratings.Rating;
+import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.users.ServiceProvider;
+import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -18,6 +22,9 @@ public class ServiceProviderService {
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private ServiceProviderDTOMapper serviceProviderDTOMapper;
+    @Autowired
+    private CommentDTOMapper commentDTOMapper;
+
 
     public SimpleServiceProviderDTO findOne(UUID id) {
         ServiceProvider serviceProvider = serviceProviderRepository.findById(id).orElseGet(null);
@@ -76,4 +83,27 @@ public class ServiceProviderService {
     }
 
 
+    public ServiceProviderDetailsDTO getDetails(UUID id) {
+        ServiceProvider provider = serviceProviderRepository.findById(id).orElseGet(null);
+
+        if (provider == null) {
+            return null;
+        }
+
+        List<Rating> ratings = provider.getProducts().stream()
+        .flatMap(product -> product.getRatings().stream())
+        .toList();
+
+        List<Comment> comments = provider.getProducts().stream()
+                .flatMap(product -> product.getComments().stream())
+                .filter(comment -> comment.getStatus() == CommentStatus.ACCEPTED)
+                .toList();
+
+        ServiceProviderDetailsDTO details = serviceProviderDTOMapper.fromServiceProviderToDetailsDTO(provider);
+
+        details.setRating(ratings.stream().mapToDouble(Rating::getValue).average().orElse(0.0));
+        details.setComments(commentDTOMapper.fromCommentListToSimplecommentDTOCollection(comments));
+
+        return details;
+    }
 }

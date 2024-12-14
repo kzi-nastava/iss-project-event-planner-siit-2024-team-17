@@ -61,5 +61,16 @@ public class ServiceProviderController {
         return new ResponseEntity<>(updatedProvider, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}/details", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ServiceProviderDetailsDTO> getServiceProviderDetails(@PathVariable UUID id) {
+        ServiceProviderDetailsDTO details = serviceProviderService.getDetails(id);
+
+        if (details == null) {
+            return new ResponseEntity<ServiceProviderDetailsDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(details, HttpStatus.OK);
+    }
+
 
 }
