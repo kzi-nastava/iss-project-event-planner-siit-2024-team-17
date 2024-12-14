@@ -18,8 +18,6 @@ import java.util.*;
 public class AccountController {
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private PersonService personService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccountDTO>> getAccounts() {
@@ -108,11 +106,15 @@ public class AccountController {
 
 
     @PostMapping(value = "{id}/deactivate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deactivate(@PathVariable UUID id, @RequestBody ChangePasswordDTO newPasswordDTO) {
-        if(accountService.deactivate(id)) {
-            return new ResponseEntity<>("Password changed successfully", HttpStatus.ACCEPTED);
+    public ResponseEntity<?> deactivate(@PathVariable UUID id) {
+        try {
+            accountService.deactivate(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Success
+        } catch (RuntimeException ex) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
-        return new ResponseEntity<>("Password couldn't be changed, account not found", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "{id}/verify", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

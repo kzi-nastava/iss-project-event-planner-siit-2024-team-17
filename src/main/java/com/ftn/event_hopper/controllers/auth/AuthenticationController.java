@@ -2,6 +2,7 @@ package com.ftn.event_hopper.controllers.auth;
 
 
 import com.ftn.event_hopper.dtos.users.account.LoginDTO;
+import com.ftn.event_hopper.dtos.users.account.LoginResponse;
 import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.services.users.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,17 @@ public class AuthenticationController {
     private LoginService loginService;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleAccountDTO> getLoginAccount(@RequestBody LoginDTO loginDTO) {
-        Optional<SimpleAccountDTO> account = loginService.login(loginDTO);
-        return account.map(simpleAccountDTO -> new ResponseEntity<>(simpleAccountDTO, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<?> getLoginAccount(@RequestBody LoginDTO loginDTO) {
+        LoginResponse response = loginService.login(loginDTO);
+
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response.getAccount()); // Successful login
+        }
+
+        // Return error message with BAD_REQUEST status
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
     }
+
+
+
 }

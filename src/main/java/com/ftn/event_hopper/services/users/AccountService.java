@@ -35,6 +35,10 @@ public class AccountService {
         return accountDTOMapper.fromAccountToAccountDTO(accountRepository.findById(id).orElseGet(null));
     }
 
+    public Optional<Account> findByEmail(String email) {
+        return accountRepository.findByEmail(email);
+    }
+
     public SimpleAccountDTO findOneSimpleAccount(UUID id) {
         return accountDTOMapper.fromAccountToSimpleDTO(accountRepository.findById(id).orElseGet(null));
     }
@@ -135,14 +139,13 @@ public class AccountService {
         this.save(account);
     }
 
-    public boolean deactivate(UUID accountId){
+    public void deactivate(UUID accountId){
         Account account = accountRepository.findById(accountId).orElseGet(null);
         if(account!= null){
             account.setActive(false);
             this.save(account);
-            return true;
         }
-        return false;
+        throw new RuntimeException("Account not found.");
     }
 
     public Optional<SimpleAccountDTO> verify(UUID accountId){
