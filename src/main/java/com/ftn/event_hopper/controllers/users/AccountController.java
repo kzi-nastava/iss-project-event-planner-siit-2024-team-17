@@ -1,16 +1,16 @@
 package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.account.*;
+import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.services.users.AccountService;
+import com.ftn.event_hopper.services.users.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -18,6 +18,8 @@ import java.util.UUID;
 public class AccountController {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private PersonService personService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccountDTO>> getAccounts() {
@@ -56,6 +58,16 @@ public class AccountController {
     }
 
 
+    @GetMapping(value = "/valid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getValidAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllValid();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+
     @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleAccountDTO>> getVerifiedAccounts() {
         List<SimpleAccountDTO> accounts = accountService.findAllVerified();
@@ -84,12 +96,44 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> changePassword(@PathVariable UUID id, @RequestBody ChangePasswordDTO newPasswordDTO) {
-        if(accountService.changePassword(id, newPasswordDTO.getNewPassword())) {
+
+    @GetMapping(value = "/{id}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileForPersonDTO> getProfile(@PathVariable UUID id) {
+        ProfileForPersonDTO profileForPerson = accountService.getProfile(id);
+        if (profileForPerson == null) {
+            return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "{id}/deactivate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deactivate(@PathVariable UUID id, @RequestBody ChangePasswordDTO newPasswordDTO) {
+        if(accountService.deactivate(id)) {
             return new ResponseEntity<>("Password changed successfully", HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>("Password couldn't be changed, account not found", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping(value = "{id}/verify", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> verify(@PathVariable UUID id, @RequestBody ChangePasswordDTO newPasswordDTO) {
+        Optional<SimpleAccountDTO> account = accountService.verify(id);
+        if(account.isPresent()) {
+            return new ResponseEntity<>("Account has been verified", HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>("Account couldn't be verified", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping(value = "{id}/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changePassword(@PathVariable UUID id, @RequestBody ChangePasswordDTO changePasswordDTO) {
+        try {
+            accountService.changePassword(id, changePasswordDTO);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Success
+        } catch (RuntimeException ex) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
     }
 
     @PostMapping(value = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

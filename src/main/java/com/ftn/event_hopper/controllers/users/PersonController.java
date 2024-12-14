@@ -46,15 +46,6 @@ public class PersonController {
         return new ResponseEntity<>(homePageForPerson, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileForPersonDTO> getProfile(@PathVariable UUID id) {
-        ProfileForPersonDTO profileForPerson = personService.getProfile(id);
-        if (profileForPerson == null) {
-            return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedPersonDTO> createPerson(@RequestBody CreatePersonDTO personDTO) {
         return new ResponseEntity<>(personService.create(personDTO), HttpStatus.CREATED);
