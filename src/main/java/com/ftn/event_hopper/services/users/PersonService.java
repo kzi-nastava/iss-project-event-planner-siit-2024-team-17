@@ -114,9 +114,11 @@ public class PersonService {
 
     public void removeFavoriteSolution(UUID accountId, UUID solutionId) {
         Account account = accountRepository.findById(accountId).orElseGet(null);
-        account.getPerson()
-                .getFavoriteProducts()
+        Person person = account.getPerson();
+        person.getFavoriteProducts()
                 .removeIf(product -> product.getId().equals(solutionId));
+        personRepository.save(person);
+        personRepository.flush();
     }
 
 
