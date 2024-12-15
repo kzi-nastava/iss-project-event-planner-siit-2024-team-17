@@ -77,12 +77,12 @@ public class EmailService {
     }
 
     private String getAcceptationLink() {
-        return "http://localhost:8080/login";
+        return "http://localhost:4200/login";
 
     }
 
     private String getRegistrationLink() {
-        return "http://localhost:8080/registration";
+        return "http://localhost:4200/register-user";
     }
 
     public String getSignUp() {
