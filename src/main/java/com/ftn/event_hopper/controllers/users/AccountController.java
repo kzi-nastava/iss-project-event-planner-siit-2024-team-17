@@ -2,6 +2,7 @@ package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
+import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.services.users.AccountService;
 import com.ftn.event_hopper.services.users.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,8 +156,8 @@ public class AccountController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdateAccountDTO accountDTO) {
-        UpdatedAccountDTO updatedAccount = accountService.update(id, accountDTO);
+    public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdatePersonDTO personDTO) {
+        UpdatedAccountDTO updatedAccount = accountService.update(id, personDTO);
         if(updatedAccount == null) {
             return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
         }

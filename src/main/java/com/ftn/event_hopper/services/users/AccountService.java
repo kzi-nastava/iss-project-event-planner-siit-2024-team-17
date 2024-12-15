@@ -3,6 +3,7 @@ package com.ftn.event_hopper.services.users;
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
+import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
@@ -114,14 +115,10 @@ public class AccountService {
         return accountDTOMapper.fromAccountToCreatedDTO(account);
     }
 
-    public UpdatedAccountDTO update(UUID id, UpdateAccountDTO accountDTO){
+    public UpdatedAccountDTO update(UUID id, UpdatePersonDTO personDTO){
         Account account = accountRepository.findById(id).orElseGet(null);
         if(account!= null){
-            account.setVerified(accountDTO.isVerified());
-            account.setActive(accountDTO.isActive());
-            account.setSuspensionTimestamp(accountDTO.getSuspensionTimeStamp());
-            account.setType(accountDTO.getType());
-
+            personService.update(account.getPerson().getId(), personDTO);
             this.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);

@@ -50,7 +50,6 @@ public class PersonService {
         if(person!= null){
             person.setName(personDTO.getName());
             person.setSurname(personDTO.getSurname());
-            person.setProfilePicture(personDTO.getProfilePicture());
             person.setPhoneNumber(personDTO.getPhoneNumber());
             person.setType(personDTO.getType());
             Location location = person.getLocation();
