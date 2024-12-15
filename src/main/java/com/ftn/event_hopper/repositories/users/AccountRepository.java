@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface AccountRepository extends JpaRepository<Account, UUID>{
     List<Account> findByIsVerified(boolean verified);
     List<Account> findByIsActive(boolean active);
+    List<Account> findByIsVerifiedAndIsActive(boolean verified, boolean active);
 
+    Optional<Account> findByEmail(String email);
     Optional<Account> findByEmailAndPassword(String email, String password);
 }

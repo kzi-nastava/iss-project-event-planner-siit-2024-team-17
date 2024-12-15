@@ -18,6 +18,7 @@ import java.util.UUID;
  * the attending events necessary for the calendar*/
 public class ProfileForPersonDTO {
     private UUID id;
+    private String email;
     private String name;
     private String surname;
     private String profilePicture;

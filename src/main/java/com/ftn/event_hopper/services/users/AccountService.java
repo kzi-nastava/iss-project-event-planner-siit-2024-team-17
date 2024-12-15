@@ -2,6 +2,8 @@ package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
+import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
+import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
@@ -27,8 +29,15 @@ public class AccountService {
     @Autowired
     private RegistrationRequestDTOMapper registrationRequestDTOMapper;
 
+    @Autowired
+    private PersonService personService;
+
     public AccountDTO findOneAccount(UUID id) {
         return accountDTOMapper.fromAccountToAccountDTO(accountRepository.findById(id).orElseGet(null));
+    }
+
+    public Optional<Account> findByEmail(String email) {
+        return accountRepository.findByEmail(email);
     }
 
     public SimpleAccountDTO findOneSimpleAccount(UUID id) {
@@ -37,6 +46,11 @@ public class AccountService {
 
     public List<SimpleAccountDTO> findAllActive() {
         List<Account> accounts = accountRepository.findByIsActive(true);
+        return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
+    }
+
+    public List<SimpleAccountDTO> findAllValid(){
+        List<Account> accounts = accountRepository.findByIsVerifiedAndIsActive(true, true);
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
@@ -50,11 +64,9 @@ public class AccountService {
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
 
-    public Optional<SimpleAccountDTO> findByEmailAndPassword(LoginDTO loginDTO) {
-        Optional<Account> accountOptional = accountRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
-        return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO);
+    public Optional<Account> findByEmailAndPassword(LoginDTO loginDTO) {
+        return accountRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
     }
-
 
     public List<AccountDTO> findAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
@@ -65,6 +77,14 @@ public class AccountService {
         List<Account> accounts = accountRepository.findAll();
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
     }
+
+    public ProfileForPersonDTO getProfile(UUID id){
+        Account account = accountRepository.findById(id).orElseGet(null);
+        ProfileForPersonDTO profileForPerson = personService.getProfile(account.getPerson().getId());
+        profileForPerson.setEmail(account.getEmail());
+        return profileForPerson;
+    }
+
 
     public CreatedServiceProviderAccountDTO createServiceProvider(CreateServiceProviderAccountDTO accountDTO){
         Account account = accountDTOMapper.fromCreateServiceProviderDTOToAccount(accountDTO);
@@ -95,36 +115,44 @@ public class AccountService {
         return accountDTOMapper.fromAccountToCreatedDTO(account);
     }
 
-    public UpdatedAccountDTO update(UUID id, UpdateAccountDTO accountDTO){
+    public UpdatedAccountDTO update(UUID id, UpdatePersonDTO personDTO){
         Account account = accountRepository.findById(id).orElseGet(null);
         if(account!= null){
-            account.setPassword(accountDTO.getPassword());
-            account.setVerified(accountDTO.isVerified());
-            account.setActive(accountDTO.isActive());
-            account.setSuspensionTimestamp(accountDTO.getSuspensionTimeStamp());
-            account.setType(accountDTO.getType());
-
+            personService.update(account.getPerson().getId(), personDTO);
             this.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
 
-    public SimpleAccountDTO deactivate(UUID accountId){
+    public void changePassword(UUID id, ChangePasswordDTO changePasswordDTO){
+        Account account = accountRepository.findById(id).orElse(null);
+        if (account == null) {
+            throw new RuntimeException("Account not found.");
+        }
+        if (!account.getPassword().equals(changePasswordDTO.getOldPassword())) {
+            throw new RuntimeException("The old password is incorrect.");
+        }
+        account.setPassword(changePasswordDTO.getNewPassword());
+        this.save(account);
+    }
+
+    public void deactivate(UUID accountId){
         Account account = accountRepository.findById(accountId).orElseGet(null);
         if(account!= null){
             account.setActive(false);
             this.save(account);
+            return;
         }
-        return accountDTOMapper.fromAccountToSimpleDTO(account);
+        throw new RuntimeException("Account not found.");
     }
 
-    public SimpleAccountDTO verify(UUID accountId){
+    public Optional<SimpleAccountDTO> verify(UUID accountId){
         Account account = accountRepository.findById(accountId).orElseGet(null);
         if(account!= null){
             account.setVerified(true);
             this.save(account);
         }
-        return accountDTOMapper.fromAccountToSimpleDTO(account);
+        return Optional.ofNullable(accountDTOMapper.fromAccountToSimpleDTO(account));
     }
 
     public SimpleAccountDTO suspend(UUID accountId) {

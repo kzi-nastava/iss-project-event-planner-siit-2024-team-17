@@ -15,7 +15,6 @@ import java.util.UUID;
 public class UpdatePersonDTO {
     private String name;
     private String surname;
-    private String profilePicture;
     private String phoneNumber;
     private PersonType type;
     private SimpleLocationDTO location;
