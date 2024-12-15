@@ -70,4 +70,27 @@ public class EmailService {
             return "Error while sending mail!!!";
         }
     }
+
+    public String getAcceptInvitation() {
+        return "If you want to join us, please click the link below to confirm your presence: \n\n"
+                + getAcceptationLink() +"\n\n";
+    }
+
+    private String getAcceptationLink() {
+        return "http://localhost:8080/login";
+
+    }
+
+    private String getRegistrationLink() {
+        return "http://localhost:8080/registration";
+    }
+
+    public String getSignUp() {
+        return "If you want to join us, please click the link below to make new account: \n\n"
+                + getRegistrationLink() +"\n\n";
+    }
+
+
+
+
 }

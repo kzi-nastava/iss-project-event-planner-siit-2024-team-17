@@ -55,9 +55,9 @@ public class InvitationService {
                 ;
         Account account = accountRepository.findByEmail(invitation.getTargetEmail()).orElse(null);
         if (account != null) {
-            body += "Potvrdite svoj dolazak na linku: sdsf";
+            body += emailService.getAcceptInvitation();
         }else{
-            body += "Brzo se registrujte i potvrdite svoj dolazak na linku";
+            body += emailService.getSignUp();
         }
 
         Email email = new Email(invitation.getTargetEmail(), subject, body, invitation.getPicture());
