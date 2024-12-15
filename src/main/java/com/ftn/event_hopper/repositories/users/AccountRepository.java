@@ -12,4 +12,5 @@ public interface AccountRepository extends JpaRepository<Account, UUID>{
     List<Account> findByIsActive(boolean active);
 
     Optional<Account> findByEmailAndPassword(String email, String password);
+    Optional<Account> findByEmail(String email);
 }

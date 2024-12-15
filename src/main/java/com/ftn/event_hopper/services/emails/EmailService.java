@@ -1,6 +1,6 @@
 package com.ftn.event_hopper.services.emails;
 
-import com.ftn.event_hopper.dtos.emails.CreatedEmailDTO;
+import com.ftn.event_hopper.models.emails.Email;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.apache.juli.logging.Log;
@@ -22,7 +22,7 @@ public class EmailService {
     @Value("${spring.mail.username}") private String sender;
 
     // To send a simple email
-    public String sendSimpleMail(CreatedEmailDTO email)
+    public String sendSimpleMail(Email email)
     {
 
         try {
@@ -46,7 +46,7 @@ public class EmailService {
 
     // To send an email with attachment
     public String
-    sendMailWithAttachment(CreatedEmailDTO email) {
+    sendMailWithAttachment(Email email) {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
