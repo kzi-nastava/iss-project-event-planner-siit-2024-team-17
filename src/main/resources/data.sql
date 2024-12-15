@@ -132,6 +132,13 @@ INSERT INTO persons_favorite_events (event_id, person_id)
 VALUES
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f'),
     ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f'),
+    ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('8c216a1f-6d65-4256-95e0-6a820d5fb902','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('06aee816-a4ec-4d3c-9d9c-2c0f6bb96285','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('6915ce46-d213-424b-a3c4-035767714df0','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('f1ad3604-fef5-439a-8adb-45776a019a55','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
     ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3');
 
 
@@ -214,6 +221,15 @@ INSERT INTO persons_favorite_products (person_id, product_id)
 VALUES
     ('d7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
     ('4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
+
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '1237e35c-80ff-4a2a-8245-2728cb45ee11'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '314c1838-8cbe-471c-9403-dc49baad1977'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d'),
+
+
     ('b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '935e1b52-6180-419a-bbe8-909db6cd6cbc');
 
 
