@@ -1,10 +1,12 @@
 package com.ftn.event_hopper.services.solutions;
 
 
+import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
@@ -247,5 +249,23 @@ public class ProductService {
         }
 
         return solutionDetailsDTO;
+    }
+
+    public Collection<PriceManagementDTO> getPricesForManagement() {
+        List<Product> products = productRepository.findAll();
+        List<PriceManagementDTO> prices = new ArrayList<>();
+        for (Product product : products) {
+            Price newestPrice = product.getPrices().get(product.getPrices().size() - 1);
+
+            PriceManagementDTO price = new PriceManagementDTO();
+            price.setProductId(product.getId());
+            price.setProductName(product.getName());
+
+            price.setBasePrice(newestPrice.getBasePrice());
+            price.setDiscount(newestPrice.getDiscount());
+            price.setFinalPrice(newestPrice.getFinalPrice());
+            prices.add(price);
+        }
+        return prices;
     }
 }
