@@ -1,22 +1,27 @@
 package com.ftn.event_hopper.services.users;
 
+import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
+import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
+import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
-import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.*;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
+import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
+import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -25,9 +30,15 @@ public class AccountService {
     @Autowired
     private AccountDTOMapper accountDTOMapper;
     @Autowired
+    private EventDTOMapper eventDTOMapper;
+    @Autowired
     private RegistrationRequestService registrationRequestService;
     @Autowired
     private RegistrationRequestDTOMapper registrationRequestDTOMapper;
+    @Autowired
+    private ServiceProviderRepository serviceProviderRepository;
+    @Autowired
+    private EventOrganizerRepository eventOrganizerRepository;
 
     @Autowired
     private PersonService personService;
@@ -76,7 +87,32 @@ public class AccountService {
 
     public ProfileForPersonDTO getProfile(UUID id){
         Account account = accountRepository.findById(id).orElseGet(null);
+        System.out.println(account.getPerson());
         ProfileForPersonDTO profileForPerson = personService.getProfile(account.getPerson().getId());
+
+        Person person = account.getPerson();
+        if (account.getType() == PersonType.SERVICE_PROVIDER) {
+            Optional<ServiceProvider> serviceProvider = serviceProviderRepository.findById(person.getId());
+            if(serviceProvider.isPresent()){
+                profileForPerson.setCompanyEmail(serviceProvider.get().getCompanyEmail());
+                profileForPerson.setCompanyName(serviceProvider.get().getCompanyName());
+                profileForPerson.setCompanyPhoneNumber(serviceProvider.get().getCompanyPhoneNumber());
+                profileForPerson.setCompanyPhotos(serviceProvider.get().getCompanyPhotos());
+                profileForPerson.setCompanyDescription(serviceProvider.get().getCompanyDescription());
+                SimpleLocationDTO location = new SimpleLocationDTO();
+                location.setAddress(serviceProvider.get().getCompanyLocation().getAddress());
+                location.setCity(serviceProvider.get().getCompanyLocation().getCity());
+                profileForPerson.setCompanyLocation(location);
+            }
+
+        } else if (account.getType() == PersonType.EVENT_ORGANIZER) {
+            Optional<EventOrganizer> eventOrganizer = eventOrganizerRepository.findById(person.getId());
+            if(eventOrganizer.isPresent()){
+                Set<Event> events = eventOrganizer.get().getEvents();
+                List<SimpleEventDTO> simpleEvents = eventDTOMapper.fromEventListToSimpleDTOList(new ArrayList<>(events));
+                profileForPerson.setMyEvents(simpleEvents);
+            }
+        }
         profileForPerson.setEmail(account.getEmail());
         return profileForPerson;
     }

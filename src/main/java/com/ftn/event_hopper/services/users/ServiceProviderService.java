@@ -40,11 +40,6 @@ public class ServiceProviderService {
         return serviceProviderRepository.save(provider);
     }
 
-    public ProfileForServiceProviderDTO getProfile(UUID id) {
-        ServiceProvider provider = serviceProviderRepository.findById(id).orElseGet(null);
-        return serviceProviderDTOMapper.fromServiceProviderToProfileDTO(provider);
-    }
-
 
     public UpdatedServiceProviderDTO update(UUID id, UpdateServiceProviderDTO providerDTO){
         ServiceProvider provider = serviceProviderRepository.findById(id).orElseGet(null);
