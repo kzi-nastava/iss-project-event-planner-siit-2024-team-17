@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.location.LocationDTO;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
@@ -155,6 +156,32 @@ public class AccountService {
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
+
+    public UpdatedCompanyAccountDTO updateCompanyAccount(UUID id, UpdateCompanyAccountDTO companyAccountDTO){
+        Account account = accountRepository.findById(id).orElseGet(null);
+        if(account!= null){
+            Optional<ServiceProvider> serviceProvider = serviceProviderRepository.findById(account.getPerson().getId());
+            if(serviceProvider.isPresent()){
+                serviceProvider.get().setCompanyPhoneNumber(companyAccountDTO.getCompanyPhoneNumber());
+                serviceProvider.get().setCompanyDescription(companyAccountDTO.getCompanyDescription());
+                serviceProvider.get().getCompanyLocation().setAddress(companyAccountDTO.getCompanyLocation().getAddress());
+                serviceProvider.get().getCompanyLocation().setCity(companyAccountDTO.getCompanyLocation().getCity());
+                serviceProviderRepository.save(serviceProvider.get());
+            }
+        }
+        UpdatedCompanyAccountDTO newCompanyAccount = new UpdatedCompanyAccountDTO();
+        Optional<ServiceProvider> newServiceProvider = serviceProviderRepository.findById(account.getPerson().getId());
+        if(newServiceProvider.isPresent()){
+            newCompanyAccount.setCompanyPhoneNumber(newServiceProvider.get().getCompanyPhoneNumber());
+            newCompanyAccount.setCompanyDescription(newServiceProvider.get().getCompanyDescription());
+            LocationDTO location = new LocationDTO();
+            location.setAddress(newServiceProvider.get().getCompanyLocation().getAddress());
+            location.setCity(newServiceProvider.get().getCompanyLocation().getCity());
+            newCompanyAccount.setCompanyLocation(location);
+        }
+        return newCompanyAccount;
+    }
+
 
     public void changePassword(UUID id, ChangePasswordDTO changePasswordDTO){
         Account account = accountRepository.findById(id).orElse(null);

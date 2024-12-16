@@ -67,7 +67,7 @@ INSERT INTO service_providers (type, work_end, work_start, company_location_id, 
 VALUES
     (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '1234567890', 'https://example.com/john.jpg', 'Doe', '1234567890'),
     (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Providing top-tier consultancy services', 'contact@bizconsult.com', 'BizConsult', 'Alice', '9876543210', 'https://example.com/alice.jpg', 'Smith', '1234567890'),
-    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing', 'support@creativehub.com', 'CreativeHub', 'Emma', '1122334455', 'https://example.com/emma.jpg', 'Brown', '1234567890');
+    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing. Something something something something ', 'support@creativehub.com', 'CreativeHub', 'Emma', '1122334455', 'https://example.com/emma.jpg', 'Brown', '1234567890');
 
 
 INSERT INTO categories (is_deleted, status, id, description, name)
