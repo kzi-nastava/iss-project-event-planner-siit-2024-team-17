@@ -189,7 +189,15 @@ public class ServiceService {
 
         newService.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(service.getEventTypesIds())));
 
-        Price price = new Price(null, service.getBasePrice(), service.getDiscount(), service.getFinalPrice(), LocalDateTime.now());
+        double finalPrice = service.getBasePrice() * (1 - service.getDiscount() / 100);
+        finalPrice = Math.round(finalPrice * 100.0) / 100.0;
+
+        Price price = new Price(
+                null,
+                service.getBasePrice(),
+                service.getDiscount(),
+                finalPrice,
+                LocalDateTime.now());
         List<Price> prices = new ArrayList<>();
         prices.add(price);
         newService.setPrices(prices);

@@ -51,9 +51,9 @@ public class PriceController {
         return new ResponseEntity<CreatedPriceDTO>(createdPrice, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedPriceDTO> updatePrice(@PathVariable("id") UUID id, @RequestBody UpdatePriceDTO price) {
-        UpdatedPriceDTO updatedPrice = new UpdatedPriceDTO();
+    @PutMapping(value = "/{productId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedPriceDTO> updatePrice(@PathVariable("productId") UUID productId, @RequestBody UpdatePriceDTO price) {
+        UpdatedPriceDTO updatedPrice = productService.updatePrice(productId, price);
 
         return new ResponseEntity<UpdatedPriceDTO>(updatedPrice, HttpStatus.OK);
     }

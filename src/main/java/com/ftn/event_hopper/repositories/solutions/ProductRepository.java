@@ -26,5 +26,5 @@ public interface ProductRepository extends JpaRepository<Product, UUID> , JpaSpe
 
     Page<Product> findAll(Pageable page);
 
-
+    List<Product> findByIsDeletedFalse();
 }
