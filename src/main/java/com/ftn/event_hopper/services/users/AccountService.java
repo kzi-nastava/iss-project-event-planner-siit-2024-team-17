@@ -198,6 +198,24 @@ public class AccountService {
     public void deactivate(UUID accountId){
         Account account = accountRepository.findById(accountId).orElseGet(null);
         if(account!= null){
+            if(account.getType() == PersonType.SERVICE_PROVIDER){
+
+            }
+            if(account.getType() == PersonType.EVENT_ORGANIZER){
+                boolean canBeDeactivated = true;
+                EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElseGet(null);
+                for(Event event : eventOrganizer.getEvents()){
+                    System.out.println(event.getTime().isAfter(LocalDateTime.now()));
+                    System.out.println(event.getTime());
+                    if(event.getTime().isAfter(LocalDateTime.now())){
+                        canBeDeactivated = false;
+                    }
+                }
+                if(!canBeDeactivated){
+                    throw new RuntimeException("Event organizer has upcoming events. Can not be deactivated");
+                }
+            }
+
             account.setActive(false);
             this.save(account);
             return;
