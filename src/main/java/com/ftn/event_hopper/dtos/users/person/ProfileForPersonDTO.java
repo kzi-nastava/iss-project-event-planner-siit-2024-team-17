@@ -27,4 +27,11 @@ public class ProfileForPersonDTO {
     private Set<SimpleEventDTO> attendingEvents;
     private Set<SimpleEventDTO> favoriteEvents;
     private Set<SimpleProductDTO> favoriteProducts;
+    private List<SimpleEventDTO> myEvents;
+    private String companyName;
+    private String companyEmail;
+    private String companyPhoneNumber;
+    private String companyDescription;
+    private SimpleLocationDTO companyLocation;
+    private List<String> companyPhotos;
 }

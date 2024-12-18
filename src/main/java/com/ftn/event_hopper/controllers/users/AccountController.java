@@ -164,6 +164,15 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/{id}/company", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedCompanyAccountDTO> updateCompanyAccount(@PathVariable UUID id, @RequestBody UpdateCompanyAccountDTO companyAccountDTO) {
+        UpdatedCompanyAccountDTO updatedAccount = accountService.updateCompanyAccount(id, companyAccountDTO);
+        if(updatedAccount == null) {
+            return new ResponseEntity<UpdatedCompanyAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteAccount(@PathVariable UUID id) {
         boolean success = accountService.delete(id);

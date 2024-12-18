@@ -67,7 +67,7 @@ INSERT INTO service_providers (type, work_end, work_start, company_location_id, 
 VALUES
     (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '1234567890', 'https://i.imgur.com/xgY56h0.png', 'Doe', '1234567890'),
     (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin posuere pulvinar est, et molestie justo tempus in. Phasellus vitae mi ac libero posuere efficitur. Donec laoreet turpis lectus, eget lacinia leo eleifend gravida.', 'contact@bizconsult.com', 'BizConsult', 'Alice', '9876543210', 'https://i.imgur.com/xgY56h0.png', 'Smith', '1234567890'),
-    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing', 'support@creativehub.com', 'CreativeHub', 'Emma', '1122334455', 'https://i.imgur.com/xgY56h0.png', 'Brown', '1234567890');
+    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing. Something something something something ', 'support@creativehub.com', 'CreativeHub', 'Emma', '1122334455', 'https://i.imgur.com/xgY56h0.png', 'Brown', '1234567890');
 
 
 INSERT INTO categories (is_deleted, status, id, description, name)
@@ -114,7 +114,7 @@ VALUES
 INSERT INTO events (max_attendance, privacy, "time", event_type_id, event_organizer_id, id, location_id, description, name, picture)
 VALUES
     (100, 0, '2024-12-10 10:00:00', 'f0dcab26-9656-491e-bcce-bf23f723e998', '57c05a8a-dd8b-4da8-af73-90961e423f42', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Annual gathering', 'Tech Meetup', 'https://example.com/tech.jpg'),
-    (200, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Holiday party', 'Winter Fest', 'https://example.com/winter.jpg'),
+    (200, 1, '2024-12-20 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '57c05a8a-dd8b-4da8-af73-90961e423f42', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Holiday party', 'Winter Fest', 'https://example.com/winter.jpg'),
     (300, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '8c216a1f-6d65-4256-95e0-6a820d5fb902', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', 'Birthday', 'https://example.com/winter.jpg'),
     (100, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Anniversary party', 'Anniversary', 'https://example.com/winter.jpg'),
     (50, 1, '2024-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '6915ce46-d213-424b-a3c4-035767714df0', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Halloween party', 'halloween', 'https://example.com/winter.jpg'),
@@ -126,6 +126,16 @@ INSERT INTO persons_attending_events (event_id, person_id)
 VALUES
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f'),
     ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f'),
+
+    ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('8c216a1f-6d65-4256-95e0-6a820d5fb902','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+
+
+    ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','57c05a8a-dd8b-4da8-af73-90961e423f42'),
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b','57c05a8a-dd8b-4da8-af73-90961e423f42'),
+    ('8c216a1f-6d65-4256-95e0-6a820d5fb902','57c05a8a-dd8b-4da8-af73-90961e423f42'),
+
     ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3');
 
 
@@ -133,6 +143,13 @@ INSERT INTO persons_favorite_events (event_id, person_id)
 VALUES
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f'),
     ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f'),
+    ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('8c216a1f-6d65-4256-95e0-6a820d5fb902','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('06aee816-a4ec-4d3c-9d9c-2c0f6bb96285','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('6915ce46-d213-424b-a3c4-035767714df0','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
+    ('f1ad3604-fef5-439a-8adb-45776a019a55','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
     ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3');
 
 
@@ -225,6 +242,15 @@ INSERT INTO persons_favorite_products (person_id, product_id)
 VALUES
     ('d7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
     ('4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
+
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '1237e35c-80ff-4a2a-8245-2728cb45ee11'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '314c1838-8cbe-471c-9403-dc49baad1977'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d'),
+
+
     ('b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '935e1b52-6180-419a-bbe8-909db6cd6cbc');
 
 
