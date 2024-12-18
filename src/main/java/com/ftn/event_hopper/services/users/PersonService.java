@@ -3,20 +3,33 @@ package com.ftn.event_hopper.services.users;
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.mapper.users.PersonDTOMapper;
 import com.ftn.event_hopper.models.locations.Location;
+import com.ftn.event_hopper.models.solutions.Product;
+import com.ftn.event_hopper.models.solutions.Service;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
+import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
+@org.springframework.stereotype.Service
 public class PersonService {
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ServiceRepository serviceRepository;
+
     @Autowired
     private PersonDTOMapper personDTOMapper;
 
@@ -74,6 +87,40 @@ public class PersonService {
         Person person = personRepository.findById(id).orElseGet(null);
         return personDTOMapper.fromPersonToProfileInfoDTO(person);
     }
+
+    public void addFavoriteSolution(UUID accountId, UUID solutionId) {
+        Account account = accountRepository.findById(accountId).orElseGet(null);
+        Person person = account.getPerson();
+        Product solution = productRepository.findById(solutionId).orElseGet(null);
+        if (solution instanceof Service service) {
+            service = serviceRepository.findById(solutionId).orElseGet(null);
+            if (person.getFavoriteProducts().contains(service)) {
+                return;
+            }
+            person.getFavoriteProducts()
+                    .add(service);
+            personRepository.save(person);
+            personRepository.flush();
+        } else {
+            if (account.getPerson().getFavoriteProducts().contains(solution)) {
+                return;
+            }
+            person.getFavoriteProducts()
+                    .add(solution);
+            personRepository.save(person);
+            personRepository.flush();
+        }
+    }
+
+    public void removeFavoriteSolution(UUID accountId, UUID solutionId) {
+        Account account = accountRepository.findById(accountId).orElseGet(null);
+        Person person = account.getPerson();
+        person.getFavoriteProducts()
+                .removeIf(product -> product.getId().equals(solutionId));
+        personRepository.save(person);
+        personRepository.flush();
+    }
+
 
     // person doesnt have remove/delete
 }

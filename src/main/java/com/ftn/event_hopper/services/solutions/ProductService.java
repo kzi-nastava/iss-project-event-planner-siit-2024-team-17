@@ -1,29 +1,41 @@
 package com.ftn.event_hopper.services.solutions;
 
 
+import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
+import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
+import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
+import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
+import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.prices.Price;
+import com.ftn.event_hopper.models.ratings.Rating;
+import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
+import com.ftn.event_hopper.models.solutions.Service;
 import com.ftn.event_hopper.models.users.Person;
-import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.users.ServiceProvider;
+import com.ftn.event_hopper.repositories.prices.PriceRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Service
+@org.springframework.stereotype.Service
 public class ProductService {
 
     @Autowired
@@ -32,12 +44,17 @@ public class ProductService {
     private ServiceRepository serviceRepository;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private PriceRepository priceRepository;
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private ProductDTOMapper productDTOMapper;
-
+    @Autowired
+    private ServiceProviderDTOMapper serviceProviderDTOMapper;
+    @Autowired
+    private PriceDTOMapper priceDTOMapper;
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -208,4 +225,81 @@ public class ProductService {
 
         return all;
         }
+
+    public SolutionDetailsDTO findSolutionDetails(UUID id) {
+        Product product = productRepository.findById(id).orElse(null);
+
+        if (product == null || product.isDeleted() || !product.isVisible() || product.getStatus() != ProductStatus.APPROVED) {
+            return null;
+        }
+
+        product.setComments(product.getComments().stream()
+                .filter(comment -> comment.getStatus() == CommentStatus.ACCEPTED)
+                .toList());
+
+        SolutionDetailsDTO solutionDetailsDTO = productDTOMapper.fromProductToSolutionDetailsDTO(product);
+        solutionDetailsDTO.setRating(product.getRatings().stream()
+                .mapToDouble(Rating::getValue)
+                .average()
+                .orElse(0.0));
+
+        ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
+
+        solutionDetailsDTO.setProvider(serviceProviderDTOMapper.fromServiceProviderToSimpleDTO(provider));
+
+        solutionDetailsDTO.setService(product instanceof Service);
+
+        if (product instanceof Service service) {
+            service = (Service) serviceRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Service not found"));
+            solutionDetailsDTO.setDurationMinutes(service.getDurationMinutes());
+            solutionDetailsDTO.setReservationWindowDays(service.getReservationWindowDays());
+            solutionDetailsDTO.setCancellationWindowDays(service.getCancellationWindowDays());
+        }
+
+        return solutionDetailsDTO;
+    }
+
+    public Collection<PriceManagementDTO> getPricesForManagement() {
+        List<Product> products = productRepository.findByIsDeletedFalse();
+        List<PriceManagementDTO> prices = new ArrayList<>();
+        for (Product product : products) {
+            Price newestPrice = product.getPrices().get(product.getPrices().size() - 1);
+
+            PriceManagementDTO price = new PriceManagementDTO();
+            price.setId(newestPrice.getId());
+            price.setProductId(product.getId());
+            price.setProductName(product.getName());
+
+            price.setBasePrice(newestPrice.getBasePrice());
+            price.setDiscount(newestPrice.getDiscount());
+            price.setFinalPrice(newestPrice.getFinalPrice());
+            prices.add(price);
+        }
+        return prices;
+    }
+
+    public UpdatedPriceDTO updatePrice(UUID productId, UpdatePriceDTO price) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null) {
+            throw new EntityNotFoundException("Product not found");
+        }
+
+        Price newPrice = new Price();
+
+        newPrice.setBasePrice(price.getBasePrice());
+        newPrice.setDiscount(price.getDiscount());
+
+        double finalPrice = newPrice.getBasePrice() * (1 - newPrice.getDiscount()/100);
+        newPrice.setFinalPrice(Math.round(finalPrice * 100.0) / 100.0);
+
+        newPrice.setTimestamp(LocalDateTime.now());
+        Price savedPrice = priceRepository.save(newPrice);
+
+        product.getPrices().add(savedPrice);
+
+        productRepository.save(product);
+        productRepository.flush();
+
+        return priceDTOMapper.fromPriceToUpdatedPriceDTO(newPrice);
+    }
 }

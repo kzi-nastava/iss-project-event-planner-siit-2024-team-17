@@ -59,5 +59,17 @@ public class PersonController {
         }
         return new ResponseEntity<>(updatedPersonDTO, HttpStatus.OK);
     }
-    
+
+    @PostMapping(value = "/{accountId}/favorite-solutions/{solutionId}")
+    public ResponseEntity<?> addFavoriteSolution(@PathVariable UUID accountId, @PathVariable UUID solutionId) {
+        personService.addFavoriteSolution(accountId, solutionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{accountId}/favorite-solutions/{solutionId}")
+    public ResponseEntity<?> removeFavoriteSolution(@PathVariable UUID accountId, @PathVariable UUID solutionId) {
+        personService.removeFavoriteSolution(accountId, solutionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
