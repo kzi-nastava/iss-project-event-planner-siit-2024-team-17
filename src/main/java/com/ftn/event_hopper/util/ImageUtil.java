@@ -27,7 +27,7 @@ public class ImageUtil {
                     .getOriginalFilename()
                         .lastIndexOf("."));
 
-        String fileName = getNewIndex() + fileExtension;
+        String fileName = getNewIndex() + "_" + System.currentTimeMillis() + fileExtension;
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);

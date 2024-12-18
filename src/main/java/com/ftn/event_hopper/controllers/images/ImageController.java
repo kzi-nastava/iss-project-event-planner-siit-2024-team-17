@@ -14,14 +14,14 @@ import java.io.IOException;
 @CrossOrigin(origins = "*")
 public class ImageController {
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file) {
         try {
             String fileName = ImageUtil.saveImage(file);
 
-            return new ResponseEntity<>(fileName, HttpStatus.OK);
+            return new ResponseEntity<String>(fileName, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
