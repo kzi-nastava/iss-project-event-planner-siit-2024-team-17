@@ -25,10 +25,10 @@ VALUES
 
 INSERT INTO persons (type, id, location_id, name, phone_number, profile_picture, surname)
 VALUES
-    (3, 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe'),
-    (3, '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith'),
-    (3, 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown'),
-    (0, '20343059-c4dd-4608-81aa-104f415e8085', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Admin', '+1122334455', 'https://example.com/emma.jpg', 'Admin');
+    (3, 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'John', '1234567890', 'https://i.imgur.com/xgY56h0.png', 'Doe'),
+    (3, '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '9876543210', 'https://i.imgur.com/xgY56h0.png', 'Smith'),
+    (3, 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Emma', '1122334455', 'https://i.imgur.com/xgY56h0.png', 'Brown'),
+    (0, '20343059-c4dd-4608-81aa-104f415e8085', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Admin', '1122334455', 'https://i.imgur.com/xgY56h0.png', 'Admin');
 
 
 INSERT INTO accounts (is_active, is_verified, type, suspension_timestamp, id, person_id, registration_request_id, email, password)
@@ -58,16 +58,16 @@ VALUES
 
 INSERT INTO event_organizers (type, id, location_id, name, phone_number, profile_picture, surname)
 VALUES
-    (2, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe'),
-    (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith'),
-    (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown');
+    (2, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'John', '1234567890', 'https://i.imgur.com/xgY56h0.png', 'Doe'),
+    (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '9876543210', 'https://i.imgur.com/xgY56h0.png', 'Smith'),
+    (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Emma', '1122334455', 'https://i.imgur.com/xgY56h0.png', 'Brown');
 
 
 INSERT INTO service_providers (type, work_end, work_start, company_location_id, id, location_id, company_description, company_email, company_name, name, phone_number, profile_picture, surname, company_phone_number)
 VALUES
-    (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '+1234567890', 'https://example.com/john.jpg', 'Doe', '1234567890'),
-    (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Providing top-tier consultancy services', 'contact@bizconsult.com', 'BizConsult', 'Alice', '+9876543210', 'https://example.com/alice.jpg', 'Smith', '1234567890'),
-    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing', 'support@creativehub.com', 'CreativeHub', 'Emma', '+1122334455', 'https://example.com/emma.jpg', 'Brown', '1234567890');
+    (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '1234567890', 'https://i.imgur.com/xgY56h0.png', 'Doe', '1234567890'),
+    (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin posuere pulvinar est, et molestie justo tempus in. Phasellus vitae mi ac libero posuere efficitur. Donec laoreet turpis lectus, eget lacinia leo eleifend gravida.', 'contact@bizconsult.com', 'BizConsult', 'Alice', '9876543210', 'https://i.imgur.com/xgY56h0.png', 'Smith', '1234567890'),
+    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing', 'support@creativehub.com', 'CreativeHub', 'Emma', '1122334455', 'https://i.imgur.com/xgY56h0.png', 'Brown', '1234567890');
 
 
 INSERT INTO categories (is_deleted, status, id, description, name)
@@ -105,9 +105,10 @@ VALUES
 
 INSERT INTO company_pictures (service_provider_id, picture_url)
 VALUES
-    ('a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'https://example.com/picture1.jpg'),
-    ('c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'https://example.com/picture2.jpg'),
-    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'https://example.com/picture3.jpg');
+    ('a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'https://i.imgur.com/ARrm8Ja.jpeg'),
+    ('c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'https://i.imgur.com/ARrm8Ja.jpeg'),
+    ('c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'https://i.imgur.com/ARrm8Ja.jpeg'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'https://i.imgur.com/ARrm8Ja.jpeg');
 
 
 INSERT INTO events (max_attendance, privacy, "time", event_type_id, event_organizer_id, id, location_id, description, name, picture)
@@ -165,7 +166,7 @@ VALUES
     (5, 180, false, false, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
     (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','314c1838-8cbe-471c-9403-dc49baad1977', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A cleaning service for offices', 'Office Cleaning5'),
-    (10, 90, true, false, false, false, 3, 1, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
+    (10, 90, true, false, false, true, 3, 1, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES
@@ -190,7 +191,7 @@ INSERT INTO product_prices (price_id, product_id)
 VALUES
     ('5d2f4a3b-c7a9-4e1a-b8f6-3e7a5c9d2b4f', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
     ('c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
-    ('c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c', '314c1838-8cbe-471c-9403-dc49baad1977'),
+    ('c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
     ('9d6b7c5e-a4f2-4a9b-b6c1-3e5f7d2b8a4f', '2eed4933-2477-487e-8b99-c39a9ac939dd');
 
 
@@ -205,9 +206,10 @@ VALUES
 
 INSERT INTO product_pictures (product_id, picture_url)
 VALUES
-    ('935e1b52-6180-419a-bbe8-909db6cd6cbc', 'https://example.com/images/product1.jpg'),
-    ('11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'https://example.com/images/product2.jpg'),
-    ('2eed4933-2477-487e-8b99-c39a9ac939dd', 'https://example.com/images/product3.jpg');
+    ('935e1b52-6180-419a-bbe8-909db6cd6cbc', 'https://i.imgur.com/ARrm8Ja.jpeg'),
+    ('11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'https://i.imgur.com/ARrm8Ja.jpeg'),
+    ('2eed4933-2477-487e-8b99-c39a9ac939dd', 'https://i.imgur.com/ARrm8Ja.jpeg'),
+    ('2eed4933-2477-487e-8b99-c39a9ac939dd', 'https://i.imgur.com/jqcgAdK.jpeg');
 
 
 INSERT INTO persons_favorite_products (person_id, product_id)
@@ -219,9 +221,9 @@ VALUES
 
 INSERT INTO comments (status, author_id, id, product_id, content)
 VALUES
-    (0, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
-    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f92c4b63-d2a1-49d7-8f1e-9b4c72e1a5f3', '11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'Needs improvement.'),
-    (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', '3b9e6a2c-d7f2-4a3b-b2c9-7e5f4b6a1c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc', 'Highly recommended!');
+    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
+    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f92c4b63-d2a1-49d7-8f1e-9b4c72e1a5f3', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Needs improvement.'),
+    (1, '57c05a8a-dd8b-4da8-af73-90961e423f42', '3b9e6a2c-d7f2-4a3b-b2c9-7e5f4b6a1c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc', 'Highly recommended!');
 
 
 INSERT INTO notifications ("timestamp", event_id, id, product_id, content)

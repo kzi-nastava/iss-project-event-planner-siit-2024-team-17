@@ -46,15 +46,6 @@ public class PersonController {
         return new ResponseEntity<>(homePageForPerson, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileForPersonDTO> getProfile(@PathVariable UUID id) {
-        ProfileForPersonDTO profileForPerson = personService.getProfile(id);
-        if (profileForPerson == null) {
-            return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedPersonDTO> createPerson(@RequestBody CreatePersonDTO personDTO) {
         return new ResponseEntity<>(personService.create(personDTO), HttpStatus.CREATED);
@@ -68,5 +59,17 @@ public class PersonController {
         }
         return new ResponseEntity<>(updatedPersonDTO, HttpStatus.OK);
     }
-    
+
+    @PostMapping(value = "/{accountId}/favorite-solutions/{solutionId}")
+    public ResponseEntity<?> addFavoriteSolution(@PathVariable UUID accountId, @PathVariable UUID solutionId) {
+        personService.addFavoriteSolution(accountId, solutionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{accountId}/favorite-solutions/{solutionId}")
+    public ResponseEntity<?> removeFavoriteSolution(@PathVariable UUID accountId, @PathVariable UUID solutionId) {
+        personService.removeFavoriteSolution(accountId, solutionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

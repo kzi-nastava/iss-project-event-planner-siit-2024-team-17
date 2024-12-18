@@ -125,4 +125,10 @@ public class ServiceProviderDTOMapper {
                 .map(this::fromServiceProviderToSimpleDTO)
                 .collect(Collectors.toList());
     }
+
+    public ServiceProviderDetailsDTO fromServiceProviderToDetailsDTO(ServiceProvider provider) {
+        ServiceProviderDetailsDTO detailsDTO = modelMapper.map(provider, ServiceProviderDetailsDTO.class);
+        detailsDTO.setCompanyLocation(locationDTOMapper.fromLocationToLocationDTO(provider.getCompanyLocation()));
+        return detailsDTO;
+    }
 }

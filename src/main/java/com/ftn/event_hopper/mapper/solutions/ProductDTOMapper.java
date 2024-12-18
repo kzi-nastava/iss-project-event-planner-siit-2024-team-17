@@ -1,13 +1,16 @@
 package com.ftn.event_hopper.mapper.solutions;
 
 import com.ftn.event_hopper.dtos.categories.SimpleCategoryDTO;
+import com.ftn.event_hopper.dtos.comments.SimpleCommentDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
+import com.ftn.event_hopper.mapper.comments.CommentDTOMapper;
 import com.ftn.event_hopper.models.categories.Category;
+import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.solutions.Product;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +21,13 @@ import java.util.stream.Collectors;
 public class ProductDTOMapper {
     private final ModelMapper modelMapper;
     private final CategoryDTOMapper categoryDTOMapper;
+    private final CommentDTOMapper commentDTOMapper;
 
-    public ProductDTOMapper(ModelMapper modelMapper, CategoryDTOMapper categoryDTOMapper) {
+
+    public ProductDTOMapper(ModelMapper modelMapper, CategoryDTOMapper categoryDTOMapper, CommentDTOMapper commentDTOMapper) {
         this.modelMapper = modelMapper;
         this.categoryDTOMapper = categoryDTOMapper;
+        this.commentDTOMapper = commentDTOMapper;
         configureMappings();
     }
 
@@ -29,10 +35,16 @@ public class ProductDTOMapper {
         Converter<Category, SimpleCategoryDTO> productConverter = context ->
                 categoryDTOMapper.fromCategoryToSimpleCategoryDTO(context.getSource());
 
-        // Custom mapping for Product -> ProductDTO
-        modelMapper.typeMap(Product.class, SimpleProductDTO.class)
+        Converter<Comment, SimpleCommentDTO> commentConverter = context ->
+                commentDTOMapper.fromCommentToSimplecommentDTO(context.getSource());
+
+        // Custom mapping for Product -> SolutionDetailsDTO
+        modelMapper.typeMap(Product.class, SolutionDetailsDTO.class)
                 .addMappings(mapper -> mapper.using(productConverter)
-                        .map(Product::getCategory, SimpleProductDTO::setCategory));
+                        .map(Product::getCategory, SolutionDetailsDTO::setCategory))
+                .addMappings(mapper -> mapper.using(commentConverter)
+                        .map(Product::getComments, SolutionDetailsDTO::setComments));
+
     }
 
     public SimpleProductDTO fromProductToSimpleDTO(Product product) {
@@ -49,4 +61,7 @@ public class ProductDTOMapper {
         return all.map(this::fromProductToSimpleDTO);
     }
 
+    public SolutionDetailsDTO fromProductToSolutionDetailsDTO(Product product) {
+        return modelMapper.map(product, SolutionDetailsDTO.class);
+    }
 }

@@ -2,28 +2,34 @@ package com.ftn.event_hopper.services.solutions;
 
 
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
+import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.ratings.Rating;
+import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
+import com.ftn.event_hopper.models.solutions.Service;
 import com.ftn.event_hopper.models.users.Person;
-import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Service
+@org.springframework.stereotype.Service
 public class ProductService {
 
     @Autowired
@@ -37,7 +43,8 @@ public class ProductService {
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private ProductDTOMapper productDTOMapper;
-
+    @Autowired
+    private ServiceProviderDTOMapper serviceProviderDTOMapper;
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -208,4 +215,37 @@ public class ProductService {
 
         return all;
         }
+
+    public SolutionDetailsDTO findSolutionDetails(UUID id) {
+        Product product = productRepository.findById(id).orElse(null);
+
+        if (product == null || product.isDeleted() || !product.isVisible() || product.getStatus() != ProductStatus.APPROVED) {
+            return null;
+        }
+
+        product.setComments(product.getComments().stream()
+                .filter(comment -> comment.getStatus() == CommentStatus.ACCEPTED)
+                .toList());
+
+        SolutionDetailsDTO solutionDetailsDTO = productDTOMapper.fromProductToSolutionDetailsDTO(product);
+        solutionDetailsDTO.setRating(product.getRatings().stream()
+                .mapToDouble(Rating::getValue)
+                .average()
+                .orElse(0.0));
+
+        ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
+
+        solutionDetailsDTO.setProvider(serviceProviderDTOMapper.fromServiceProviderToSimpleDTO(provider));
+
+        solutionDetailsDTO.setService(product instanceof Service);
+
+        if (product instanceof Service service) {
+            service = (Service) serviceRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Service not found"));
+            solutionDetailsDTO.setDurationMinutes(service.getDurationMinutes());
+            solutionDetailsDTO.setReservationWindowDays(service.getReservationWindowDays());
+            solutionDetailsDTO.setCancellationWindowDays(service.getCancellationWindowDays());
+        }
+
+        return solutionDetailsDTO;
+    }
 }
