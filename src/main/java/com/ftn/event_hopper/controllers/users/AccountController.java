@@ -76,6 +76,15 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/active/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleAccountDTO> getActiveByEmail(@PathVariable String email) {
+        SimpleAccountDTO account = accountService.findActiveByEmail(email);
+        if(account == null) {
+            return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleAccountDTO>> getInactiveAccounts() {
         List<SimpleAccountDTO> accounts = accountService.findAllInactive();
@@ -84,6 +93,8 @@ public class AccountController {
         }
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
+
+
 
     @PostMapping(value = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedAccountDTO> createAccount(@RequestBody CreatePersonAccountDTO accountDTO) {

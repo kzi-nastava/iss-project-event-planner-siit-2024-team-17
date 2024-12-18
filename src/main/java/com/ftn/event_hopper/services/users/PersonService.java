@@ -2,9 +2,11 @@ package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.mapper.users.PersonDTOMapper;
+import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class PersonService {
     private PersonRepository personRepository;
     @Autowired
     private PersonDTOMapper personDTOMapper;
+    @Autowired
+    private EventRepository eventRepository;
 
     public SimplePersonDTO findOne(UUID id) {
         Person person = personRepository.findById(id).orElseGet(null);
@@ -74,6 +78,21 @@ public class PersonService {
     public ProfileForPersonDTO getProfile(UUID id){
         Person person = personRepository.findById(id).orElseGet(null);
         return personDTOMapper.fromPersonToProfileInfoDTO(person);
+    }
+
+    public boolean addAttendingEvent(UUID personId, UUID eventId) {
+        Person person = personRepository.findById(personId).orElse(null);
+        if (person == null) return false;
+
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) return false;
+
+        if (!person.getAttendingEvents().contains(event)) {
+            person.getAttendingEvents().add(event);
+            personRepository.save(person);
+        }
+
+        return true;
     }
 
     // person doesnt have remove/delete

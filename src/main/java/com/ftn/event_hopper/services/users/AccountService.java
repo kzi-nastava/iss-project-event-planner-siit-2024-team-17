@@ -55,6 +55,15 @@ public class AccountService {
         return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO);
     }
 
+    public Optional<SimpleAccountDTO> findByEmail(String email) {
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO);
+    }
+
+    public SimpleAccountDTO findActiveByEmail(String email) {
+        Optional<Account> accountOptional = accountRepository.findByIsActiveAndEmail(true,email);
+        return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO).orElse(null);
+    }
 
     public List<AccountDTO> findAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
@@ -94,6 +103,7 @@ public class AccountService {
         this.save(account);
         return accountDTOMapper.fromAccountToCreatedDTO(account);
     }
+
 
     public UpdatedAccountDTO update(UUID id, UpdateAccountDTO accountDTO){
         Account account = accountRepository.findById(id).orElseGet(null);
