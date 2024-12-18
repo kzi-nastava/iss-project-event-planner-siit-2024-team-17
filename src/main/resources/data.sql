@@ -147,7 +147,12 @@ INSERT INTO prices (base_price, discount, final_price, "timestamp", id)
 VALUES
     (100.00, 10.00, 90.00, '2024-12-07 07:30:00', '5d2f4a3b-c7a9-4e1a-b8f6-3e7a5c9d2b4f'),
     (200.00, 20.00, 160.00, '2024-12-07 07:45:00', 'c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c'),
-    (300.00, 0.00, 300.00, '2024-12-07 08:00:00', '9d6b7c5e-a4f2-4a9b-b6c1-3e5f7d2b8a4f');
+    (300.00, 0.00, 300.00, '2024-12-07 08:00:00', '9d6b7c5e-a4f2-4a9b-b6c1-3e5f7d2b8a4f'),
+    (300.00, 10.00, 270.00, '2024-12-07 08:00:00', 'e1546489-1191-4d16-8f1b-1a834c916e49'),
+    (300.00, 10.00, 270.00, '2024-12-07 08:00:00', 'ca84aabb-51d4-43f7-bd6b-16b1cebda6dd'),
+    (300.00, 10.00, 270.00, '2024-12-07 08:00:00', '60b650c0-1372-4e9c-ac71-6fecc14fb3f7'),
+    (300.00, 10.00, 270.00, '2024-12-07 08:00:00', 'bd805644-991c-4207-8157-bc4ff8d2f1c3'),
+    (300.00, 10.00, 270.00, '2024-12-07 08:00:00', '3cb148b3-bc1b-472c-a985-43d5991592b1');
 
 
 INSERT INTO agenda_activities (end_time, start_time, event_id, id, description, location_name, name)
@@ -191,8 +196,12 @@ INSERT INTO product_prices (price_id, product_id)
 VALUES
     ('5d2f4a3b-c7a9-4e1a-b8f6-3e7a5c9d2b4f', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
     ('c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
-    ('c7e5a3b9-d2f4-49b8-b1c9-5f7a3d9e6b4c', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
-    ('9d6b7c5e-a4f2-4a9b-b6c1-3e5f7d2b8a4f', '2eed4933-2477-487e-8b99-c39a9ac939dd');
+    ('e1546489-1191-4d16-8f1b-1a834c916e49', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
+    ('9d6b7c5e-a4f2-4a9b-b6c1-3e5f7d2b8a4f', '314c1838-8cbe-471c-9403-dc49baad1977'),
+    ('ca84aabb-51d4-43f7-bd6b-16b1cebda6dd', '894d865c-0343-4a4a-9594-6ffc4f3a5a16'),
+    ('60b650c0-1372-4e9c-ac71-6fecc14fb3f7', '45067d8d-9d86-4104-97cd-7054c48cbbc6'),
+    ('bd805644-991c-4207-8157-bc4ff8d2f1c3', '1237e35c-80ff-4a2a-8245-2728cb45ee11'),
+    ('3cb148b3-bc1b-472c-a985-43d5991592b1', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d');
 
 
 INSERT INTO product_event_types (event_type_id, product_id)
