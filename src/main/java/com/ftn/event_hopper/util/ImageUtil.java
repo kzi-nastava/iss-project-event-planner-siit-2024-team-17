@@ -2,7 +2,6 @@ package com.ftn.event_hopper.util;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -27,7 +26,7 @@ public class ImageUtil {
                     .getOriginalFilename()
                         .lastIndexOf("."));
 
-        String fileName = getNewIndex() + "_" + System.currentTimeMillis() + fileExtension;
+        String fileName = System.currentTimeMillis() + fileExtension;
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
@@ -55,20 +54,5 @@ public class ImageUtil {
         } catch (IOException e) {
             throw new IOException("Could not delete image file: " + imageName, e);
         }
-    }
-
-    private static String getNewIndex() {
-        File[] files = new File(imagesDirPath).listFiles();
-        int maxIndex = 0;
-        if (files != null) {
-            for (File file : files) {
-                String name = file.getName();
-                int index = Integer.parseInt(name.substring(0, name.indexOf('.')));
-                if (index > maxIndex) {
-                    maxIndex = index;
-                }
-            }
-        }
-        return String.valueOf(++maxIndex);
     }
 }
