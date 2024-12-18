@@ -18,6 +18,7 @@ import java.util.UUID;
  * the attending events necessary for the calendar*/
 public class ProfileForPersonDTO {
     private UUID id;
+    private String email;
     private String name;
     private String surname;
     private String profilePicture;
@@ -26,4 +27,11 @@ public class ProfileForPersonDTO {
     private Set<SimpleEventDTO> attendingEvents;
     private Set<SimpleEventDTO> favoriteEvents;
     private Set<SimpleProductDTO> favoriteProducts;
+    private List<SimpleEventDTO> myEvents;
+    private String companyName;
+    private String companyEmail;
+    private String companyPhoneNumber;
+    private String companyDescription;
+    private SimpleLocationDTO companyLocation;
+    private List<String> companyPhotos;
 }

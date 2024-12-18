@@ -37,16 +37,6 @@ public class ServiceProviderController {
         return new ResponseEntity<>(provider, HttpStatus.OK);
     }
 
-
-    @GetMapping(value = "/{id}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileForServiceProviderDTO> getProfile(@PathVariable UUID id) {
-        ProfileForServiceProviderDTO profile = serviceProviderService.getProfile(id);
-        if (profile == null) {
-            return new ResponseEntity<ProfileForServiceProviderDTO>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(profile, HttpStatus.OK);
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedServiceProviderDTO> createServiceProvider(@RequestBody CreateServiceProviderDTO providerDTO) {
         return new ResponseEntity<>(serviceProviderService.create(providerDTO), HttpStatus.CREATED);
@@ -59,6 +49,17 @@ public class ServiceProviderController {
             return new ResponseEntity<UpdatedServiceProviderDTO>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(updatedProvider, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/details", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ServiceProviderDetailsDTO> getServiceProviderDetails(@PathVariable UUID id) {
+        ServiceProviderDetailsDTO details = serviceProviderService.getDetails(id);
+
+        if (details == null) {
+            return new ResponseEntity<ServiceProviderDetailsDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(details, HttpStatus.OK);
     }
 
 

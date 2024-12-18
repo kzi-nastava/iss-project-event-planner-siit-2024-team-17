@@ -53,4 +53,9 @@ public class Account {
     @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "registration_request_id", nullable = true)
     private RegistrationRequest registrationRequest;
+
+
+    public boolean isValid(){
+        return this.isActive && this.isVerified;
+    }
 }
