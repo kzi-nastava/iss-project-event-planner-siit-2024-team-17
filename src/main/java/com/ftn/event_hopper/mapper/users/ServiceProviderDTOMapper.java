@@ -59,12 +59,6 @@ public class ServiceProviderDTOMapper {
                             .map(ServiceProvider::getCompanyLocation, CreateServiceProviderDTO::setCompanyLocation);
                 });
 
-        // Custom mapping for ServiceProvider -> ProfileForServiceProviderDTO
-        modelMapper.typeMap(ServiceProvider.class, ProfileForServiceProviderDTO.class)
-                .addMappings(mapper -> {
-                    mapper.using(locationConverter)
-                            .map(ServiceProvider::getCompanyLocation, ProfileForServiceProviderDTO::setCompanyLocation);
-                });
 
         // Custom mapping for ServiceProvider -> UpdatedServiceProviderDTO
         modelMapper.typeMap(ServiceProvider.class, UpdatedServiceProviderDTO.class)
@@ -91,10 +85,6 @@ public class ServiceProviderDTOMapper {
 
     public CreatedServiceProviderDTO fromServiceProviderToCreatedDTO(ServiceProvider serviceProvider) {
         return modelMapper.map(serviceProvider, CreatedServiceProviderDTO.class);
-    }
-
-    public ProfileForServiceProviderDTO fromServiceProviderToProfileDTO(ServiceProvider serviceProvider) {
-        return modelMapper.map(serviceProvider, ProfileForServiceProviderDTO.class);
     }
 
     public UpdateServiceProviderDTO fromServiceProviderToUpdateDTO(ServiceProvider serviceProvider) {
@@ -124,5 +114,11 @@ public class ServiceProviderDTOMapper {
         return persons.stream()
                 .map(this::fromServiceProviderToSimpleDTO)
                 .collect(Collectors.toList());
+    }
+
+    public ServiceProviderDetailsDTO fromServiceProviderToDetailsDTO(ServiceProvider provider) {
+        ServiceProviderDetailsDTO detailsDTO = modelMapper.map(provider, ServiceProviderDetailsDTO.class);
+        detailsDTO.setCompanyLocation(locationDTOMapper.fromLocationToLocationDTO(provider.getCompanyLocation()));
+        return detailsDTO;
     }
 }

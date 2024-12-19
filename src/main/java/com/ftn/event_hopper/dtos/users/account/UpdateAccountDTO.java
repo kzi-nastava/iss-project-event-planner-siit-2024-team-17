@@ -15,7 +15,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class UpdateAccountDTO {
-    private String password;
     private boolean isVerified;
     private boolean isActive;
     private LocalDateTime suspensionTimeStamp;
