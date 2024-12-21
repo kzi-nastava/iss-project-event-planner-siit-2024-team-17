@@ -2,6 +2,7 @@ package com.ftn.event_hopper.controllers.solutions;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
 import com.ftn.event_hopper.services.solutions.ProductService;
 import com.ftn.event_hopper.services.solutions.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +93,14 @@ public class SolutionController{
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/details")
+    public ResponseEntity<SolutionDetailsDTO> getSolutionDetails(@PathVariable UUID id){
+        SolutionDetailsDTO solution = productService.findSolutionDetails(id);
 
+        if (solution == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<SolutionDetailsDTO>(solution, HttpStatus.OK);
+    }
 }
