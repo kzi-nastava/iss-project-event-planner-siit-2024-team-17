@@ -1,15 +1,16 @@
 package com.ftn.event_hopper.services.solutions;
 
 
+
+import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
+import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
+import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
-import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
-import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
-import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
-import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
