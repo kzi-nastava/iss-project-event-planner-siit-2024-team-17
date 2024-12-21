@@ -2,11 +2,13 @@ package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.location.LocationDTO;
+import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
@@ -306,8 +308,42 @@ public class AccountService {
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
 
-//    public UpdatedAccountDTO updateToPUP(UUID id, ServiceProviderDetailsDTO serviceProviderDetailsDTO) {
-//    }
+    @Transactional
+    public UpdatedAccountDTO updateToPUP(UUID id, CompanyDetailsDTO companyDetailsDTO) {
+        Account account = accountRepository.findById(id).orElseGet(null);
+        if(account != null){
+            Person person = account.getPerson();
+            personRepository.delete(person);
+
+            ServiceProvider serviceProvider = new ServiceProvider();
+
+
+            serviceProvider.setName(person.getName());
+            serviceProvider.setSurname(person.getSurname());
+            serviceProvider.setProfilePicture(person.getProfilePicture());
+            serviceProvider.setPhoneNumber(person.getPhoneNumber());
+            serviceProvider.setType(PersonType.SERVICE_PROVIDER);
+            serviceProvider.setLocation(person.getLocation());
+            serviceProvider.setNotifications(person.getNotifications());
+            serviceProvider.setAttendingEvents(person.getAttendingEvents());
+            serviceProvider.setFavoriteEvents(person.getFavoriteEvents());
+            serviceProvider.setFavoriteProducts(person.getFavoriteProducts());
+
+            serviceProvider.setCompanyName(companyDetailsDTO.getCompanyName());
+            serviceProvider.setCompanyEmail(companyDetailsDTO.getCompanyEmail());
+            serviceProvider.setCompanyPhoneNumber(companyDetailsDTO.getCompanyPhoneNumber());
+            serviceProvider.setCompanyDescription(companyDetailsDTO.getCompanyDescription());
+            serviceProvider.setCompanyPhotos(companyDetailsDTO.getCompanyPhotos());
+            serviceProvider.setCompanyLocation(companyDetailsDTO.getCompanyLocation());
+            serviceProvider.setProducts(new HashSet<>());
+
+            serviceProviderRepository.save(serviceProvider);
+            account.setType(PersonType.SERVICE_PROVIDER);
+            account.setPerson(serviceProvider);
+            this.save(account);
+        }
+        return accountDTOMapper.fromAccountToUpdatedDTO(account);
+    }
 
 
 }

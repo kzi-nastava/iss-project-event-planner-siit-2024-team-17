@@ -4,6 +4,7 @@ import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatedPersonDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
 import com.ftn.event_hopper.services.users.AccountService;
 import com.ftn.event_hopper.services.users.PersonService;
@@ -193,14 +194,14 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
     }
 
-//    @PutMapping(value = "/upgrade-to-PUP/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP(@PathVariable UUID id, @RequestBody ServiceProviderDetailsDTO serviceProviderDetailsDTO) {
-//        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(id, serviceProviderDetailsDTO);
-//        if(updatedAccountDTO == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
-//    }
+    @PutMapping(value = "/upgrade-to-PUP/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP(@PathVariable UUID id, @RequestBody CompanyDetailsDTO companyDetailsDTO) {
+        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(id, companyDetailsDTO);
+        if(updatedAccountDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
+    }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteAccount(@PathVariable UUID id) {
