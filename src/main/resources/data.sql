@@ -78,23 +78,23 @@ VALUES
 
 INSERT INTO reports ("timestamp", id, reported_id, reporter_id, reason)
 VALUES
-    ('2024-12-07 10:00:00', 'cd38da05-3026-4485-bc4d-82a527a2f93f', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'Inappropriate behavior'),
-    ('2024-12-07 10:15:00', '80acd37d-2e79-405e-b349-78ff9895649d', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', 'Spam content'),
-    ('2024-12-07 10:30:00', 'fdcedddb-8b2c-4048-9d6d-9e7d7da2d758', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'Harassment');
+    ('2024-12-07 10:00:00', 'cd38da05-3026-4485-bc4d-82a527a2f93f', '97d6429d-d755-4337-a2b0-31f54633c538', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'Inappropriate behavior'),
+    ('2024-12-07 10:15:00', '80acd37d-2e79-405e-b349-78ff9895649d', '97d6429d-d755-4337-a2b0-31f54633c538', 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', 'Spam content'),
+    ('2024-12-07 10:30:00', 'fdcedddb-8b2c-4048-9d6d-9e7d7da2d758', '6a1c3423-e400-443f-93c1-9491b9dafb03', '97d6429d-d755-4337-a2b0-31f54633c538', 'Harassment');
 
 
 INSERT INTO messages ("timestamp", from_id, id, to_id, content)
 VALUES
-    ('2024-12-07 09:00:00', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'Hello, how are you?'),
-    ('2024-12-07 09:05:00', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'I am good, thank you!'),
-    ('2024-12-07 09:10:00', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'See you at the event.');
+    ('2024-12-07 09:00:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', '97d6429d-d755-4337-a2b0-31f54633c538', 'Hello, how are you?'),
+    ('2024-12-07 09:05:00', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'I am good, thank you!'),
+    ('2024-12-07 09:10:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'See you at the event.');
 
 
 INSERT INTO blocks ("timestamp", blocked_id, who_id, id)
 VALUES
-    ('2024-12-07 15:00:00', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'f4bb3025-88e7-4dc8-835e-6fda3279f8c8'),
-    ('2024-12-07 16:00:00', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '5db5b1b6-3a15-40b5-a8ec-72e7e62a8fbf'),
-    ('2024-12-07 17:00:00',  'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '9dbedc2e-4d54-4c4b-902b-49f3f1d6bda5');
+    ('2024-12-07 15:00:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '97d6429d-d755-4337-a2b0-31f54633c538', 'f4bb3025-88e7-4dc8-835e-6fda3279f8c8'),
+    ('2024-12-07 16:00:00', 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', '97d6429d-d755-4337-a2b0-31f54633c538', '5db5b1b6-3a15-40b5-a8ec-72e7e62a8fbf'),
+    ('2024-12-07 17:00:00',  'd7e7937b-02f3-47d7-bf64-f6e1555ff828', '6a1c3423-e400-443f-93c1-9491b9dafb03', '9dbedc2e-4d54-4c4b-902b-49f3f1d6bda5');
 
 
 INSERT INTO category_event_types (category_id, event_type_id)
