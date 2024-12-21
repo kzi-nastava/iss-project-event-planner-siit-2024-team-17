@@ -7,6 +7,7 @@ import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
@@ -15,11 +16,13 @@ import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.users.*;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,9 +43,10 @@ public class AccountService {
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
-
     @Autowired
     private PersonService personService;
+    @Autowired
+    private PersonRepository personRepository;
 
     public AccountDTO findOneAccount(UUID id) {
         return accountDTOMapper.fromAccountToAccountDTO(accountRepository.findById(id).orElseGet(null));
@@ -271,4 +275,40 @@ public class AccountService {
         return false;
     }
 
+    @Transactional
+    public UpdatedAccountDTO updateToOD(UUID id) {
+        Account account = accountRepository.findById(id).orElseGet(null);
+        if(account != null){
+            Person person = account.getPerson();
+            personRepository.delete(person);
+
+            EventOrganizer eventOrganizer = new EventOrganizer();
+
+            UUID personId = person.getId();
+
+            eventOrganizer.setName(person.getName());
+            eventOrganizer.setSurname(person.getSurname());
+            eventOrganizer.setProfilePicture(person.getProfilePicture());
+            eventOrganizer.setPhoneNumber(person.getPhoneNumber());
+            eventOrganizer.setType(PersonType.EVENT_ORGANIZER);
+            eventOrganizer.setLocation(person.getLocation());
+            eventOrganizer.setNotifications(person.getNotifications());
+            eventOrganizer.setAttendingEvents(person.getAttendingEvents());
+            eventOrganizer.setFavoriteEvents(person.getFavoriteEvents());
+            eventOrganizer.setFavoriteProducts(person.getFavoriteProducts());
+            eventOrganizer.setEvents(new HashSet<>());
+
+            eventOrganizerRepository.save(eventOrganizer);
+            account.setType(PersonType.EVENT_ORGANIZER);
+            account.setPerson(eventOrganizer);
+            this.save(account);
+        }
+
+        return accountDTOMapper.fromAccountToUpdatedDTO(account);
+    }
+
+//    public UpdatedAccountDTO updateToPUP(UUID id, UpdateAccountDTO accountDTO, ServiceProviderDetailsDTO serviceProviderDetailsDTO) {
+//
+//
+//    }
 }
