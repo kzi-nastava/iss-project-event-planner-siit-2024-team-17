@@ -284,7 +284,6 @@ public class AccountService {
 
             EventOrganizer eventOrganizer = new EventOrganizer();
 
-            UUID personId = person.getId();
 
             eventOrganizer.setName(person.getName());
             eventOrganizer.setSurname(person.getSurname());
@@ -307,8 +306,8 @@ public class AccountService {
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
 
-//    public UpdatedAccountDTO updateToPUP(UUID id, UpdateAccountDTO accountDTO, ServiceProviderDetailsDTO serviceProviderDetailsDTO) {
-//
-//
+//    public UpdatedAccountDTO updateToPUP(UUID id, ServiceProviderDetailsDTO serviceProviderDetailsDTO) {
 //    }
+
+
 }

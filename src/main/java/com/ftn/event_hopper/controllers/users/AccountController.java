@@ -184,7 +184,7 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/upgrade/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/upgrade-to-OD/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedAccountDTO> upgradeToOD(@PathVariable UUID id) {
         UpdatedAccountDTO updatedAccountDTO = accountService.updateToOD(id);
         if(updatedAccountDTO == null) {
@@ -193,9 +193,9 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
     }
 
-//    @PutMapping(value = "/upgrade/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP(@PathVariable UUID id, @RequestBody UpdateAccountDTO accountDTO, @RequestBody ServiceProviderDetailsDTO serviceProviderDetailsDTO) {
-//        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(id, accountDTO, serviceProviderDetailsDTO);
+//    @PutMapping(value = "/upgrade-to-PUP/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP(@PathVariable UUID id, @RequestBody ServiceProviderDetailsDTO serviceProviderDetailsDTO) {
+//        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(id, serviceProviderDetailsDTO);
 //        if(updatedAccountDTO == null) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
