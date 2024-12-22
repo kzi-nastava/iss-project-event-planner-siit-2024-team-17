@@ -5,6 +5,7 @@ import com.ftn.event_hopper.dtos.users.account.LoginDTO;
 import com.ftn.event_hopper.dtos.users.account.LoginResponse;
 import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.services.users.LoginService;
+import com.ftn.event_hopper.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +20,8 @@ import java.util.Optional;
 public class AuthenticationController {
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private TokenUtils tokenUtils;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getLoginAccount(@RequestBody LoginDTO loginDTO) {
