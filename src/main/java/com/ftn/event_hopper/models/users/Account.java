@@ -1,13 +1,17 @@
 package com.ftn.event_hopper.models.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.UUID;
 
 @Getter
@@ -19,7 +23,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
-public class Account {
+public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -55,7 +59,12 @@ public class Account {
     private RegistrationRequest registrationRequest;
 
 
+
     public boolean isValid(){
         return this.isActive && this.isVerified;
     }
+
+    public String getUsername(){return this.email;}
+
+
 }
