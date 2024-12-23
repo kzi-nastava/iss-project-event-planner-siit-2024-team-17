@@ -51,6 +51,8 @@ public class PersonController {
         return new ResponseEntity<>(personService.create(personDTO), HttpStatus.CREATED);
     }
 
+
+
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedPersonDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdatePersonDTO person) {
         UpdatedPersonDTO updatedPersonDTO = personService.update(id, person);
@@ -58,6 +60,18 @@ public class PersonController {
             return new ResponseEntity<UpdatedPersonDTO>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(updatedPersonDTO, HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/{personId}/attending-events/{eventId}")
+    public ResponseEntity<Void> addAttendingEvent(
+            @PathVariable UUID personId,
+            @PathVariable UUID eventId) {
+        boolean added = personService.addAttendingEvent(personId, eventId);
+        if (!added) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping(value = "/{accountId}/favorite-solutions/{solutionId}")
@@ -71,5 +85,4 @@ public class PersonController {
         personService.removeFavoriteSolution(accountId, solutionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

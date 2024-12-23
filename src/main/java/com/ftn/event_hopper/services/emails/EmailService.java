@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.UUID;
 
 @Service
 public class EmailService {
@@ -71,24 +72,17 @@ public class EmailService {
         }
     }
 
-    public String getAcceptInvitation() {
+    public String getAcceptInvitation(UUID invitaionId) {
         return "If you want to join us, please click the link below to confirm your presence: \n\n"
-                + getAcceptationLink() +"\n\n";
+                + getAcceptationLink(invitaionId) +"\n\n";
     }
 
-    private String getAcceptationLink() {
-        return "http://localhost:4200/login";
+    private String getAcceptationLink(UUID invitationId) {
+        return "http://localhost:4200/invitations/" + invitationId;
 
     }
 
-    private String getRegistrationLink() {
-        return "http://localhost:4200/register-user";
-    }
 
-    public String getSignUp() {
-        return "If you want to join us, please click the link below to make new account: \n\n"
-                + getRegistrationLink() +"\n\n";
-    }
 
 
 
