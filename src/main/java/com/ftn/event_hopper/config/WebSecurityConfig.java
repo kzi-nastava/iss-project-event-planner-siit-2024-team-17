@@ -42,7 +42,6 @@ public class WebSecurityConfig {
     @Autowired
     private TokenUtils tokenUtils;
 
-
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
@@ -79,9 +78,7 @@ public class WebSecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> {
-            request.requestMatchers(new AntPathRequestMatcher("/api/login")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/home")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+            request.requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
@@ -96,7 +93,11 @@ public class WebSecurityConfig {
         // Autentifikacija ce biti ignorisana ispod navedenih putanja (kako bismo ubrzali pristup resursima)
         // Zahtevi koji se mecuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
         // Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
-        return (web) -> web.ignoring()//.requestMatchers(HttpMethod.POST, "/auth/login")
+        return (web) -> web.ignoring()
+                .requestMatchers(HttpMethod.POST, "/api/login")
+                .requestMatchers(HttpMethod.POST, "/api/accounts/event-organizer")
+                .requestMatchers(HttpMethod.POST, "/api/accounts/service-provider")
+                .requestMatchers(HttpMethod.POST, "/api/accounts/person")
 
 
                 // Ovim smo dozvolili pristup statickim resursima aplikacije

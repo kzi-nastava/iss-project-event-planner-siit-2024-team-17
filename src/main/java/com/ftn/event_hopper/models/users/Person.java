@@ -32,7 +32,7 @@ public class Person {
     @Pattern(regexp = "^[A-Za-z]+$", message = "Surname must contain only alphabetic characters")
     private String surname;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String profilePicture;
 
     @Column(nullable = false)
