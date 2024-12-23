@@ -42,6 +42,7 @@ public class WebSecurityConfig {
     @Autowired
     private TokenUtils tokenUtils;
 
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
@@ -78,11 +79,9 @@ public class WebSecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> {
-            request.requestMatchers(new AntPathRequestMatcher("/auth/login")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/api/login")).permitAll()
-                    //Da nam lepsu poruku vrati
+            request.requestMatchers(new AntPathRequestMatcher("/api/login")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/home")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
-                    //.requestMatchers(new AntPathRequestMatcher("/api/whoami")).hasRole("USER")
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
@@ -108,17 +107,13 @@ public class WebSecurityConfig {
 
 
 
-
-
-
-
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("POST", "PUT", "GET", "OPTIONS", "DELETE", "PATCH")); // or simply "*"
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
