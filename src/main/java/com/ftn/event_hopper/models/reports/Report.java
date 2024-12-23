@@ -1,6 +1,6 @@
 package com.ftn.event_hopper.models.reports;
 
-import com.ftn.event_hopper.models.users.Person;
+import com.ftn.event_hopper.models.users.Account;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,9 +29,9 @@ public class Report {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", nullable = false)
-    private Person reporter;
+    private Account reporter;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "reported_id", nullable = false)
-    private Person reported;
+    private Account reported;
 }

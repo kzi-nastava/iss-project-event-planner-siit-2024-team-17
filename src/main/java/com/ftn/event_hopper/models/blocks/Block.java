@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.models.blocks;
 
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.Person;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,9 +27,9 @@ public class Block {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "who_id", nullable = false)
-    private Person who;
+    private Account who;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "blocked_id", nullable = false)
-    private Person blocked;
+    private Account blocked;
 }
