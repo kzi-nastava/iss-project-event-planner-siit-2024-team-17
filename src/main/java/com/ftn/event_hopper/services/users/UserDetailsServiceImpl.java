@@ -19,7 +19,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     // Funkcija koja na osnovu username-a iz baze vraca objekat User-a
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("Upao u user detaiks service ipmpl");
         Optional<Account> account = accountRepository.findByEmail(username);
         if (account.isEmpty()) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
