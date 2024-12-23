@@ -36,8 +36,9 @@ public class Account implements UserDetails {
 
 
     @Column(nullable = false)
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).*$", message = "Password must include at least one uppercase letter and one number")
+    //the password is encoded now
+    //@Size(min = 8, message = "Password must be at least 8 characters long")
+    //@Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).*$", message = "Password must include at least one uppercase letter and one number")
     private String password;
 
     @Column(nullable = false)

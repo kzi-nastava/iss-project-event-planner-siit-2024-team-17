@@ -12,16 +12,12 @@ import lombok.Setter;
 public class LoginResponse {
     private boolean success;
     private String message;
-    private SimpleAccountDTO account;
+    private String token;
+    private Long expiresIn;
 
+    //for failed login this is all i need
     public LoginResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
-
-    public LoginResponse(SimpleAccountDTO account) {
-        this.success = true;
-        this.account = account;
-    }
-
 }
