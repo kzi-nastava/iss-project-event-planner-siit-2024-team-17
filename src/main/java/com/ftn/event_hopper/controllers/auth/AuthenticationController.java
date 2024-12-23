@@ -7,6 +7,7 @@ import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.users.LoginService;
 import com.ftn.event_hopper.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,8 @@ public class AuthenticationController {
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserTokenState> getLoginAccount(
-            @RequestBody LoginDTO loginDTO, HttpServletRequest response) {      //LoginDTO - credentials    HttpServletRequest - manipulating with HTTP response
-
+            @RequestBody LoginDTO loginDTO) {      //LoginDTO - credentials    HttpServletRequest - manipulating with HTTP response
+        System.out.println("Usao");
         //AuthenticationManager automatically uses UserDetailService which has only one method - UserDetails loadUserByUsername(username). It
         //returns username,password and role based on username (not by password)
         //AuthenticationManager compares password entered by client with password in UserDetails class
@@ -58,13 +59,16 @@ public class AuthenticationController {
                 )
         );
 
+        System.out.println(authentication.getPrincipal());
+        System.out.println(authentication.getDetails());
+
         //seting user into context - info about authenticated user
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
         //generates token
         Account user = (Account) authentication.getPrincipal();
-        String jwt = tokenUtils.generateToken(user.getUsername());
+        String jwt = tokenUtils.generateToken(user);
         int expiresIn = tokenUtils.getExpiredIn();
 
         return  ResponseEntity.ok(new UserTokenState(jwt, (long) expiresIn));
