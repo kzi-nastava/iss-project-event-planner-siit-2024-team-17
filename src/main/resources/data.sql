@@ -72,33 +72,35 @@ VALUES
 
 INSERT INTO categories (is_deleted, status, id, description, name)
 VALUES
+    (FALSE, 0, 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Category for technology', 'Technology'),
     (FALSE, 1, 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', 'Category for technology', 'Technology'),
     (FALSE, 1, 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'Category for arts and culture', 'Arts'),
     (FALSE, 1, 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'Deprecated category', 'Legacy');
 
 INSERT INTO reports ("timestamp", id, reported_id, reporter_id, reason)
 VALUES
-    ('2024-12-07 10:00:00', 'cd38da05-3026-4485-bc4d-82a527a2f93f', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'Inappropriate behavior'),
-    ('2024-12-07 10:15:00', '80acd37d-2e79-405e-b349-78ff9895649d', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', 'Spam content'),
-    ('2024-12-07 10:30:00', 'fdcedddb-8b2c-4048-9d6d-9e7d7da2d758', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'Harassment');
+    ('2024-12-07 10:00:00', 'cd38da05-3026-4485-bc4d-82a527a2f93f', '97d6429d-d755-4337-a2b0-31f54633c538', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'Inappropriate behavior'),
+    ('2024-12-07 10:15:00', '80acd37d-2e79-405e-b349-78ff9895649d', '97d6429d-d755-4337-a2b0-31f54633c538', 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', 'Spam content'),
+    ('2024-12-07 10:30:00', 'fdcedddb-8b2c-4048-9d6d-9e7d7da2d758', '6a1c3423-e400-443f-93c1-9491b9dafb03', '97d6429d-d755-4337-a2b0-31f54633c538', 'Harassment');
 
 
 INSERT INTO messages ("timestamp", from_id, id, to_id, content)
 VALUES
-    ('2024-12-07 09:00:00', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'Hello, how are you?'),
-    ('2024-12-07 09:05:00', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'I am good, thank you!'),
-    ('2024-12-07 09:10:00', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'See you at the event.');
+    ('2024-12-07 09:00:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', '97d6429d-d755-4337-a2b0-31f54633c538', 'Hello, how are you?'),
+    ('2024-12-07 09:05:00', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'I am good, thank you!'),
+    ('2024-12-07 09:10:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'See you at the event.');
 
 
 INSERT INTO blocks ("timestamp", blocked_id, who_id, id)
 VALUES
-    ('2024-12-07 15:00:00', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'f4bb3025-88e7-4dc8-835e-6fda3279f8c8'),
-    ('2024-12-07 16:00:00', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '5db5b1b6-3a15-40b5-a8ec-72e7e62a8fbf'),
-    ('2024-12-07 17:00:00',  'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '9dbedc2e-4d54-4c4b-902b-49f3f1d6bda5');
+    ('2024-12-07 15:00:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '97d6429d-d755-4337-a2b0-31f54633c538', 'f4bb3025-88e7-4dc8-835e-6fda3279f8c8'),
+    ('2024-12-07 16:00:00', 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', '97d6429d-d755-4337-a2b0-31f54633c538', '5db5b1b6-3a15-40b5-a8ec-72e7e62a8fbf'),
+    ('2024-12-07 17:00:00',  'd7e7937b-02f3-47d7-bf64-f6e1555ff828', '6a1c3423-e400-443f-93c1-9491b9dafb03', '9dbedc2e-4d54-4c4b-902b-49f3f1d6bda5');
 
 
 INSERT INTO category_event_types (category_id, event_type_id)
 VALUES
+    ('c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a'),
     ('b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a'),
     ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', '5de088d0-7bff-44f5-b144-51d6a24e740b'),
     ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'f0dcab26-9656-491e-bcce-bf23f723e998');
@@ -155,7 +157,7 @@ VALUES
 
 INSERT INTO invitations (status, "timestamp", event_id, id, picture, target_email)
 VALUES
-    (0, '2024-12-08 12:00:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'f5b2d3c9-7e6a-49a1-b8c5-3e7f9d2a4b6c', 'https://example.com/invitation1.jpg', 'attendee1@example.com'),
+    (0, '2024-12-08 12:00:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'f5b2d3c9-7e6a-49a1-b8c5-3e7f9d2a4b6c', 'https://example.com/invitation1.jpg', 'vanjakostic03@gmail.com'),
     (1, '2024-12-09 15:30:00', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '7f2a3b9e-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'https://example.com/invitation2.jpg', 'attendee2@example.com'),
     (2, '2024-12-10 20:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', '3c9a7b2e-4d5f-4a8b-b1c7-5f3e2d9b6a4c', 'https://example.com/invitation3.jpg', 'attendee3@example.com');
 
@@ -185,7 +187,7 @@ VALUES
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','df9a2350-c532-4a75-9cbf-5d5ea6fc807d', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning2'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','1237e35c-80ff-4a2a-8245-2728cb45ee11', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning3'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','45067d8d-9d86-4104-97cd-7054c48cbbc6', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning4'),
-    (5, 180, false, false, false, true, 7, 0, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
+    (5, 180, false, false, false, true, 7, 0, '2024-12-07 09:45:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
     (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
     (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','314c1838-8cbe-471c-9403-dc49baad1977', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A cleaning service for offices', 'Office Cleaning5'),
     (10, 90, true, false, false, true, 3, 1, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
@@ -239,6 +241,7 @@ VALUES
     ('45067d8d-9d86-4104-97cd-7054c48cbbc6', '26.jpg'),
     ('894d865c-0343-4a4a-9594-6ffc4f3a5a16', '27.jpg'),
     ('314c1838-8cbe-471c-9403-dc49baad1977', '28.jpg'),
+    ('2eed4933-2477-487e-8b99-c39a9ac939dd', '16.jpg'),
     ('2eed4933-2477-487e-8b99-c39a9ac939dd', '29.jpg');
 
 INSERT INTO persons_favorite_products (person_id, product_id)

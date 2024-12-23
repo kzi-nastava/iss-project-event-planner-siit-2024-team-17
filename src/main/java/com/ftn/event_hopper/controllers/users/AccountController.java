@@ -3,6 +3,9 @@ package com.ftn.event_hopper.controllers.users;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
+import com.ftn.event_hopper.dtos.users.person.UpdatedPersonDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
 import com.ftn.event_hopper.services.users.AccountService;
 import com.ftn.event_hopper.services.users.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +87,15 @@ public class AccountController {
             return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/active/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleAccountDTO> getActiveByEmail(@PathVariable String email) {
+        SimpleAccountDTO account = accountService.findActiveByEmail(email);
+        if(account == null) {
+            return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -171,6 +183,24 @@ public class AccountController {
             return new ResponseEntity<UpdatedCompanyAccountDTO>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/upgrade-to-OD/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> upgradeToOD(@PathVariable UUID id) {
+        UpdatedAccountDTO updatedAccountDTO = accountService.updateToOD(id);
+        if(updatedAccountDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/upgrade-to-PUP/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP(@PathVariable UUID id, @RequestBody CompanyDetailsDTO companyDetailsDTO) {
+        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(id, companyDetailsDTO);
+        if(updatedAccountDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

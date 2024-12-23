@@ -18,4 +18,5 @@ public class CategoryDTO {
     private String description;
     private CategoryStatus status;
     private Collection<SimpleEventTypeDTO> eventTypes;
+    private boolean isDeletable;
 }

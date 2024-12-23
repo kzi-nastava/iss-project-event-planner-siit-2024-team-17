@@ -1,7 +1,5 @@
 package com.ftn.event_hopper.services.solutions;
 
-
-
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;

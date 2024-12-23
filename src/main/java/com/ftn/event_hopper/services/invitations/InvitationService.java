@@ -53,14 +53,10 @@ public class InvitationService {
                 "Description: " + invitation.getEvent().getDescription()
                 +"\n" + "Date: " + invitation.getEvent().getTime() + "\n"
                 ;
-        Account account = accountRepository.findByEmail(invitation.getTargetEmail()).orElse(null);
-        if (account != null) {
-            body += emailService.getAcceptInvitation();
-        }else{
-            body += emailService.getSignUp();
-        }
 
-        Email email = new Email(invitation.getTargetEmail(), subject, body, invitation.getPicture());
+        body += emailService.getAcceptInvitation(invitation.getId());
+
+        Email email = new Email(invitation.getTargetEmail(), subject, body, invitation.getPicture(), invitation.getId());
 
         emailService.sendSimpleMail(email);
         return invitationDTOMapper.fromInvitationToCreatedInvitationDTO(invitation);

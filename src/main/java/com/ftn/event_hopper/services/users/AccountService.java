@@ -2,11 +2,14 @@ package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.location.LocationDTO;
+import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
@@ -15,12 +18,14 @@ import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.users.*;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -43,14 +48,18 @@ public class AccountService {
     private EventOrganizerRepository eventOrganizerRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private PersonService personService;
+    @Autowired
+    private PersonRepository personRepository;
 
     public AccountDTO findOneAccount(UUID id) {
         return accountDTOMapper.fromAccountToAccountDTO(accountRepository.findById(id).orElseGet(null));
     }
 
     public Optional<Account> findByEmail(String email) {
+
         return accountRepository.findByEmail(email);
     }
 
@@ -76,6 +85,18 @@ public class AccountService {
     public List<SimpleAccountDTO> findAllInactive() {
         List<Account> accounts = accountRepository.findByIsActive(false);
         return accountDTOMapper.fromAccountListToSimpleDTOList(accounts);
+    }
+
+
+    public Optional<SimpleAccountDTO> findByEmailAndPassword(LoginDTO loginDTO) {
+        Optional<Account> accountOptional = accountRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+        return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO);
+    }
+
+
+    public SimpleAccountDTO findActiveByEmail(String email) {
+        Optional<Account> accountOptional = accountRepository.findByIsActiveAndEmail(true,email);
+        return accountOptional.map(accountDTOMapper::fromAccountToSimpleDTO).orElse(null);
     }
 
     public List<AccountDTO> findAllAccounts() {
@@ -149,6 +170,7 @@ public class AccountService {
         this.save(account);
         return accountDTOMapper.fromAccountToCreatedDTO(account);
     }
+
 
     public UpdatedAccountDTO update(UUID id, UpdatePersonDTO personDTO){
         Account account = accountRepository.findById(id).orElseGet(null);
@@ -259,5 +281,74 @@ public class AccountService {
         }
         return false;
     }
+
+    @Transactional
+    public UpdatedAccountDTO updateToOD(UUID id) {
+        Account account = accountRepository.findById(id).orElseGet(null);
+        if(account != null){
+            Person person = account.getPerson();
+            personRepository.delete(person);
+
+            EventOrganizer eventOrganizer = new EventOrganizer();
+
+
+            eventOrganizer.setName(person.getName());
+            eventOrganizer.setSurname(person.getSurname());
+            eventOrganizer.setProfilePicture(person.getProfilePicture());
+            eventOrganizer.setPhoneNumber(person.getPhoneNumber());
+            eventOrganizer.setType(PersonType.EVENT_ORGANIZER);
+            eventOrganizer.setLocation(person.getLocation());
+            eventOrganizer.setNotifications(person.getNotifications());
+            eventOrganizer.setAttendingEvents(person.getAttendingEvents());
+            eventOrganizer.setFavoriteEvents(person.getFavoriteEvents());
+            eventOrganizer.setFavoriteProducts(person.getFavoriteProducts());
+            eventOrganizer.setEvents(new HashSet<>());
+
+            eventOrganizerRepository.save(eventOrganizer);
+            account.setType(PersonType.EVENT_ORGANIZER);
+            account.setPerson(eventOrganizer);
+            this.save(account);
+        }
+
+        return accountDTOMapper.fromAccountToUpdatedDTO(account);
+    }
+
+    @Transactional
+    public UpdatedAccountDTO updateToPUP(UUID id, CompanyDetailsDTO companyDetailsDTO) {
+        Account account = accountRepository.findById(id).orElseGet(null);
+        if(account != null){
+            Person person = account.getPerson();
+            personRepository.delete(person);
+
+            ServiceProvider serviceProvider = new ServiceProvider();
+
+
+            serviceProvider.setName(person.getName());
+            serviceProvider.setSurname(person.getSurname());
+            serviceProvider.setProfilePicture(person.getProfilePicture());
+            serviceProvider.setPhoneNumber(person.getPhoneNumber());
+            serviceProvider.setType(PersonType.SERVICE_PROVIDER);
+            serviceProvider.setLocation(person.getLocation());
+            serviceProvider.setNotifications(person.getNotifications());
+            serviceProvider.setAttendingEvents(person.getAttendingEvents());
+            serviceProvider.setFavoriteEvents(person.getFavoriteEvents());
+            serviceProvider.setFavoriteProducts(person.getFavoriteProducts());
+
+            serviceProvider.setCompanyName(companyDetailsDTO.getCompanyName());
+            serviceProvider.setCompanyEmail(companyDetailsDTO.getCompanyEmail());
+            serviceProvider.setCompanyPhoneNumber(companyDetailsDTO.getCompanyPhoneNumber());
+            serviceProvider.setCompanyDescription(companyDetailsDTO.getCompanyDescription());
+            serviceProvider.setCompanyPhotos(companyDetailsDTO.getCompanyPhotos());
+            serviceProvider.setCompanyLocation(companyDetailsDTO.getCompanyLocation());
+            serviceProvider.setProducts(new HashSet<>());
+
+            serviceProviderRepository.save(serviceProvider);
+            account.setType(PersonType.SERVICE_PROVIDER);
+            account.setPerson(serviceProvider);
+            this.save(account);
+        }
+        return accountDTOMapper.fromAccountToUpdatedDTO(account);
+    }
+
 
 }

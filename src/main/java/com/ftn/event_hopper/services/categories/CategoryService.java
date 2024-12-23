@@ -36,7 +36,14 @@ public class CategoryService {
 
     public List<CategoryDTO> findAllApproved() {
         List<Category> categories = categoryRepository.findByStatusAndIsDeletedFalse(CategoryStatus.APPROVED);
-        return categoryMapper.fromCategoryListToCategoryDTOList(categories);
+        List<CategoryDTO> categoryDTOs = categoryMapper.fromCategoryListToCategoryDTOList(categories);
+
+        for (CategoryDTO categoryDTO : categoryDTOs) {
+            boolean hasProducts = productRepository.existsByCategory_Id(categoryDTO.getId());
+            categoryDTO.setDeletable(!hasProducts);
+        }
+
+        return categoryDTOs;
     }
 
     public CategoryDTO findOneCategory(UUID id) {
@@ -115,11 +122,12 @@ public class CategoryService {
 
     public boolean deleteCategory(UUID id) {
         Category existing = categoryRepository.findById(id).orElse(null);
-        if (existing == null || existing.isDeleted() || !existing.getEventTypes().isEmpty()) {
+        if (existing == null || existing.isDeleted() || productRepository.existsByCategory_Id(id)) {
             return false;
         }
 
         existing.setDeleted(true);
+        existing.setEventTypes(null);
         categoryRepository.save(existing);
         categoryRepository.flush();
         return true;

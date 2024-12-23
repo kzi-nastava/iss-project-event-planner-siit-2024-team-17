@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.models.messages;
 
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.Person;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,9 +31,9 @@ public class Message {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "to_id", nullable = false)
-    private Person to;
+    private Account to;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "from_id", nullable = false)
-    private Person from;
+    private Account from;
 }
