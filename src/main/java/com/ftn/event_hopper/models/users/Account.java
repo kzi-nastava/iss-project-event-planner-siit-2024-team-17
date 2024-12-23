@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -58,6 +59,10 @@ public class Account implements UserDetails {
     @JoinColumn(name = "registration_request_id", nullable = true)
     private RegistrationRequest registrationRequest;
 
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "account_roles", joinColumns = @JoinColumn(name = "account_id"))
+//    @Column(name = "role")
+//    private List<String> roles;
 
 
     public boolean isValid(){
@@ -66,5 +71,11 @@ public class Account implements UserDetails {
 
     public String getUsername(){return this.email;}
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> (GrantedAuthority) () -> role)
+                .toList();
+    }
 
 }
