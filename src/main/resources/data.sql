@@ -72,7 +72,7 @@ VALUES
 
 INSERT INTO categories (is_deleted, status, id, description, name)
 VALUES
-    (FALSE, 0, 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Category for technology', 'Technology'),
+    (FALSE, 0, 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Suggested category', 'Suggestion'),
     (FALSE, 1, 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', 'Category for technology', 'Technology'),
     (FALSE, 1, 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'Category for arts and culture', 'Arts'),
     (FALSE, 1, 'c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', 'Deprecated category', 'Legacy');
