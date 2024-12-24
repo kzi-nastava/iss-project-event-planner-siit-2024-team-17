@@ -183,14 +183,14 @@ VALUES
 
 INSERT INTO products (cancellation_window_days, duration_minutes, is_auto_accept, is_available, is_deleted, is_visible, reservation_window_days, status, edit_timestamp, category_id, id, service_provider_id, type, description, name)
 VALUES
-    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning1'),
-    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','df9a2350-c532-4a75-9cbf-5d5ea6fc807d', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning2'),
-    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','1237e35c-80ff-4a2a-8245-2728cb45ee11', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning3'),
-    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','45067d8d-9d86-4104-97cd-7054c48cbbc6', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning4'),
-    (5, 180, false, false, false, true, 7, 0, '2024-12-07 09:45:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
+    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','11fbaacb-5d2e-44b0-8f7e-1d302baef461', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning1'),
+    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','df9a2350-c532-4a75-9cbf-5d5ea6fc807d', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning2'),
+    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','1237e35c-80ff-4a2a-8245-2728cb45ee11', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning3'),
+    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','45067d8d-9d86-4104-97cd-7054c48cbbc6', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning4'),
+    (5, 180, false, false, false, true, 7, 0, '2024-12-07 09:45:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
     (3, 120, true, true, false, true, 5, 1, '2024-12-07 09:30:00', 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
-    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','314c1838-8cbe-471c-9403-dc49baad1977', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A cleaning service for offices', 'Office Cleaning5'),
-    (10, 90, true, false, false, true, 3, 1, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
+    (5, 180, false, true, false, true, 7, 1, '2024-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','314c1838-8cbe-471c-9403-dc49baad1977', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'SERVICE', 'A cleaning service for offices', 'Office Cleaning5'),
+    (10, 90, true, false, false, true, 3, 1, '2024-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES
