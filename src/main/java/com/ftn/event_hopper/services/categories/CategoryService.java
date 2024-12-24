@@ -6,6 +6,7 @@ import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.shared.CategoryStatus;
+import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
@@ -107,19 +108,6 @@ public class CategoryService {
         return categoryMapper.fromCategoryToUpdatedCategoryDTO(updated);
     }
 
-    public UpdatedCategorySuggestionDTO updateCategorySuggestion(UUID id, UpdateCategorySuggestionDTO suggestion) {
-        Category existing = categoryRepository.findById(id).orElse(null);
-        if (existing == null) {
-            return null;
-        }
-
-        existing.setStatus(suggestion.getStatus());
-
-        Category updated = categoryRepository.save(existing);
-        categoryRepository.flush();
-        return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
-    }
-
     public boolean deleteCategory(UUID id) {
         Category existing = categoryRepository.findById(id).orElse(null);
         if (existing == null || existing.isDeleted() || productRepository.existsByCategory_Id(id)) {
@@ -131,5 +119,55 @@ public class CategoryService {
         categoryRepository.save(existing);
         categoryRepository.flush();
         return true;
+    }
+
+    public UpdatedCategorySuggestionDTO rejectCategorySuggestion(UUID id, UUID substituteCategoryId) {
+        Category existing = categoryRepository.findById(id).orElse(null);
+        if (existing == null) {
+            return null;
+        }
+
+        existing.setStatus(CategoryStatus.REJECTED);
+
+        Category updated = categoryRepository.save(existing);
+        categoryRepository.flush();
+
+        Category substitute = categoryRepository.findById(substituteCategoryId).orElse(null);
+        if (substitute == null) {
+            return null;
+        }
+
+        Product requester = productRepository.findByCategory_Id(id);
+        if (requester == null) {
+            return null;
+        }
+        requester.setCategory(substitute);
+        requester.setStatus(ProductStatus.APPROVED);
+        productRepository.save(requester);
+        productRepository.flush();
+
+        return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
+    }
+
+    public UpdatedCategorySuggestionDTO approveCategorySuggestion(UUID id) {
+        Category existing = categoryRepository.findById(id).orElse(null);
+        if (existing == null) {
+            return null;
+        }
+
+        existing.setStatus(CategoryStatus.APPROVED);
+
+        Category updated = categoryRepository.save(existing);
+        categoryRepository.flush();
+
+        Product requester = productRepository.findByCategory_Id(id);
+        if (requester == null) {
+            return null;
+        }
+        requester.setStatus(ProductStatus.APPROVED);
+        productRepository.save(requester);
+        productRepository.flush();
+
+        return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
     }
 }

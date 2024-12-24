@@ -67,9 +67,16 @@ public class CategoryController {
         return new ResponseEntity<UpdatedCategoryDTO>(updatedCategory, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/suggestions/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedCategorySuggestionDTO> updateCategorySuggestion(@PathVariable("id") UUID id, @RequestBody UpdateCategorySuggestionDTO suggestion) {
-        UpdatedCategorySuggestionDTO updatedCategorySuggestion = categoryService.updateCategorySuggestion(id, suggestion);
+    @PutMapping(value = "/suggestions/{id}/approve", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedCategorySuggestionDTO> approveCategorySuggestion(@PathVariable("id") UUID id) {
+        UpdatedCategorySuggestionDTO updatedCategorySuggestion = categoryService.approveCategorySuggestion(id);
+
+        return new ResponseEntity<UpdatedCategorySuggestionDTO>(updatedCategorySuggestion, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/suggestions/{id}/reject/{substituteCategoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedCategorySuggestionDTO> rejectCategorySuggestion(@PathVariable("id") UUID id, @PathVariable UUID substituteCategoryId) {
+        UpdatedCategorySuggestionDTO updatedCategorySuggestion = categoryService.rejectCategorySuggestion(id, substituteCategoryId);
 
         return new ResponseEntity<UpdatedCategorySuggestionDTO>(updatedCategorySuggestion, HttpStatus.OK);
     }
