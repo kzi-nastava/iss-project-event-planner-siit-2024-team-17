@@ -7,10 +7,14 @@ import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.shared.CategoryStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
+import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.solutions.Service;
+import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
+import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
@@ -21,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -42,6 +47,8 @@ public class ServiceService {
 
     @Autowired
     private EventTypeRepository eventTypeRepository;
+    @Autowired
+    private ServiceProviderRepository serviceProviderRepository;
 
 
     public boolean deleteService(UUID id) {
@@ -71,8 +78,21 @@ public class ServiceService {
                                                                   String sortDirection
     ) {
 
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            return Page.empty();
+        }
+        ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
+        Collection<UUID> personsServices = serviceProvider.getProducts().stream()
+                .map(Product::getId)
+                .toList();
+
         Specification<Service> specification = Specification.where((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("isDeleted"), false));
+
+        specification = specification.and((root, query, criteriaBuilder) ->
+                root.get("id").in(personsServices));
 
         if (categoryId != null) {
             specification = specification.and((root, query, criteriaBuilder) ->
