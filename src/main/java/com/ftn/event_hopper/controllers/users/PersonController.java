@@ -73,15 +73,15 @@ public class PersonController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping(value = "/{accountId}/favorite-solutions/{solutionId}")
-    public ResponseEntity<?> addFavoriteSolution(@PathVariable UUID accountId, @PathVariable UUID solutionId) {
-        personService.addFavoriteSolution(accountId, solutionId);
+    @PostMapping(value = "/favorite-solutions/{solutionId}")
+    public ResponseEntity<?> addFavoriteSolution(@PathVariable UUID solutionId) {
+        personService.addFavoriteSolution(solutionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{accountId}/favorite-solutions/{solutionId}")
-    public ResponseEntity<?> removeFavoriteSolution(@PathVariable UUID accountId, @PathVariable UUID solutionId) {
-        personService.removeFavoriteSolution(accountId, solutionId);
+    @DeleteMapping(value = "/favorite-solutions/{solutionId}")
+    public ResponseEntity<?> removeFavoriteSolution(@PathVariable UUID solutionId) {
+        personService.removeFavoriteSolution(solutionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
