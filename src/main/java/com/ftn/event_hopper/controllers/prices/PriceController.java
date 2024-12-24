@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/prices")
-@CrossOrigin(origins = "*")
 public class PriceController {
     @Autowired
     private ProductService productService;

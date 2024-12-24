@@ -3,11 +3,8 @@ package com.ftn.event_hopper.controllers.users;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
-import com.ftn.event_hopper.dtos.users.person.UpdatedPersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
-import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
 import com.ftn.event_hopper.services.users.AccountService;
-import com.ftn.event_hopper.services.users.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +15,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/accounts")
-@CrossOrigin(origins = "*")
 public class AccountController {
     @Autowired
     private AccountService accountService;

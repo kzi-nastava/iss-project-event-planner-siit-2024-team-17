@@ -1,8 +1,6 @@
 package com.ftn.event_hopper.controllers.invitations;
 
 import com.ftn.event_hopper.dtos.invitations.*;
-import com.ftn.event_hopper.dtos.location.*;
-import com.ftn.event_hopper.models.invitations.Invitation;
 import com.ftn.event_hopper.services.invitations.InvitationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/invitations")
-@CrossOrigin(origins = "*")
 public class InvitationController {
     @Autowired
     private InvitationService invitationService;
