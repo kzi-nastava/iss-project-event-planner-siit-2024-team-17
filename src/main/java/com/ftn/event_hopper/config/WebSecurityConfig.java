@@ -75,7 +75,12 @@ public class WebSecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> {
-            request.requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+            request
+                    .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+
+                    .requestMatchers(HttpMethod.GET, "/api/solutions/*/details").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/service-providers/*/details").permitAll()
+
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
@@ -96,8 +101,6 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/accounts/service-provider")
                 .requestMatchers(HttpMethod.POST, "/api/accounts/person")
                 .requestMatchers(HttpMethod.GET, "/api/images/**")
-                .requestMatchers(HttpMethod.GET, "/api/solutions/*/details")
-                .requestMatchers(HttpMethod.GET, "/api/service-providers/*/details")
 
 
                 // Ovim smo dozvolili pristup statickim resursima aplikacije

@@ -14,6 +14,7 @@ import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.solutions.Service;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.prices.PriceRepository;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -255,11 +257,28 @@ public class ProductService {
             solutionDetailsDTO.setCancellationWindowDays(service.getCancellationWindowDays());
         }
 
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
+            return solutionDetailsDTO;
+        }
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+        if (person != null) {
+            solutionDetailsDTO.setFavorite(person.getFavoriteProducts().contains(product));
+        }
+
         return solutionDetailsDTO;
     }
 
     public Collection<PriceManagementDTO> getPricesForManagement() {
-        List<Product> products = productRepository.findByIsDeletedFalse();
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ServiceProvider provider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (provider == null) {
+            throw new EntityNotFoundException("Provider not found");
+        }
+
+        Set<Product> products = provider.getProducts();
         List<PriceManagementDTO> prices = new ArrayList<>();
         for (Product product : products) {
             Price newestPrice = product.getPrices().get(product.getPrices().size() - 1);
