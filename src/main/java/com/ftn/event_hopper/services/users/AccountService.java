@@ -23,6 +23,7 @@ import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +46,9 @@ public class AccountService {
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private PersonService personService;
     @Autowired
@@ -264,6 +268,7 @@ public class AccountService {
 
 
     public Account save(Account account) {
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
 

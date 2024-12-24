@@ -33,6 +33,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -44,7 +45,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         try {
 
-            if (authToken != null) {
+            if (authToken != null && !authToken.equals("")) {
 
                 // 2. Getting username form JWT
                 username = tokenUtils.getUsernameFromToken(authToken);

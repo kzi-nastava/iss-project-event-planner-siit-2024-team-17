@@ -33,19 +33,19 @@ VALUES
 
 INSERT INTO accounts (is_active, is_verified, type, suspension_timestamp, id, person_id, registration_request_id, email, password)
 VALUES
-    (TRUE, FALSE, 3, '2024-12-01 10:00:00', '97d6429d-d755-4337-a2b0-31f54633c538', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '5e6d739a-b529-44fb-98db-9cf95b7fe750', 'user1@example.com', 'Password123'),
-    (FALSE, TRUE, 3, NULL, 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '2b221736-8f5b-4c2a-ab96-2a77d7d6274e', 'user2@example.com', 'Password123'),
-    (TRUE, TRUE, 3, '2024-12-07 14:45:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '537a4529-8241-4ac4-8d1b-94bb5b50355b', 'vanjakostic03@gmail.com', 'Password123'),
+    (TRUE, FALSE, 3, '2024-12-01 10:00:00', '97d6429d-d755-4337-a2b0-31f54633c538', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '5e6d739a-b529-44fb-98db-9cf95b7fe750', 'user1@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
+    (FALSE, TRUE, 3, NULL, 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '2b221736-8f5b-4c2a-ab96-2a77d7d6274e', 'user2@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
+    (TRUE, TRUE, 3, '2024-12-07 14:45:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '537a4529-8241-4ac4-8d1b-94bb5b50355b', 'user3@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
 
-    (TRUE, FALSE, 1, '2024-12-01 10:00:00', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'dbb94ace-5710-489c-85b3-4fcef244d9b9', 'pup1@example.com', 'Password123'),
-    (FALSE, TRUE, 1, NULL, '1b02e7df-ea2a-4cb2-b93b-a067a7f12fc6', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'b7627b61-ffd5-4664-9137-1f7421cbb12f', 'pup2@example.com', 'Password123'),
-    (TRUE, TRUE, 1, '2024-12-07 14:45:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '53a359d9-f904-4cce-b4f4-cdf32c20552c', 'pup3@example.com', 'Password123'),
+    (TRUE, FALSE, 1, '2024-12-01 10:00:00', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'dbb94ace-5710-489c-85b3-4fcef244d9b9', 'pup1@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
+    (FALSE, TRUE, 1, NULL, '1b02e7df-ea2a-4cb2-b93b-a067a7f12fc6', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'b7627b61-ffd5-4664-9137-1f7421cbb12f', 'pup2@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
+    (TRUE, TRUE, 1, '2024-12-07 14:45:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '53a359d9-f904-4cce-b4f4-cdf32c20552c', 'pup3@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
 
-    (TRUE, FALSE, 2, '2024-12-01 10:00:00', 'ae7adea0-516c-47b5-ae7b-10abcb32752d', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f18fe9b0-a620-45f9-b3b4-59c9d6929882', 'organizer1@example.com', 'Password123'),
-    (FALSE, TRUE, 2, NULL, '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '4b7bcaa9-4c40-46d5-a1ba-a22d4e3f9778', 'organzier2@example.com', 'Password123'),
-    (TRUE, TRUE, 2, '2024-12-07 14:45:00', '035ad44b-2ca3-4775-be2d-c65e6c1eb084', '57c05a8a-dd8b-4da8-af73-90961e423f42', 'd123fc95-e98a-473d-bd83-ac3a63a043b4', 'organizer3@example.com', 'Password123'),
+    (TRUE, FALSE, 2, '2024-12-01 10:00:00', 'ae7adea0-516c-47b5-ae7b-10abcb32752d', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f18fe9b0-a620-45f9-b3b4-59c9d6929882', 'organizer1@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
+    (FALSE, TRUE, 2, NULL, '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '4b7bcaa9-4c40-46d5-a1ba-a22d4e3f9778', 'organzier2@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
+    (TRUE, TRUE, 2, '2024-12-07 14:45:00', '035ad44b-2ca3-4775-be2d-c65e6c1eb084', '57c05a8a-dd8b-4da8-af73-90961e423f42', 'd123fc95-e98a-473d-bd83-ac3a63a043b4', 'organizer3@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
 
-    (TRUE, TRUE, 0, '2024-12-01 10:00:00', 'e527b2da-66ae-4076-8301-d3a9dc3c5860', '20343059-c4dd-4608-81aa-104f415e8085', '48428b06-0175-4830-80fd-595d96f66906', 'admin@example.com', 'Admin123')
+    (TRUE, TRUE, 0, '2024-12-01 10:00:00', 'e527b2da-66ae-4076-8301-d3a9dc3c5860', '20343059-c4dd-4608-81aa-104f415e8085', '48428b06-0175-4830-80fd-595d96f66906', 'admin@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36')
 ;
 
 
