@@ -77,9 +77,13 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(request -> {
             request
                     .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
-
+                    .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/solutions/*/details").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/service-providers/*/details").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/accounts/event-organizer").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/accounts/service-provider").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/accounts/person").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/images/**").permitAll()
 
                     .anyRequest().authenticated();
         });
@@ -96,13 +100,6 @@ public class WebSecurityConfig {
         // Zahtevi koji se mecuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
         // Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
         return (web) -> web.ignoring()
-                .requestMatchers(HttpMethod.POST, "/api/login")
-                .requestMatchers(HttpMethod.POST, "/api/accounts/event-organizer")
-                .requestMatchers(HttpMethod.POST, "/api/accounts/service-provider")
-                .requestMatchers(HttpMethod.POST, "/api/accounts/person")
-                .requestMatchers(HttpMethod.GET, "/api/images/**")
-
-
                 // Ovim smo dozvolili pristup statickim resursima aplikacije
                 .requestMatchers(HttpMethod.GET, "/", "/webjars/*", "/*.html", "favicon.ico",
                         "/*/*.html", "/*/*.css", "/*/*.js");
