@@ -212,7 +212,7 @@ public class AccountService {
         if (account == null) {
             throw new RuntimeException("Account not found.");
         }
-        if (!account.getPassword().equals(changePasswordDTO.getOldPassword())) {
+        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), account.getPassword())) {
             throw new RuntimeException("The old password is incorrect.");
         }
         account.setPassword(changePasswordDTO.getNewPassword());

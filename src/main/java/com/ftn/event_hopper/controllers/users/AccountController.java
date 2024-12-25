@@ -3,15 +3,14 @@ package com.ftn.event_hopper.controllers.users;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
-import com.ftn.event_hopper.dtos.users.person.UpdatedPersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
-import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.users.AccountService;
-import com.ftn.event_hopper.services.users.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -140,10 +139,11 @@ public class AccountController {
         return new ResponseEntity<>("Account couldn't be verified", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(value = "{id}/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> changePassword(@PathVariable UUID id, @RequestBody ChangePasswordDTO changePasswordDTO) {
+    @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
         try {
-            accountService.changePassword(id, changePasswordDTO);
+            Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            accountService.changePassword(account.getId(), changePasswordDTO);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Success
         } catch (RuntimeException ex) {
             Map<String, String> errorResponse = new HashMap<>();

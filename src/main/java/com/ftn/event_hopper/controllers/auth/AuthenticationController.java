@@ -41,20 +41,20 @@ public class AuthenticationController {
 
         Optional<Account> accountOpt = accountService.findByEmail(loginDTO.getEmail());
         if (accountOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new LoginResponse(false, "Account not found."));
         }
         Account account = accountOpt.get();
 
         // Check if account is verified
         if (!account.isVerified()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new LoginResponse(false, "Account is not verified. Please check your email."));
         }
 
         // Check if account is active
         if (!account.isActive()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new LoginResponse(false, "Account is inactive."));
         }
 
