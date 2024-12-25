@@ -30,14 +30,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<LoginResponse> createAuthenticationToken(
-            @RequestBody LoginDTO loginDTO, HttpServletResponse response) {      //LoginDTO - credentials    HttpServletRequest - manipulating with HTTP response
-        System.out.println("Login method in auth controller accessed ***********************");
-        //AuthenticationManager automatically uses UserDetailService which has only one method - UserDetails loadUserByUsername(username). It
-        //returns username,password and role based on username (not by password)
-        //AuthenticationManager compares password entered by client with password in UserDetails class
-        //If everything is OK, AuthenticationManager returns Authentication object which represents successfully logged in user, otherwise it throws AuthenticationException
-
-
+            @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         Optional<Account> accountOpt = accountService.findByEmail(loginDTO.getEmail());
         if (accountOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -45,18 +38,14 @@ public class AuthenticationController {
         }
         Account account = accountOpt.get();
 
-        // Check if account is verified
         if (!account.isVerified()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new LoginResponse(false, "Account is not verified. Please check your email."));
         }
-
-        // Check if account is active
         if (!account.isActive()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new LoginResponse(false, "Account is inactive."));
+                    .body(new LoginResponse(false, "Account has been deactivated."));
         }
-
 
         //Authenticate
         try{

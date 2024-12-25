@@ -106,9 +106,13 @@ public class AccountController {
     }
 
 
-    @GetMapping(value = "/{id}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileForPersonDTO> getProfile(@PathVariable UUID id) {
-        ProfileForPersonDTO profileForPerson = accountService.getProfile(id);
+    @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileForPersonDTO> getProfile() {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        ProfileForPersonDTO profileForPerson = accountService.getProfile(account.getId());
         if (profileForPerson == null) {
             return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
         }
@@ -116,10 +120,11 @@ public class AccountController {
     }
 
 
-    @PostMapping(value = "{id}/deactivate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deactivate(@PathVariable UUID id) {
+    @PostMapping(value = "/deactivate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deactivate() {
         try {
-            accountService.deactivate(id);
+            Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            accountService.deactivate(account.getId());
             System.out.println("Account deactivated");
             return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // Success
         } catch (RuntimeException ex) {
@@ -166,18 +171,26 @@ public class AccountController {
         return new ResponseEntity<>(accountService.createServiceProvider(accountDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdatePersonDTO personDTO) {
-        UpdatedAccountDTO updatedAccount = accountService.update(id, personDTO);
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> updateAccount(@RequestBody UpdatePersonDTO personDTO) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NO_CONTENT);
+        }
+        UpdatedAccountDTO updatedAccount = accountService.update(account.getId(), personDTO);
         if(updatedAccount == null) {
-            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}/company", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedCompanyAccountDTO> updateCompanyAccount(@PathVariable UUID id, @RequestBody UpdateCompanyAccountDTO companyAccountDTO) {
-        UpdatedCompanyAccountDTO updatedAccount = accountService.updateCompanyAccount(id, companyAccountDTO);
+    @PutMapping(value = "/company", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedCompanyAccountDTO> updateCompanyAccount(@RequestBody UpdateCompanyAccountDTO companyAccountDTO) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedCompanyAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        UpdatedCompanyAccountDTO updatedAccount = accountService.updateCompanyAccount(account.getId(), companyAccountDTO);
         if(updatedAccount == null) {
             return new ResponseEntity<UpdatedCompanyAccountDTO>(HttpStatus.NOT_FOUND);
         }
