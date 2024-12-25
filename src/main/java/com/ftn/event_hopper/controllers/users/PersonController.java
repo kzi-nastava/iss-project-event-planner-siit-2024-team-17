@@ -1,11 +1,13 @@
 package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.person.*;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.users.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -53,9 +55,13 @@ public class PersonController {
 
 
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedPersonDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdatePersonDTO person) {
-        UpdatedPersonDTO updatedPersonDTO = personService.update(id, person);
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedPersonDTO> updatePerson(@RequestBody UpdatePersonDTO person) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        UpdatedPersonDTO updatedPersonDTO = personService.update(account.getId(), person);
         if(updatedPersonDTO == null){
             return new ResponseEntity<UpdatedPersonDTO>(HttpStatus.NOT_FOUND);
         }
