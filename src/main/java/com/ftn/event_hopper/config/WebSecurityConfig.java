@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -71,12 +70,21 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults());
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> {
-            request.requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+            request
+                    .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/solutions/*/details").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/service-providers/*/details").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/accounts/event-organizer").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/accounts/service-provider").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/accounts/person").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/images/**").permitAll()
+
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
@@ -92,12 +100,6 @@ public class WebSecurityConfig {
         // Zahtevi koji se mecuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
         // Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
         return (web) -> web.ignoring()
-                .requestMatchers(HttpMethod.POST, "/api/login")
-                .requestMatchers(HttpMethod.POST, "/api/accounts/event-organizer")
-                .requestMatchers(HttpMethod.POST, "/api/accounts/service-provider")
-                .requestMatchers(HttpMethod.POST, "/api/accounts/person")
-
-
                 // Ovim smo dozvolili pristup statickim resursima aplikacije
                 .requestMatchers(HttpMethod.GET, "/", "/webjars/*", "/*.html", "favicon.ico",
                         "/*/*.html", "/*/*.css", "/*/*.js");
@@ -109,7 +111,7 @@ public class WebSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOriginPatterns(List.of("**"));
         configuration.setAllowedMethods(Arrays.asList("POST", "PUT", "GET", "OPTIONS", "DELETE", "PATCH")); // or simply "*"
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

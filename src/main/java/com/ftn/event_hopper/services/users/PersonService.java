@@ -16,7 +16,7 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.UUID;
@@ -107,9 +107,11 @@ public class PersonService {
         return true;
     }
 
-    public void addFavoriteSolution(UUID accountId, UUID solutionId) {
-        Account account = accountRepository.findById(accountId).orElseGet(null);
-        Person person = account.getPerson();
+    public void addFavoriteSolution(UUID solutionId) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+        if (person == null) return;
+
         Product solution = productRepository.findById(solutionId).orElseGet(null);
         if (solution instanceof Service service) {
             service = serviceRepository.findById(solutionId).orElseGet(null);
@@ -131,9 +133,12 @@ public class PersonService {
         }
     }
 
-    public void removeFavoriteSolution(UUID accountId, UUID solutionId) {
-        Account account = accountRepository.findById(accountId).orElseGet(null);
-        Person person = account.getPerson();
+    public void removeFavoriteSolution(UUID solutionId) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+        || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) return;
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+        if (person == null) return;
         person.getFavoriteProducts()
                 .removeIf(product -> product.getId().equals(solutionId));
         personRepository.save(person);

@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/registration-requests")
-@CrossOrigin(origins = "*")
 public class RegistrationRequestController {
     @Autowired
     private RegistrationRequestService registrationRequestService;

@@ -11,7 +11,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/images")
-@CrossOrigin(origins = "*")
 public class ImageController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
