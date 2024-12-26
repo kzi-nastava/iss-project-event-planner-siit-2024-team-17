@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ftn.event_hopper.mapper.locations.LocationDTOMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,5 +61,14 @@ public class LocationService {
     }
 
 
-
+    public ArrayList<String> findCities() {
+        ArrayList<String> cities = new ArrayList<>();
+        List<Location> locations = locationRepository.findAll();
+        for (Location location : locations) {
+            if(!cities.contains(location.getCity())) {
+                cities.add(location.getCity());
+            }
+        }
+        return cities;
+    }
 }
