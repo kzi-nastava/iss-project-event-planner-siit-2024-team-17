@@ -215,13 +215,4 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteAccount(@PathVariable UUID id) {
-        boolean success = accountService.delete(id);
-        if(success) {
-            return new ResponseEntity<>("Account with ID " + id + " deleted successfully.", HttpStatus.NO_CONTENT);
-        }else{
-            return new ResponseEntity<>("Account with ID " + id + " not found.", HttpStatus.NOT_FOUND);
-        }
-    }
 }
