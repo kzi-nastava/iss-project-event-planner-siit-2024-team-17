@@ -222,6 +222,15 @@ public class CategoryService {
 
     }
 
+    public void addEventType(EventType eventType, List<UUID> categories){
+        for (UUID categoryId : categories) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            category.getEventTypes().add(eventType);
+            categoryRepository.save(category);
+        }
+    }
+
     public List<Category> getCategoriesForEventType(UUID eventTypeId) {
         return categoryRepository.findByEventTypeId(eventTypeId);
     }

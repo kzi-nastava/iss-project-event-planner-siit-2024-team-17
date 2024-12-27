@@ -1,5 +1,7 @@
 package com.ftn.event_hopper.services.events;
 
+import com.ftn.event_hopper.dtos.categories.SimpleCategoryDTO;
+import com.ftn.event_hopper.dtos.eventTypes.CreateEventTypeDTO;
 import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.eventTypes.UpdateEventTypeDTO;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
@@ -40,6 +42,19 @@ public class EventTypeService {
         return eventTypeRepository.findById(id).orElseGet(null);
     }
 
+    public SimpleEventTypeDTO create(CreateEventTypeDTO createDTO) {
+        EventType createEventType = new EventType();
+        createEventType.setName(createDTO.getName());
+        createEventType.setDescription(createDTO.getDescription());
+        createEventType.setDeactivated(false);
+        createEventType = this.save(createEventType);
+        List<UUID> categoriesIds = createDTO.getSuggestedCategories().stream()
+                .map(SimpleCategoryDTO::getId).toList();
+        categoryService.addEventType(createEventType, categoriesIds);
+        return eventTypeDTOMapper.fromEventTypeToSimpleDTO(createEventType);
+    }
+
+
     public SimpleEventTypeDTO update(UUID id, UpdateEventTypeDTO updateEventTypeDTO) {
         EventType eventType = this.findOne(id);
         eventType.setDescription(updateEventTypeDTO.getDescription());
@@ -57,8 +72,8 @@ public class EventTypeService {
         this.save(eventType);
     }
 
-    public void save(EventType eventType) {
-        eventTypeRepository.save(eventType);
+    public EventType save(EventType eventType) {
+        return eventTypeRepository.save(eventType);
     }
 
 }

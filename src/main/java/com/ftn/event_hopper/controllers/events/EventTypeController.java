@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.controllers.events;
 
+import com.ftn.event_hopper.dtos.eventTypes.CreateEventTypeDTO;
 import com.ftn.event_hopper.dtos.eventTypes.EventTypeManagementDTO;
 import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.eventTypes.UpdateEventTypeDTO;
@@ -11,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,6 +43,17 @@ public class EventTypeController {
         }
     }
 
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleEventTypeDTO> createEventType(@RequestBody CreateEventTypeDTO createEventTypeDTO) {
+        try{
+            SimpleEventTypeDTO eventType = eventTypeService.create(createEventTypeDTO);
+            return new ResponseEntity<>(eventType, HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deactivateEventType(@PathVariable UUID id) {
         try{
@@ -53,6 +64,4 @@ public class EventTypeController {
             return new ResponseEntity<>("EventType deactivation failed.", HttpStatus.NOT_FOUND);
         }
     }
-
-
 }
