@@ -11,12 +11,12 @@ import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -45,6 +45,11 @@ public class CategoryService {
         }
 
         return categoryDTOs;
+    }
+
+    public List<SimpleCategoryDTO> findAllApprovedSimple() {
+        List<Category> categories = categoryRepository.findByStatusAndIsDeletedFalse(CategoryStatus.APPROVED);
+        return categoryMapper.fromCategoryListToSimpleDTOList(categories);
     }
 
     public CategoryDTO findOneCategory(UUID id) {
@@ -169,5 +174,69 @@ public class CategoryService {
         productRepository.flush();
 
         return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
+    }
+
+    @Transactional
+    public void manageEventTypes(UUID eventTypeId, List<SimpleCategoryDTO> newCategoryDtos) {
+        // Fetch the EventType
+        EventType eventType = eventTypeRepository.findById(eventTypeId)
+                .orElseThrow(() -> new IllegalArgumentException("EventType not found"));
+
+        // Fetch current categories linked to this EventType
+        List<Category> currentCategories = categoryRepository.findByEventTypeId(eventTypeId);
+
+        // Convert to Set for easier comparison
+        Set<UUID> currentCategoryIds = currentCategories.stream()
+                .map(Category::getId)
+                .collect(Collectors.toSet());
+
+        Set<UUID> newCategoryIdSet = newCategoryDtos.stream()
+                .map(SimpleCategoryDTO::getId)
+                .collect(Collectors.toSet());
+
+        // Determine categories to add
+        Set<UUID> categoriesToAdd = newCategoryIdSet.stream()
+                .filter(id -> !currentCategoryIds.contains(id))
+                .collect(Collectors.toSet());
+
+        // Determine categories to remove
+        Set<UUID> categoriesToRemove = currentCategoryIds.stream()
+                .filter(id -> !newCategoryIdSet.contains(id))
+                .collect(Collectors.toSet());
+
+        // Add new categories
+        for (UUID categoryId : categoriesToAdd) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            category.getEventTypes().add(eventType);
+            categoryRepository.save(category);
+        }
+
+        // Remove old categories
+        for (UUID categoryId : categoriesToRemove) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            category.getEventTypes().remove(eventType);
+            categoryRepository.save(category);
+        }
+
+    }
+
+    public void addEventType(EventType eventType, List<UUID> categories){
+        for (UUID categoryId : categories) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            category.getEventTypes().add(eventType);
+            categoryRepository.save(category);
+        }
+    }
+
+    public List<Category> getCategoriesForEventType(UUID eventTypeId) {
+        return categoryRepository.findByEventTypeId(eventTypeId);
+    }
+
+
+    public void save(Category category) {
+        categoryRepository.save(category);
     }
 }
