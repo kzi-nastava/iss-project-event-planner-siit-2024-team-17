@@ -30,6 +30,11 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/check-email")
+    public ResponseEntity<Boolean> isEmailTaken(@RequestBody String email) {
+        return accountService.findByEmail(email).isPresent() ? new ResponseEntity<>(true, HttpStatus.OK) : new ResponseEntity<>(false, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/simple",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleAccountDTO>> getSimpleAccounts() {
         List<SimpleAccountDTO> accounts = accountService.findAllSimpleAccounts();

@@ -59,7 +59,6 @@ public class AccountService {
     }
 
     public Optional<Account> findByEmail(String email) {
-
         return accountRepository.findByEmail(email);
     }
 
