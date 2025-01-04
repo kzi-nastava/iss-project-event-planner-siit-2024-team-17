@@ -53,7 +53,7 @@ VALUES
 INSERT INTO event_types (is_deactivated, id, description, name)
 VALUES
     (FALSE, 'f0dcab26-9656-491e-bcce-bf23f723e998', 'Outdoor events', 'Outdoor'),
-    (TRUE, '5de088d0-7bff-44f5-b144-51d6a24e740b', 'Virtual events', 'Virtual'),
+    (FALSE, '5de088d0-7bff-44f5-b144-51d6a24e740b', 'Virtual events', 'Virtual'),
     (FALSE, '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', 'Corporate events', 'Corporate');
 
 

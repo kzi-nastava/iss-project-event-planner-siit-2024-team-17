@@ -71,6 +71,12 @@ public class CategoryDTOMapper {
                 .collect(Collectors.toList());
     }
 
+    public List<SimpleCategoryDTO> fromCategoryListToSimpleDTOList(List<Category> categories) {
+        return categories.stream()
+                .map(this::fromCategoryToSimpleCategoryDTO)
+                .collect(Collectors.toList());
+    }
+
     private CategorySuggestionDTO fromCategoryToCategorySuggestionDTO(Category category) {
         return modelMapper.map(category, CategorySuggestionDTO.class);
     }

@@ -1,11 +1,13 @@
 package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.serviceProvider.*;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.users.ServiceProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -41,9 +43,13 @@ public class ServiceProviderController {
         return new ResponseEntity<>(serviceProviderService.create(providerDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedServiceProviderDTO> updatePerson(@PathVariable UUID id, @RequestBody UpdateServiceProviderDTO providerDTO) {
-        UpdatedServiceProviderDTO updatedProvider = serviceProviderService.update(id, providerDTO);
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedServiceProviderDTO> updatePerson(@RequestBody UpdateServiceProviderDTO providerDTO) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        UpdatedServiceProviderDTO updatedProvider = serviceProviderService.update(account.getId(), providerDTO);
         if(updatedProvider == null) {
             return new ResponseEntity<UpdatedServiceProviderDTO>(HttpStatus.NOT_FOUND);
         }
