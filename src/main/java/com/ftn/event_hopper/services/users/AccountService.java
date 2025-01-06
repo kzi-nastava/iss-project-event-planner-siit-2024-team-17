@@ -20,7 +20,9 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import com.ftn.event_hopper.services.emails.EmailService;
 import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
+import com.ftn.event_hopper.services.verification.VerificationService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,7 +50,8 @@ public class AccountService {
     private EventOrganizerRepository eventOrganizerRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private VerificationService verificationService;
     @Autowired
     private PersonService personService;
     @Autowired
@@ -147,6 +150,7 @@ public class AccountService {
         RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
         account.setRegistrationRequest(request);
         this.save(account);
+        this.verificationService.sendVerificationEmail(account.getEmail());
         return accountDTOMapper.fromAccountToCreatedServiceProviderDTO(account);
     }
 
@@ -158,6 +162,7 @@ public class AccountService {
         account.setRegistrationRequest(request);
         System.out.println(account);
         this.save(account);
+        this.verificationService.sendVerificationEmail(account.getEmail());
         return accountDTOMapper.fromAccountToCreatedEventOrganizerDTO(account);
     }
 
@@ -246,11 +251,11 @@ public class AccountService {
         throw new RuntimeException("Account not found.");
     }
 
-    public Optional<SimpleAccountDTO> verify(UUID accountId){
-        Account account = accountRepository.findById(accountId).orElseGet(null);
+    public Optional<SimpleAccountDTO> verify(String email){
+        Account account = accountRepository.findByEmail(email).orElseGet(null);
         if(account!= null){
             account.setVerified(true);
-            this.save(account);
+            accountRepository.save(account);
         }
         return Optional.ofNullable(accountDTOMapper.fromAccountToSimpleDTO(account));
     }

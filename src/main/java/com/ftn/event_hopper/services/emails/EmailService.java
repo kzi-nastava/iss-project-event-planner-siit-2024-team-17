@@ -3,7 +3,6 @@ package com.ftn.event_hopper.services.emails;
 import com.ftn.event_hopper.models.emails.Email;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -25,7 +24,6 @@ public class EmailService {
     // To send a simple email
     public String sendSimpleMail(Email email)
     {
-
         try {
 
             SimpleMailMessage mailMessage= new SimpleMailMessage();
@@ -84,6 +82,20 @@ public class EmailService {
 
 
 
+    public boolean sendVerificationEmail(String email, String subject, String body) {
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(email);
+            mailMessage.setSubject(subject);
+            mailMessage.setText(body);
+
+            javaMailSender.send(mailMessage);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 
 
