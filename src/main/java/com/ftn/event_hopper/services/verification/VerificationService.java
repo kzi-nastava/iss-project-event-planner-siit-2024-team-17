@@ -35,7 +35,6 @@ public class VerificationService {
             return VerificationTokenState.MISSING;
         }
         if(tokenOpt.get().getExpirationTime().isBefore(LocalDateTime.now())) {
-            tokenRepository.deleteByToken(token);
             return VerificationTokenState.EXPIRED;
         }
         return VerificationTokenState.ACCEPTED;
