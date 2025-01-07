@@ -44,7 +44,6 @@ public class EventDTOMapper {
     }
 
     public SimpleEventDTO fromEventToSimpleDTO(Event event) {
-
         return modelMapper.map(event, SimpleEventDTO.class);
     }
 

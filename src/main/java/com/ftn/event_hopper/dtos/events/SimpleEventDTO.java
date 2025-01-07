@@ -2,6 +2,7 @@ package com.ftn.event_hopper.dtos.events;
 
 import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
+import com.ftn.event_hopper.models.shared.EventPrivacyType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,5 @@ public class SimpleEventDTO {
     private String picture;
     private SimpleEventTypeDTO eventType;
     private SimpleLocationDTO location;
+    private EventPrivacyType privacy;
 }
