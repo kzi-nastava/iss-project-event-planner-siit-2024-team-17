@@ -210,16 +210,14 @@ public class ProductService {
         Sort sort = Sort.unsorted();
         if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
             sort = switch (sortField) {
-                case "basePrice" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
-                case "discount" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
-                case "finalPrice" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
-                default ->
+                case "prices" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices[-1].finalPrice");
+                case "name" ->
                         Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+                default -> throw new IllegalStateException("Unexpected value: " + sortField);
             };
         }
+
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
@@ -324,4 +322,8 @@ public class ProductService {
 
         return priceDTOMapper.fromPriceToUpdatedPriceDTO(newPrice);
     }
+
+
 }
+
+
