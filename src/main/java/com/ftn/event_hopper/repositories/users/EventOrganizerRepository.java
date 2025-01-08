@@ -8,6 +8,4 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface EventOrganizerRepository extends JpaRepository<EventOrganizer, UUID> {
-    @Query("SELECT eo FROM EventOrganizer eo JOIN eo.events e WHERE e.id = :eventId")
-    Optional<EventOrganizer> findByEventId(UUID eventId);
 }

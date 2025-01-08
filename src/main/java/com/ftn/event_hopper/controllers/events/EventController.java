@@ -3,12 +3,16 @@ package com.ftn.event_hopper.controllers.events;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.events.*;
+import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.Person;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.services.events.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,6 +28,7 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleEventDTO>> getEvents(){
 
@@ -37,7 +42,6 @@ public class EventController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SinglePageEventDTO> getEvent(@PathVariable UUID id){
         SinglePageEventDTO event = eventService.findOne(id);
-
         if (event == null){
             return new ResponseEntity<SinglePageEventDTO>(HttpStatus.NOT_FOUND);
         }

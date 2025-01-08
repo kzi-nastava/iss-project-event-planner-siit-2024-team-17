@@ -9,6 +9,7 @@ import com.ftn.event_hopper.models.shared.EventPrivacyType;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.users.Person;
+import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
@@ -18,6 +19,7 @@ import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.StringUtils;
@@ -51,13 +53,24 @@ public class EventService {
     public SinglePageEventDTO findOne(UUID id) {
         Event event = eventRepository.findById(id).orElseGet(null);
         SinglePageEventDTO eventDTO = eventDTOMapper.fromEventToSinglePageDTO(event);
-        Optional<EventOrganizer> organizerOpt = eventOrganizerRepository.findByEventId(event.getId());
-        if (organizerOpt.isPresent()) {
-            EventOrganizer organizer = organizerOpt.get();
-            Optional<Account> accountOpt = accountRepository.findByPersonId(organizer.getId());
-            if(accountOpt.isPresent()) {
-                eventDTO.setEventOrganizerId(accountOpt.get().getId());
-            }
+
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
+            eventDTO.setEventOrganizerLoggedIn(false);
+            return eventDTO;
+        }
+
+        //someone is logged in
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if(account.getType() == PersonType.EVENT_ORGANIZER){
+            EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElse(null);
+            eventDTO.setEventOrganizerLoggedIn(eventOrganizer.getEvents().contains(event));
+        }
+
+        if (person != null) {
+            eventDTO.setFavorite(person.getFavoriteEvents().contains(event));
         }
         return eventDTO;
     }

@@ -26,5 +26,6 @@ public class SinglePageEventDTO {
     private SimpleEventTypeDTO eventType;
     private SimpleLocationDTO location;
     private EventPrivacyType privacy;
-    private UUID eventOrganizerId;
+    private boolean eventOrganizerLoggedIn;
+    private boolean favorite;
 }
