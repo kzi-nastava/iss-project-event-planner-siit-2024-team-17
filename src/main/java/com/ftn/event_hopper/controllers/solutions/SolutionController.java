@@ -1,8 +1,11 @@
 package com.ftn.event_hopper.controllers.solutions;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
+import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
+import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.solutions.ProductService;
 import com.ftn.event_hopper.services.solutions.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -51,11 +55,19 @@ public class SolutionController{
         return new ResponseEntity<>(solution, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/persons-top-5/{usersId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleProductDTO>> getTop5Solutions(@PathVariable UUID usersId){
-        Collection<SimpleProductDTO> top5Solutions= productService.findTop5(usersId);
+    @GetMapping(value = "/persons-top-5", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleProductDTO>> getTop5Solutions(){
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("usao???");
+        if(account == null) {
+            System.out.println("Nije nasao usera");
+            return new ResponseEntity<Collection<SimpleProductDTO>>(HttpStatus.NOT_FOUND);
+        }
+
+        Collection<SimpleProductDTO> top5Solutions= productService.findTop5(account.getId());
 
         if(top5Solutions == null){
+            System.out.println("Nije nasao top");
             return new ResponseEntity<Collection<SimpleProductDTO>>(HttpStatus.NOT_FOUND);
         }
 

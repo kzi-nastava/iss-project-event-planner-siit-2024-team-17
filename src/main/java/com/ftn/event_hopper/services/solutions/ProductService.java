@@ -20,6 +20,7 @@ import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.prices.PriceRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
+import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -47,6 +48,8 @@ public class ProductService {
     private PersonRepository personRepository;
     @Autowired
     private PriceRepository priceRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
@@ -69,7 +72,8 @@ public class ProductService {
     }
 
     public Collection<SimpleProductDTO> findTop5(UUID usersId) {
-        Person person = personRepository.findById(usersId).orElse(null);
+        Account account = accountRepository.findById(usersId).orElse(null);
+        Person person = account.getPerson();
         List<ServiceProvider> providersFromTheSameCity = serviceProviderRepository.findByCompanyLocationCity(person.getLocation().getCity());
 
         List<Product> allProductsByLocation = new ArrayList<>();
@@ -206,16 +210,14 @@ public class ProductService {
         Sort sort = Sort.unsorted();
         if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
             sort = switch (sortField) {
-                case "basePrice" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
-                case "discount" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
-                case "finalPrice" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
-                default ->
+                case "prices" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices[-1].finalPrice");
+                case "name" ->
                         Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+                default -> throw new IllegalStateException("Unexpected value: " + sortField);
             };
         }
+
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
@@ -320,4 +322,8 @@ public class ProductService {
 
         return priceDTOMapper.fromPriceToUpdatedPriceDTO(newPrice);
     }
+
+
 }
+
+

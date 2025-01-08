@@ -5,7 +5,9 @@ import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
 import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.verification.VerificationTokenState;
 import com.ftn.event_hopper.services.users.AccountService;
+import com.ftn.event_hopper.services.verification.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +22,8 @@ import java.util.*;
 public class AccountController {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private VerificationService verificationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccountDTO>> getAccounts() {
@@ -139,13 +143,25 @@ public class AccountController {
         }
     }
 
-    @PostMapping(value = "{id}/verify", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> verify(@PathVariable UUID id, @RequestBody ChangePasswordDTO newPasswordDTO) {
-        Optional<SimpleAccountDTO> account = accountService.verify(id);
-        if(account.isPresent()) {
-            return new ResponseEntity<>("Account has been verified", HttpStatus.ACCEPTED);
+
+    @GetMapping(value = "/verify/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<VerificationTokenState> verify(@PathVariable String token) {
+        VerificationTokenState state = verificationService.verifyToken(token);
+        if(state == VerificationTokenState.ACCEPTED) {
+            accountService.verify(verificationService.getEmailByToken(token));
         }
-        return new ResponseEntity<>("Account couldn't be verified", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(state, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/resend-verification-email/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> resendVerificationEmail(@PathVariable String token) {
+        String email = verificationService.getEmailByToken(token);
+        Boolean success = verificationService.sendVerificationEmail(email);
+        if(success){
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

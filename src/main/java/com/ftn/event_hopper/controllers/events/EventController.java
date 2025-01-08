@@ -3,12 +3,15 @@ package com.ftn.event_hopper.controllers.events;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.events.*;
+import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.events.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -44,9 +47,14 @@ public class EventController {
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/persons-top-5/{usersId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleEventDTO>> getTop5Events(@PathVariable UUID usersId){
-        Collection<SimpleEventDTO> top5Events = eventService.findTop5(usersId);
+    @GetMapping(value = "/persons-top-5", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleEventDTO>> getTop5Events(){
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<Collection<SimpleEventDTO>>(HttpStatus.NOT_FOUND);
+        }
+
+        Collection<SimpleEventDTO> top5Events = eventService.findTop5(account.getId());
 
         if (top5Events == null){
             return new ResponseEntity<Collection<SimpleEventDTO>>(HttpStatus.NOT_FOUND);
