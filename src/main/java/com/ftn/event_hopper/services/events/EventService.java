@@ -1,13 +1,18 @@
 package com.ftn.event_hopper.services.events;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
+import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import com.ftn.event_hopper.repositories.users.AccountRepository;
+import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,19 +39,27 @@ public class EventService {
     @Autowired
     private EventDTOMapper eventDTOMapper;
     @Autowired
-    private ProductDTOMapper productDTOMapper;
+    private EventOrganizerRepository eventOrganizerRepository;
     @Autowired
-    private ProductRepository productRepository;
+    private AccountRepository accountRepository;
 
     public List<SimpleEventDTO> findAll(){
         List<Event> events = eventRepository.findAll();
         return eventDTOMapper.fromEventListToSimpleDTOList(events);
     }
 
-    public SimpleEventDTO findOne(UUID id) {
+    public SinglePageEventDTO findOne(UUID id) {
         Event event = eventRepository.findById(id).orElseGet(null);
-        return eventDTOMapper.fromEventToSimpleDTO(event);
-
+        SinglePageEventDTO eventDTO = eventDTOMapper.fromEventToSinglePageDTO(event);
+        Optional<EventOrganizer> organizerOpt = eventOrganizerRepository.findByEventId(event.getId());
+        if (organizerOpt.isPresent()) {
+            EventOrganizer organizer = organizerOpt.get();
+            Optional<Account> accountOpt = accountRepository.findByPersonId(organizer.getId());
+            if(accountOpt.isPresent()) {
+                eventDTO.setEventOrganizerId(accountOpt.get().getId());
+            }
+        }
+        return eventDTO;
     }
 
     public Collection<SimpleEventDTO> findTop5(UUID userId) {

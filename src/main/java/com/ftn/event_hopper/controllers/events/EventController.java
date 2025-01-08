@@ -35,11 +35,11 @@ public class EventController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleEventDTO> getEvent(@PathVariable UUID id){
-        SimpleEventDTO event = eventService.findOne(id);
+    public ResponseEntity<SinglePageEventDTO> getEvent(@PathVariable UUID id){
+        SinglePageEventDTO event = eventService.findOne(id);
 
         if (event == null){
-            return new ResponseEntity<SimpleEventDTO>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<SinglePageEventDTO>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(event, HttpStatus.OK);
     }

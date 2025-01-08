@@ -1,9 +1,8 @@
 package com.ftn.event_hopper.dtos.events;
 
-import com.ftn.event_hopper.models.invitations.Invitation;
-import com.ftn.event_hopper.models.locations.Location;
+import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
+import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
-import com.ftn.event_hopper.models.solutions.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +17,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class GetEventDTO {
-
+public class SinglePageEventDTO {
     private UUID id;
     private String name;
-    private int maxAttendance;
     private String description;
-    private EventPrivacyType eventPrivacyType;
     private LocalDateTime time;
     private String picture;
-    private UUID eventTypeId;
-    private UUID agendaActivityId;
-    private UUID locationId;
-    private ArrayList<UUID> productsIds = new ArrayList<UUID>();
-    private ArrayList<UUID> invitationsIds = new ArrayList<UUID>();
+    private SimpleEventTypeDTO eventType;
+    private SimpleLocationDTO location;
+    private EventPrivacyType privacy;
     private UUID eventOrganizerId;
-
 }
