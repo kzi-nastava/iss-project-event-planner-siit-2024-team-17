@@ -8,12 +8,14 @@ import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
+import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ public class EventService {
     private EventRepository eventRepository;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private AccountRepository accountRepository;
     @Autowired
     private EventDTOMapper eventDTOMapper;
     @Autowired
@@ -90,9 +94,15 @@ public class EventService {
     }
 
     public Collection<SimpleEventDTO> findTop5(UUID userId) {
-
-        Person person = personRepository.findById(userId).orElseGet(null);
+        Account account = accountRepository.findById(userId).orElseGet(null);
+        Person person = account.getPerson();
         List<Event> top5Events = eventRepository.findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(person.getLocation().getCity(), EventPrivacyType.PUBLIC, LocalDateTime.now());
+        for (Event event : top5Events) {
+
+            System.out.println("--------------");
+            System.out.println(event);
+
+        }
         return eventDTOMapper.fromEventListToSimpleDTOList(top5Events);
     }
 

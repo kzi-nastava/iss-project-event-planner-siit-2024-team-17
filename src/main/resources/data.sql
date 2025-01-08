@@ -2,7 +2,8 @@ INSERT INTO locations (latitude, longitude, id, address, city)
 VALUES
     (40.7128, -74.0060, 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', '123 Main St', 'New York'),
     (34.0522, -118.2437, 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', '456 Elm St', 'Los Angeles'),
-    (51.5074, -0.1278, '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', '789 Oak St', 'London');
+    (51.5074, -0.1278, '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', '789 Oak St', 'London'),
+    (51.5064, -0.1260, '4e2d5b9f-a6c3-49a1-b8f5-7d9a7b6e3a2c', '790 Oak St', 'London');
 
 
 INSERT INTO registration_requests (status, "timestamp", id)

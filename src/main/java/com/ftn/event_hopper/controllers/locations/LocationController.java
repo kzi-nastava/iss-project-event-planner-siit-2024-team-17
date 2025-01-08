@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +56,15 @@ public class LocationController {
         return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
+    @GetMapping(value="/cities" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ArrayList<String>> getCities() {
+        ArrayList<String> cities = locationService.findCities();
+        if (cities == null) {
+            return new ResponseEntity<ArrayList<String>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(cities, HttpStatus.OK);
+
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedLocationDTO> createLocation(@RequestBody CreateLocationDTO locationDTO) {
