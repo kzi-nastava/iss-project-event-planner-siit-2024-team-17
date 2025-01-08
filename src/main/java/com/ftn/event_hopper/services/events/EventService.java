@@ -27,10 +27,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -42,13 +39,30 @@ public class EventService {
     private EventDTOMapper eventDTOMapper;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
-    @Autowired
-    private AccountRepository accountRepository;
 
     public List<SimpleEventDTO> findAll(){
         List<Event> events = eventRepository.findAll();
         return eventDTOMapper.fromEventListToSimpleDTOList(events);
     }
+
+    public List<SimpleEventDTO> findForOrganizer(){
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
+            return null;
+        }
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account.getType() != PersonType.EVENT_ORGANIZER){
+            return null;
+        }
+        EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElse(null);
+        Set<Event> events = eventOrganizer.getEvents();
+        if(events == null){
+            return null;
+        }
+        return eventDTOMapper.fromEventSetToSimpleDTOList(events);
+    }
+
 
     public SinglePageEventDTO findOne(UUID id) {
         Event event = eventRepository.findById(id).orElseGet(null);

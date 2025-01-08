@@ -39,6 +39,15 @@ public class EventController {
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/organizer",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleEventDTO>> getOrganizerEvents(){
+        List<SimpleEventDTO> events = eventService.findForOrganizer();
+        if (events == null){
+            return new ResponseEntity<Collection<SimpleEventDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(events, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SinglePageEventDTO> getEvent(@PathVariable UUID id){
         SinglePageEventDTO event = eventService.findOne(id);

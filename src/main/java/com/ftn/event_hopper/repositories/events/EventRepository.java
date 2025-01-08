@@ -19,4 +19,5 @@ public interface EventRepository extends JpaRepository<Event, UUID> , JpaSpecifi
     List<Event> findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(String city, EventPrivacyType privacyType, LocalDateTime now);
 
     Page<Event> findAll(Specification<Event> specification, Pageable page);
+
 }
