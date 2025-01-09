@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.models.agendaActivities;
+package com.ftn.event_hopper.models.events;
 
 import jakarta.persistence.*;
 import lombok.*;
