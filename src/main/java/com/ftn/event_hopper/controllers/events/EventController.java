@@ -3,8 +3,14 @@ package com.ftn.event_hopper.controllers.events;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.events.*;
+import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.EventOrganizer;
+import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.services.events.EventService;
+import com.ftn.event_hopper.services.users.EventOrganizerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +31,8 @@ import java.util.UUID;
 public class EventController {
     @Autowired
     private EventService eventService;
+    @Autowired
+    private EventOrganizerService eventOrganizerService;
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,11 +105,19 @@ public class EventController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedEventDTO> createEvent(@RequestBody CreateEventDTO event){
-        CreatedEventDTO createdEvent = new CreatedEventDTO();
+    public ResponseEntity<CreateEventDTO> createEvent(@RequestBody CreateEventDTO eventDTO){
+        Logger logger = LoggerFactory.getLogger(EventController.class);
+        logger.info("Creating eventAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        logger.info("helooooo {}", eventDTO);
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null || account.getType() != PersonType.EVENT_ORGANIZER){
+            return new ResponseEntity<CreateEventDTO>(HttpStatus.NOT_FOUND);
+        }
+        Event event = eventService.create(eventDTO);
 
+        eventOrganizerService.addEvent(account.getPerson().getId(), event.getId());
 
-        return new ResponseEntity<CreatedEventDTO>(createdEvent, HttpStatus.CREATED);
+        return new ResponseEntity<CreateEventDTO>(HttpStatus.CREATED);
     }
 
 }

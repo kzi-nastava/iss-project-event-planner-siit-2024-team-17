@@ -1,21 +1,25 @@
 package com.ftn.event_hopper.services.events;
 
+import com.ftn.event_hopper.dtos.events.CreateAgendaActivityDTO;
+import com.ftn.event_hopper.dtos.events.CreateEventDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
-import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
+import com.ftn.event_hopper.models.eventTypes.EventType;
+import com.ftn.event_hopper.models.events.AgendaActivity;
 import com.ftn.event_hopper.models.events.Event;
+import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
-import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
+import com.ftn.event_hopper.repositories.events.AgendaActivityRepository;
 import com.ftn.event_hopper.repositories.events.EventRepository;
-import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import com.ftn.event_hopper.repositories.locations.LocationRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
-import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import jakarta.persistence.criteria.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,8 @@ public class EventService {
     @Autowired
     private EventRepository eventRepository;
     @Autowired
+    private EventTypeRepository eventTypeRepository;
+    @Autowired
     private PersonRepository personRepository;
     @Autowired
     private AccountRepository accountRepository;
@@ -43,6 +49,10 @@ public class EventService {
     private EventDTOMapper eventDTOMapper;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
+    @Autowired
+    private LocationRepository locationRepository;
+    @Autowired
+    private AgendaActivityRepository agendaActivityRepository;
 
     public List<SimpleEventDTO> findAll(){
         List<Event> events = eventRepository.findAll();
@@ -104,6 +114,45 @@ public class EventService {
 
         }
         return eventDTOMapper.fromEventListToSimpleDTOList(top5Events);
+    }
+
+
+    public Event create(CreateEventDTO eventDTO) {
+        List<CreateAgendaActivityDTO> activitiesDTO = eventDTO.getAgendaActivities();
+
+        Location eventLocation = new Location();
+        eventLocation.setAddress(eventDTO.getLocation().getAddress());
+        eventLocation.setCity(eventDTO.getLocation().getCity());
+        eventLocation.setLongitude(0.0);
+        eventLocation.setLatitude(0.0);
+        locationRepository.save(eventLocation);
+
+        Event event = new Event();
+        event.setName(eventDTO.getName());
+        event.setDescription(eventDTO.getDescription());
+        event.setPicture(eventDTO.getPicture());
+        EventType eventType = eventTypeRepository.findById(eventDTO.getEventTypeId()).orElse(null);
+        event.setEventType(eventType);
+        event.setPrivacy(eventDTO.getEventPrivacyType());
+        event.setMaxAttendance(eventDTO.getMaxAttendance());
+        event.setTime(eventDTO.getTime());
+
+        event.setLocation(eventLocation);
+
+        Set<AgendaActivity> activities = new HashSet<>();
+        for(CreateAgendaActivityDTO activityDTO : activitiesDTO){
+            AgendaActivity activity = new AgendaActivity();
+            activity.setName(activityDTO.getName());
+            activity.setDescription(activityDTO.getDescription());
+            activity.setStartTime(activityDTO.getStartTime());
+            activity.setEndTime(activityDTO.getEndTime());
+            activities.add(activity);
+            agendaActivityRepository.save(activity);
+        }
+
+        event.setAgendaActivities(activities);
+        eventRepository.save(event);
+        return event;
     }
 
 
