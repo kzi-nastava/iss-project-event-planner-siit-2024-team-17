@@ -1,9 +1,7 @@
 package com.ftn.event_hopper.services.events;
 
-import com.ftn.event_hopper.dtos.events.CreateAgendaActivityDTO;
-import com.ftn.event_hopper.dtos.events.CreateEventDTO;
-import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
+import com.ftn.event_hopper.dtos.events.*;
+import com.ftn.event_hopper.mapper.events.AgendaMapper;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.events.AgendaActivity;
@@ -22,6 +20,8 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import jakarta.persistence.criteria.Expression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -53,6 +53,8 @@ public class EventService {
     private LocationRepository locationRepository;
     @Autowired
     private AgendaActivityRepository agendaActivityRepository;
+    @Autowired
+    private AgendaMapper agendaMapper;
 
     public List<SimpleEventDTO> findAll(){
         List<Event> events = eventRepository.findAll();
@@ -75,6 +77,21 @@ public class EventService {
             return null;
         }
         return eventDTOMapper.fromEventSetToSimpleDTOList(events);
+    }
+
+
+    public GetEventAgendasDTO getEventAgendas(UUID id) {
+        Event event = eventRepository.findById(id).orElse(null);
+        if(event == null){
+            return null;
+        }
+        Set<AgendaActivity> activities = event.getAgendaActivities();
+        Logger logger = LoggerFactory.getLogger(EventService.class);
+        for(AgendaActivity activity : activities){
+            logger.info("Activity: " + activity);
+        }
+
+        return agendaMapper.mapToGetEventAgendasDTO(activities);
     }
 
 
@@ -146,6 +163,7 @@ public class EventService {
             activity.setDescription(activityDTO.getDescription());
             activity.setStartTime(activityDTO.getStartTime());
             activity.setEndTime(activityDTO.getEndTime());
+            activity.setLocationName(activityDTO.getLocationName());
             activities.add(activity);
             agendaActivityRepository.save(activity);
         }

@@ -45,6 +45,15 @@ public class EventController {
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
+    @GetMapping(value = "{id}/agenda", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetEventAgendasDTO> getAgendaForEvent(@PathVariable UUID id){
+        GetEventAgendasDTO events = eventService.getEventAgendas(id);
+        if (events == null){
+            return new ResponseEntity<GetEventAgendasDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(events, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/organizer",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleEventDTO>> getOrganizerEvents(){
         List<SimpleEventDTO> events = eventService.findForOrganizer();
@@ -106,9 +115,6 @@ public class EventController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateEventDTO> createEvent(@RequestBody CreateEventDTO eventDTO){
-        Logger logger = LoggerFactory.getLogger(EventController.class);
-        logger.info("Creating eventAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        logger.info("helooooo {}", eventDTO);
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(account == null || account.getType() != PersonType.EVENT_ORGANIZER){
             return new ResponseEntity<CreateEventDTO>(HttpStatus.NOT_FOUND);
@@ -119,5 +125,7 @@ public class EventController {
 
         return new ResponseEntity<CreateEventDTO>(HttpStatus.CREATED);
     }
+
+
 
 }
