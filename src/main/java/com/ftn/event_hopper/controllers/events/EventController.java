@@ -7,10 +7,11 @@ import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.models.users.Person;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
+import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.services.events.EventService;
 import com.ftn.event_hopper.services.users.EventOrganizerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ public class EventController {
     private EventService eventService;
     @Autowired
     private EventOrganizerService eventOrganizerService;
+
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,6 +64,7 @@ public class EventController {
         }
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SinglePageEventDTO> getEvent(@PathVariable UUID id){
