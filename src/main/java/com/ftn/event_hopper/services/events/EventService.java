@@ -39,6 +39,8 @@ public class EventService {
     @Autowired
     private PersonRepository personRepository;
     @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
     private EventDTOMapper eventDTOMapper;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
@@ -76,9 +78,15 @@ public class EventService {
     }
 
     public Collection<SimpleEventDTO> findTop5(UUID userId) {
-
-        Person person = personRepository.findById(userId).orElseGet(null);
+        Account account = accountRepository.findById(userId).orElseGet(null);
+        Person person = account.getPerson();
         List<Event> top5Events = eventRepository.findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(person.getLocation().getCity(), EventPrivacyType.PUBLIC, LocalDateTime.now());
+        for (Event event : top5Events) {
+
+            System.out.println("--------------");
+            System.out.println(event);
+
+        }
         return eventDTOMapper.fromEventListToSimpleDTOList(top5Events);
     }
 
