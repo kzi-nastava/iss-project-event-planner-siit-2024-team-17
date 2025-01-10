@@ -1,8 +1,7 @@
 package com.ftn.event_hopper.services.events;
 
+import com.ftn.event_hopper.dtos.events.*;
 import com.ftn.event_hopper.mapper.events.AgendaMapper;
-import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.events.AgendaActivity;
@@ -34,10 +33,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
