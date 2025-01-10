@@ -90,4 +90,16 @@ public class PersonController {
         personService.removeFavoriteSolution(solutionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(value = "/favorite-events/{eventId}")
+    public ResponseEntity<?> addFavoriteEvent(@PathVariable UUID eventId) {
+        personService.addFavoriteEvent(eventId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/favorite-events/{eventId}")
+    public ResponseEntity<?> removeFavoriteEvent(@PathVariable UUID eventId) {
+        personService.removeFavoriteEvent(eventId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -61,12 +61,6 @@ public class Account implements UserDetails {
     @JoinColumn(name = "registration_request_id", nullable = true)
     private RegistrationRequest registrationRequest;
 
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @CollectionTable(name = "account_roles", joinColumns = @JoinColumn(name = "account_id"))
-//    @Column(name = "role")
-//    private List<String> roles;
-
-
     public boolean isValid(){
         return this.isActive && this.isVerified;
     }

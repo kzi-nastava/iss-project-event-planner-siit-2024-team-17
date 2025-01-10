@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Getter
@@ -16,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class SimpleEventDTO {
+public class SinglePageEventDTO {
     private UUID id;
     private String name;
     private String description;
@@ -25,4 +26,6 @@ public class SimpleEventDTO {
     private SimpleEventTypeDTO eventType;
     private SimpleLocationDTO location;
     private EventPrivacyType privacy;
+    private boolean eventOrganizerLoggedIn;
+    private boolean favorite;
 }
