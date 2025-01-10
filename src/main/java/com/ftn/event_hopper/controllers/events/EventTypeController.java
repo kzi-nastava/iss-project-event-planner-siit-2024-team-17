@@ -1,11 +1,10 @@
 package com.ftn.event_hopper.controllers.events;
 
-import com.ftn.event_hopper.dtos.eventTypes.CreateEventTypeDTO;
-import com.ftn.event_hopper.dtos.eventTypes.EventTypeManagementDTO;
-import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
-import com.ftn.event_hopper.dtos.eventTypes.UpdateEventTypeDTO;
+import com.ftn.event_hopper.dtos.eventTypes.*;
 import com.ftn.event_hopper.services.categories.CategoryService;
 import com.ftn.event_hopper.services.events.EventTypeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +30,16 @@ public class EventTypeController {
         }
         EventTypeManagementDTO eventTypeManagementDTO = new EventTypeManagementDTO(eventTypes, categoryService.findAllApprovedSimple());
         return new ResponseEntity<>(eventTypeManagementDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/active",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetActiveEventTypesDTO> getActiveEventTypes() {
+        List<EventTypeDTO> eventTypes = eventTypeService.findAllActive();
+        GetActiveEventTypesDTO eventTypesDTO = new GetActiveEventTypesDTO(eventTypes);
+        if(eventTypes == null) {
+            return new ResponseEntity<GetActiveEventTypesDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(eventTypesDTO, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

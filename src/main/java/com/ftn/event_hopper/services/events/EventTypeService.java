@@ -2,6 +2,7 @@ package com.ftn.event_hopper.services.events;
 
 import com.ftn.event_hopper.dtos.categories.SimpleCategoryDTO;
 import com.ftn.event_hopper.dtos.eventTypes.CreateEventTypeDTO;
+import com.ftn.event_hopper.dtos.eventTypes.EventTypeDTO;
 import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
 import com.ftn.event_hopper.dtos.eventTypes.UpdateEventTypeDTO;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
@@ -33,6 +34,11 @@ public class EventTypeService {
         }
         return eventTypeDTOS;
     }
+
+    public List<EventTypeDTO> findAllActive(){
+        return eventTypeDTOMapper.fromEventTypeListToDTOList(eventTypeRepository.findByIsDeactivatedFalse());
+    }
+
 
     public SimpleEventTypeDTO findOneDTO(UUID id) {
         return eventTypeDTOMapper.fromEventTypeToSimpleDTO(eventTypeRepository.findById(id).orElseGet(null));
