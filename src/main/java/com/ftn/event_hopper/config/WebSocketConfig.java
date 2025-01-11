@@ -15,9 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/socket") // Endpoint for initializing communication http://localhost:8080/api/socket/
-                .setAllowedOriginPatterns("**") // Allow connections from any origin
-                .withSockJS();
-
+                .setAllowedOriginPatterns("**");// Allow connections from any origin
     }
 
     /*
