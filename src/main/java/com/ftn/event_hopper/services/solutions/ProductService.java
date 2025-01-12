@@ -434,8 +434,8 @@ public class ProductService {
             throw new EntityNotFoundException("Product not found");
         }
 
-        if (product.getRatings().stream().anyMatch(r -> r.getEventOrganizer().getId().equals(person.getId()))) {
-            throw new IllegalArgumentException("Person has already rated this product");
+        if (product.getComments().stream().anyMatch(r -> r.getAuthor().getId().equals(person.getId()))) {
+            throw new IllegalArgumentException("Person has already commented on this product");
         }
 
         if (product.getStatus() != ProductStatus.APPROVED) {
