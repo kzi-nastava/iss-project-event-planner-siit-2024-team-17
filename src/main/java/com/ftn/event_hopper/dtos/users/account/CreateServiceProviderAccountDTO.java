@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class CreateServiceProviderAccountDTO {
     private String email;
     private String password;
+    private String profilePicture;
     private boolean isVerified;
     private LocalDateTime suspensionTimeStamp;
     private PersonType type;

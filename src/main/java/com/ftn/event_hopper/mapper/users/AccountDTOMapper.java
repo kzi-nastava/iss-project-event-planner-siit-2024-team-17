@@ -151,8 +151,10 @@ public class AccountDTOMapper {
         Account account = new Account();
         if(createAccountDTO.getType() == PersonType.EVENT_ORGANIZER){
             EventOrganizer organizer = eventOrganizerDTOMapper.fromCreateDTOToEventOrganizer(createAccountDTO.getPerson());
+            organizer.setProfilePicture(createAccountDTO.getPerson().getProfilePicture());
             account.setPerson(organizer);
         }
+
         account.setEmail(createAccountDTO.getEmail());
         account.setPassword(createAccountDTO.getPassword());
         account.setVerified(createAccountDTO.isVerified());

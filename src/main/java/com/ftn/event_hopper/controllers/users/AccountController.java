@@ -8,6 +8,8 @@ import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.verification.VerificationTokenState;
 import com.ftn.event_hopper.services.users.AccountService;
 import com.ftn.event_hopper.services.verification.VerificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -126,6 +128,16 @@ public class AccountController {
             return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/change-profile-picture", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeProfilePicture(@RequestBody String newProfilePicture) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        accountService.changeProfilePicture(account.getId(), newProfilePicture);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 

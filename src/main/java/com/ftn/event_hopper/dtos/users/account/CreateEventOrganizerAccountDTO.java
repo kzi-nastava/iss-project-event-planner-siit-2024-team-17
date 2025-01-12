@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CreateEventOrganizerAccountDTO {
     private String email;
+    private String profilePicture;
     private String password;
     private boolean isVerified;
     private LocalDateTime suspensionTimeStamp;
