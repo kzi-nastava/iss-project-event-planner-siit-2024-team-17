@@ -9,7 +9,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateRatingDTO {
-    int value;
-    UUID eventId;
+public class CreatedProductRatingDTO {
+    private UUID id;
+    private int value;
+    private UUID productId;
 }

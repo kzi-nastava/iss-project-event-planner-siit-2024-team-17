@@ -122,7 +122,7 @@ VALUES
     (100, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Join the celebration of Queen''s 50th Anniversary, honoring five decades of remarkable achievements.', 'Queens 50th Anniversary', '18.jpg'),
     (50, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '6915ce46-d213-424b-a3c4-035767714df0', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Step into a world of spooktacular glamour at Heidi Klums Halloween Party! Enjoy jaw-dropping costumes.', 'Halloween Party', '19.jpg'),
     (400, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'f1ad3604-fef5-439a-8adb-45776a019a55', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', 'Global Innovation Summit', '20.jpg'),
-    (800, 0, '2025-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate the season at the Spring Fair! Enjoy vibrant flower displays, artisan markets, live music,', 'Spring Fair', '21.jpg');
+    (800, 0, '2025-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '57c05a8a-dd8b-4da8-af73-90961e423f42', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate the season at the Spring Fair! Enjoy vibrant flower displays, artisan markets, live music,', 'Spring Fair', '21.jpg');
 
 
 INSERT INTO persons_attending_events (event_id, person_id)
@@ -209,7 +209,7 @@ VALUES
     (3, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'c4d5b6e9-8d3b-47c6-b8a7-d9c3e8b5d9b6', '45067d8d-9d86-4104-97cd-7054c48cbbc6'),
     (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'd4d5b6e9-8d3b-47c6-b8a7-d9c3e8b5d9b6', '1237e35c-80ff-4a2a-8245-2728cb45ee11'),
     (1, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'e4d5b6e9-8d3b-47c6-b8a7-d9c3e8b5d9b6', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d'),
-    (3, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7f9c5d6-b9e1-4a7a-b8e6-f9b2a8d5c6b4', '2eed4933-2477-487e-8b99-c39a9ac939dd');
+    (3, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7f9c5d6-b9e1-4a7a-b8e6-f9b2a8d5c6b4', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d');
 
 
 INSERT INTO product_prices (price_id, product_id)

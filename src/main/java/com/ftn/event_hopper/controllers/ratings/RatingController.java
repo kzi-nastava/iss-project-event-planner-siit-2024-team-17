@@ -1,45 +1,32 @@
 package com.ftn.event_hopper.controllers.ratings;
 
-import com.ftn.event_hopper.dtos.ratings.*;
+import com.ftn.event_hopper.dtos.ratings.CreateProductRatingDTO;
+import com.ftn.event_hopper.dtos.ratings.CreatedProductRatingDTO;
+import com.ftn.event_hopper.services.solutions.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/ratings")
 public class RatingController {
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetRatingDTO>> getRatings() {
-        Collection<GetRatingDTO> ratings = new ArrayList<GetRatingDTO>();
+    private final ProductService productService;
 
-
-        return new ResponseEntity<Collection<GetRatingDTO>>(ratings, HttpStatus.OK);
+    public RatingController(ProductService productService) {
+        this.productService = productService;
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetRatingDTO> getRating(@PathVariable UUID id) {
-        GetRatingDTO rating = new GetRatingDTO();
-
-        if (rating == null) {
-            return new ResponseEntity<GetRatingDTO>(HttpStatus.NOT_FOUND);
-        }
+    @PostMapping(value = "/solution", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedProductRatingDTO> createRating(@RequestBody CreateProductRatingDTO rating) {
+        CreatedProductRatingDTO createdRating = productService.rateProduct(rating);
 
 
-        return new ResponseEntity<GetRatingDTO>(rating, HttpStatus.OK);
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedRatingDTO> createRating(@RequestBody CreateRatingDTO rating) {
-        CreatedRatingDTO createdRating = new CreatedRatingDTO();
-
-
-        return new ResponseEntity<CreatedRatingDTO>(createdRating, HttpStatus.CREATED);
+        return new ResponseEntity<CreatedProductRatingDTO>(createdRating, HttpStatus.CREATED);
     }
 
 }
