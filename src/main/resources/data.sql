@@ -111,7 +111,10 @@ VALUES
     ('a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', '11.jpg'),
     ('c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', '12.jpg'),
     ('c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', '13.jpg'),
-    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '14.jpg');
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '14.jpg'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'company1.png'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'company2.png');
+
 
 
 INSERT INTO events (max_attendance, privacy, "time", event_type_id, event_organizer_id, id, location_id, description, name, picture)

@@ -5,6 +5,7 @@ import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
 import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.models.verification.VerificationTokenState;
 import com.ftn.event_hopper.services.users.AccountService;
 import com.ftn.event_hopper.services.verification.VerificationService;
