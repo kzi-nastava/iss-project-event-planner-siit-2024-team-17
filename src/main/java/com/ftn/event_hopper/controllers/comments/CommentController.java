@@ -44,6 +44,10 @@ public class CommentController {
 
         CreatedCommentDTO createdComment = productService.addComment(comment);
 
+        if (createdComment == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return  new ResponseEntity<CreatedCommentDTO>(createdComment, HttpStatus.CREATED);
     }
 

@@ -25,6 +25,9 @@ public class RatingController {
     public ResponseEntity<CreatedProductRatingDTO> createRating(@RequestBody CreateProductRatingDTO rating) {
         CreatedProductRatingDTO createdRating = productService.rateProduct(rating);
 
+        if (createdRating == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<CreatedProductRatingDTO>(createdRating, HttpStatus.CREATED);
     }

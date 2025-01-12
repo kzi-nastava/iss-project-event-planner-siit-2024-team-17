@@ -248,6 +248,20 @@ public class ProductService {
         if (product == null || product.isDeleted() || !product.isVisible() || product.getStatus() != ProductStatus.APPROVED) {
             return null;
         }
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+        EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
+
+
+        boolean pendingComment = false;
+        boolean pendingRating = false;
+
+        if (eventOrganizer != null) {
+            pendingComment = product.getComments().stream()
+                    .noneMatch(comment -> comment.getAuthor().getId().equals(eventOrganizer.getId()));
+            pendingRating = product.getRatings().stream()
+                    .noneMatch(rating -> rating.getEventOrganizer().getId().equals(eventOrganizer.getId()));
+        }
 
         product.setComments(product.getComments().stream()
                 .filter(comment -> comment.getStatus() == CommentStatus.ACCEPTED)
@@ -276,22 +290,13 @@ public class ProductService {
                 || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
             return solutionDetailsDTO;
         }
-        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+
+
         if (person != null) {
             solutionDetailsDTO.setFavorite(person.getFavoriteProducts().contains(product));
         }
-
-        solutionDetailsDTO.setPendingComment(false);
-        solutionDetailsDTO.setPendingRating(false);
-        EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
-        if (eventOrganizer != null) {
-            solutionDetailsDTO.setPendingComment(product.getComments().stream()
-                    .anyMatch(comment -> comment.getAuthor().getId().equals(eventOrganizer.getId())
-                            && comment.getStatus() == CommentStatus.PENDING));
-            solutionDetailsDTO.setPendingRating(product.getRatings().stream()
-                    .anyMatch(rating -> rating.getEventOrganizer().getId().equals(eventOrganizer.getId())));
-        }
+        solutionDetailsDTO.setPendingComment(pendingComment);
+        solutionDetailsDTO.setPendingRating(pendingRating);
 
         return solutionDetailsDTO;
     }
