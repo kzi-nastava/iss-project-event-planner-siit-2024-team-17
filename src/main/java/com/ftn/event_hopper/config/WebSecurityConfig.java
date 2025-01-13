@@ -89,6 +89,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/accounts/resend-verification-email/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/images/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/events/*/agenda").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/socket/**").permitAll()
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
