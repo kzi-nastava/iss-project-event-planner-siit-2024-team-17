@@ -88,6 +88,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/events/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/accounts/resend-verification-email/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/images/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/invitations/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/events/*/agenda").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/images").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/socket/**").permitAll()
