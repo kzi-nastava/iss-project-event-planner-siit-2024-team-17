@@ -14,6 +14,7 @@ import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.registration.RegistrationRequest;
 import com.ftn.event_hopper.models.users.*;
+import com.ftn.event_hopper.repositories.registrationRequests.RegistrationRequestRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
@@ -44,6 +45,8 @@ public class AccountService {
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
+    @Autowired
+    private RegistrationRequestRepository registrationRequestRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -279,11 +282,12 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public boolean delete(UUID id) {
-        Account account = accountRepository.findById(id).orElseGet(null);
+    public boolean deleteByEmail(String email) {
+        Account account = accountRepository.findByEmail(email).orElseGet(null);
         if(account != null){
-            account.setActive(false);
-            this.save(account);
+            RegistrationRequest request = account.getRegistrationRequest();
+            registrationRequestRepository.delete(request);
+            accountRepository.delete(account);
             return true;
         }
         return false;

@@ -33,7 +33,7 @@ public class VerificationToken {
     public VerificationToken(String email){
         this.email = email;
         this.token = UUID.randomUUID().toString();
-        this.expirationTime = LocalDateTime.now().plusHours(24);
+        this.expirationTime = LocalDateTime.now().plusMinutes(2);
     }
 }
 

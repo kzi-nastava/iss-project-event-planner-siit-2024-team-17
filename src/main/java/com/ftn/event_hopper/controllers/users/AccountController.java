@@ -5,12 +5,9 @@ import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
 import com.ftn.event_hopper.models.users.Account;
-import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.models.verification.VerificationTokenState;
 import com.ftn.event_hopper.services.users.AccountService;
 import com.ftn.event_hopper.services.verification.VerificationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -159,6 +156,10 @@ public class AccountController {
     @GetMapping(value = "/verify/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VerificationTokenState> verify(@PathVariable String token) {
         VerificationTokenState state = verificationService.verifyToken(token);
+        if(state == VerificationTokenState.EXPIRED) {
+            accountService.deleteByEmail(verificationService.getEmailByToken(token));
+        }
+
         if(state == VerificationTokenState.ACCEPTED) {
             accountService.verify(verificationService.getEmailByToken(token));
         }
