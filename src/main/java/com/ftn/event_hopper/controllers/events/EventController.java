@@ -3,9 +3,15 @@ package com.ftn.event_hopper.controllers.events;
 
 import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.events.*;
-import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
+import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.EventOrganizer;
+import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.models.users.Person;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
+import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.services.events.EventService;
+import com.ftn.event_hopper.services.users.EventOrganizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,6 +32,10 @@ import java.util.UUID;
 public class EventController {
     @Autowired
     private EventService eventService;
+    @Autowired
+    private EventOrganizerService eventOrganizerService;
+
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleEventDTO>> getEvents(){
@@ -37,12 +47,30 @@ public class EventController {
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleEventDTO> getEvent(@PathVariable UUID id){
-        SimpleEventDTO event = eventService.findOne(id);
+    @GetMapping(value = "{id}/agenda", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GetEventAgendasDTO> getAgendaForEvent(@PathVariable UUID id){
+        GetEventAgendasDTO events = eventService.getEventAgendas(id);
+        if (events == null){
+            return new ResponseEntity<GetEventAgendasDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(events, HttpStatus.OK);
+    }
 
+    @GetMapping(value = "/organizer",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleEventDTO>> getOrganizerEvents(){
+        List<SimpleEventDTO> events = eventService.findForOrganizer();
+        if (events == null){
+            return new ResponseEntity<Collection<SimpleEventDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(events, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SinglePageEventDTO> getEvent(@PathVariable UUID id){
+        SinglePageEventDTO event = eventService.findOne(id);
         if (event == null){
-            return new ResponseEntity<SimpleEventDTO>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<SinglePageEventDTO>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
@@ -89,11 +117,18 @@ public class EventController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedEventDTO> createEvent(@RequestBody CreateEventDTO event){
-        CreatedEventDTO createdEvent = new CreatedEventDTO();
+    public ResponseEntity<CreateEventDTO> createEvent(@RequestBody CreateEventDTO eventDTO){
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null || account.getType() != PersonType.EVENT_ORGANIZER){
+            return new ResponseEntity<CreateEventDTO>(HttpStatus.NOT_FOUND);
+        }
+        Event event = eventService.create(eventDTO);
 
+        eventOrganizerService.addEvent(account.getPerson().getId(), event.getId());
 
-        return new ResponseEntity<CreatedEventDTO>(createdEvent, HttpStatus.CREATED);
+        return new ResponseEntity<CreateEventDTO>(HttpStatus.CREATED);
     }
+
+
 
 }

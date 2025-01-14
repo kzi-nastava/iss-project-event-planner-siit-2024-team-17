@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.mapper.events;
 
+import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
 import com.ftn.event_hopper.mapper.locations.LocationDTOMapper;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,7 @@ import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.locations.Location;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,12 +46,21 @@ public class EventDTOMapper {
     }
 
     public SimpleEventDTO fromEventToSimpleDTO(Event event) {
-
         return modelMapper.map(event, SimpleEventDTO.class);
+    }
+
+    public SinglePageEventDTO fromEventToSinglePageDTO(Event event) {
+        return modelMapper.map(event, SinglePageEventDTO.class);
     }
 
     public List<SimpleEventDTO> fromEventListToSimpleDTOList(List<Event> events) {
 
+        return events.stream()
+                .map(this::fromEventToSimpleDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<SimpleEventDTO> fromEventSetToSimpleDTOList(Set<Event> events) {
         return events.stream()
                 .map(this::fromEventToSimpleDTO)
                 .collect(Collectors.toList());

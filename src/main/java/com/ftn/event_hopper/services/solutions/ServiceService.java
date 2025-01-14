@@ -194,6 +194,12 @@ public class ServiceService {
     public CreatedServiceDTO create(CreateServiceDTO service) {
         Service newService = serviceDTOMapper.fromCreateServiceDTOToService(service);
 
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            return null;
+        }
+        ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
         newService.setId(null);
         newService.setDeleted(false);
         newService.setEditTimestamp(LocalDateTime.now());
@@ -225,8 +231,10 @@ public class ServiceService {
         newService = serviceRepository.save(newService);
         serviceRepository.flush();
 
-        //TODO: Assign new service to ServiceProvider
-        //TODO: Pictures
+        serviceProvider.getProducts().add(newService);
+        serviceProviderRepository.save(serviceProvider);
+        serviceProviderRepository.flush();
+
         return serviceDTOMapper.fromServiceToCreatedServiceDTO(newService);
     }
 

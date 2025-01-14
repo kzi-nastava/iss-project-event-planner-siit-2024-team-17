@@ -18,6 +18,6 @@ import java.util.UUID;
 public interface EventRepository extends JpaRepository<Event, UUID> , JpaSpecificationExecutor<Event> {
     List<Event> findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(String city, EventPrivacyType privacyType, LocalDateTime now);
 
-
     Page<Event> findAll(Specification<Event> specification, Pageable page);
+
 }

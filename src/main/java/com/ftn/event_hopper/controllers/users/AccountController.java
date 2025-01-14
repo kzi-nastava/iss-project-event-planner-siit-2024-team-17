@@ -134,7 +134,6 @@ public class AccountController {
         try {
             Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             accountService.deactivate(account.getId());
-            System.out.println("Account deactivated");
             return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // Success
         } catch (RuntimeException ex) {
             Map<String, String> errorResponse = new HashMap<>();

@@ -15,6 +15,8 @@ import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -144,6 +146,46 @@ public class PersonService {
         personRepository.save(person);
         personRepository.flush();
     }
+
+
+
+    public void addFavoriteEvent(UUID eventId) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) return;
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+        if (person == null) return;
+
+        Logger logger = LoggerFactory.getLogger(PersonService.class);
+        logger.info("Authenticated user: {}", person);
+        logger.info("Authenticated user: {}", person);
+
+        Event event = eventRepository.findById(eventId).orElseGet(null);
+
+
+        if (person.getFavoriteEvents().contains(event)) {
+            return;
+        }
+        person.getFavoriteEvents()
+                .add(event);
+        personRepository.save(person);
+        personRepository.flush();
+
+    }
+
+    public void removeFavoriteEvent(UUID eventId) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) return;
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+        if (person == null) return;
+        person.getFavoriteEvents()
+                .removeIf(event -> event.getId().equals(eventId));
+        personRepository.save(person);
+        personRepository.flush();
+    }
+
 
 
     // person doesnt have remove/delete

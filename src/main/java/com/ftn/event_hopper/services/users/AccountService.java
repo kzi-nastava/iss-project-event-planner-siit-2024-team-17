@@ -160,7 +160,6 @@ public class AccountService {
         CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
         RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
         account.setRegistrationRequest(request);
-        System.out.println(account);
         this.save(account);
         this.verificationService.sendVerificationEmail(account.getEmail());
         return accountDTOMapper.fromAccountToCreatedEventOrganizerDTO(account);
