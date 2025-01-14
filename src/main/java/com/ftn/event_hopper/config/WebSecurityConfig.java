@@ -87,6 +87,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/accounts/verify/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/accounts/resend-verification-email/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/images/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/invitations/*").permitAll()
 
                     .anyRequest().authenticated();
         });
