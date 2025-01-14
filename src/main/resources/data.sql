@@ -26,10 +26,10 @@ VALUES
 
 INSERT INTO persons (type, id, location_id, name, phone_number, profile_picture, surname)
 VALUES
-    (3, 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'John', '1234567890', '1.png', 'Doe'),
-    (3, '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '9876543210', '2.png', 'Smith'),
-    (3, 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Emma', '1122334455', '3.png', 'Brown'),
-    (0, '20343059-c4dd-4608-81aa-104f415e8085', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Admin', '1122334455', '4.png', 'Admin');
+    (3, 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'John', '1234567890', '', 'Doe'),
+    (3, '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '9876543210', '', 'Smith'),
+    (3, 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Emma', '1122334455', '', 'Brown'),
+    (0, '20343059-c4dd-4608-81aa-104f415e8085', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Lane', '1122334455', 'lane.jpg', 'Gutovic');
 
 
 INSERT INTO accounts (is_active, is_verified, type, suspension_timestamp, id, person_id, registration_request_id, email, password)
@@ -59,16 +59,16 @@ VALUES
 
 INSERT INTO event_organizers (type, id, location_id, name, phone_number, profile_picture, surname)
 VALUES
-    (2, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'John', '1234567890', '5.png', 'Doe'),
-    (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '9876543210', '6.png', 'Smith'),
-    (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Emma', '1122334455', '7.png', 'Brown');
+    (2, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'John', '1234567890', '', 'Doe'),
+    (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'Alice', '9876543210', '', 'Smith'),
+    (2, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Dragan', '1122334455', 'dragan.jpg', 'Nikolic');
 
 
 INSERT INTO service_providers (type, work_end, work_start, company_location_id, id, location_id, company_description, company_email, company_name, name, phone_number, profile_picture, surname, company_phone_number)
 VALUES
-    (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '1234567890', '8.png', 'Doe', '1234567890'),
-    (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin posuere pulvinar est, et molestie justo tempus in. Phasellus vitae mi ac libero posuere efficitur. Donec laoreet turpis lectus, eget lacinia leo eleifend gravida.', 'contact@bizconsult.com', 'BizConsult', 'Alice', '9876543210', '9.png', 'Smith', '1234567890'),
-    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing. Something something something something ', 'support@creativehub.com', 'CreativeHub', 'Emma', '1122334455', '10.png', 'Brown', '1234567890');
+    (1, '18:00:00', '09:00:00', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Tech solutions for small businesses', 'info@techcorp.com', 'TechCorp', 'John', '1234567890', '', 'Doe', '1234567890'),
+    (1, '17:00:00', '08:00:00', 'b6f3e9d2-c7a5-4b1a-b2c9-8d5e7c6f3a2b', 'c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin posuere pulvinar est, et molestie justo tempus in. Phasellus vitae mi ac libero posuere efficitur. Donec laoreet turpis lectus, eget lacinia leo eleifend gravida.', 'contact@bizconsult.com', 'BizConsult', 'Alice', '9876543210', '', 'Smith', '1234567890'),
+    (1, '20:00:00', '10:00:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Offering creative solutions for marketing. Something something something something ', 'support@creativehub.com', 'CreativeHub', 'Bora', '1122334455', 'bora.png', 'Todorovic', '1234567890');
 
 
 INSERT INTO categories (is_deleted, status, id, description, name)
@@ -111,7 +111,10 @@ VALUES
     ('a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', '11.jpg'),
     ('c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', '12.jpg'),
     ('c7a9e5d3-f2b4-4a1b-b8c6-3f9e7a5b2d4f', '13.jpg'),
-    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '14.jpg');
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', '14.jpg'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'company1.png'),
+    ('d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'company2.png');
+
 
 
 INSERT INTO events (max_attendance, privacy, "time", event_type_id, event_organizer_id, id, location_id, description, name, picture)

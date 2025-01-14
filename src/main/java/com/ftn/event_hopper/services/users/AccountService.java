@@ -2,14 +2,12 @@ package com.ftn.event_hopper.services.users;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.location.LocationDTO;
-import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.dtos.registration.CreatedRegistrationRequestDTO;
 import com.ftn.event_hopper.dtos.users.account.*;
 import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
 import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
 import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
-import com.ftn.event_hopper.dtos.users.serviceProvider.ServiceProviderDetailsDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.registrationRequests.RegistrationRequestDTOMapper;
 import com.ftn.event_hopper.mapper.users.AccountDTOMapper;
@@ -20,10 +18,8 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
-import com.ftn.event_hopper.services.emails.EmailService;
 import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
 import com.ftn.event_hopper.services.verification.VerificationService;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -113,7 +109,6 @@ public class AccountService {
 
     public ProfileForPersonDTO getProfile(UUID id){
         Account account = accountRepository.findById(id).orElseGet(null);
-        System.out.println(account.getPerson());
         ProfileForPersonDTO profileForPerson = personService.getProfile(account.getPerson().getId());
 
         Person person = account.getPerson();
@@ -123,8 +118,9 @@ public class AccountService {
                 profileForPerson.setCompanyEmail(serviceProvider.get().getCompanyEmail());
                 profileForPerson.setCompanyName(serviceProvider.get().getCompanyName());
                 profileForPerson.setCompanyPhoneNumber(serviceProvider.get().getCompanyPhoneNumber());
-                profileForPerson.setCompanyPhotos(serviceProvider.get().getCompanyPhotos());
                 profileForPerson.setCompanyDescription(serviceProvider.get().getCompanyDescription());
+                profileForPerson.setCompanyPhotos(serviceProvider.get().getCompanyPhotos());
+
                 SimpleLocationDTO location = new SimpleLocationDTO();
                 location.setAddress(serviceProvider.get().getCompanyLocation().getAddress());
                 location.setCity(serviceProvider.get().getCompanyLocation().getCity());
@@ -209,6 +205,14 @@ public class AccountService {
         return newCompanyAccount;
     }
 
+    public void changeProfilePicture(UUID id, String profilePicture){
+        Account account = accountRepository.findById(id).orElse(null);
+        if(account != null){
+            account.getPerson().setProfilePicture(profilePicture);
+            this.save(account);
+        }
+    }
+
 
     public void changePassword(UUID id, ChangePasswordDTO changePasswordDTO){
         Account account = accountRepository.findById(id).orElse(null);
@@ -219,7 +223,7 @@ public class AccountService {
             throw new RuntimeException("The old password is incorrect.");
         }
         account.setPassword(changePasswordDTO.getNewPassword());
-        this.save(account);
+        accountRepository.save(account);
     }
 
     public void deactivate(UUID accountId){

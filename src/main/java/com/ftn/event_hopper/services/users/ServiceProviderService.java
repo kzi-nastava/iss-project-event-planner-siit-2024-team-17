@@ -78,6 +78,16 @@ public class ServiceProviderService {
     }
 
 
+    public void changeCompanyPhotos(UUID pupId, List<String> companyPhotos){
+        ServiceProvider provider = serviceProviderRepository.findById(pupId).orElseGet(null);
+        if(provider != null){
+            provider.setCompanyPhotos(companyPhotos);
+            this.save(provider);
+        }
+    }
+
+
+
     public ServiceProviderDetailsDTO getDetails(UUID id) {
         ServiceProvider provider = serviceProviderRepository.findById(id).orElseGet(null);
 
