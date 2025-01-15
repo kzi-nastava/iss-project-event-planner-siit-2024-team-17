@@ -11,13 +11,18 @@ import java.util.UUID;
 public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     @Query("""
-        SELECT DISTINCT CASE
-            WHEN m.from.id = :accountId THEN m.to
-            ELSE m.from
-        END
-        FROM Message m
-        WHERE m.from.id = :accountId OR m.to.id = :accountId
-    """)
+    SELECT DISTINCT a
+    FROM Account a
+    WHERE a.id IN (
+        SELECT m.from.id\s
+        FROM Message m\s
+        WHERE m.to.id = :accountId
+        UNION
+        SELECT m.to.id\s
+        FROM Message m\s
+        WHERE m.from.id = :accountId
+    )
+""")
     List<Account> findDistinctCommunicatedUsers(UUID accountId);
 
     @Query("""
@@ -28,6 +33,7 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
         OR\s
         (m.from.id = :secondAccountId AND m.to.id = :firstAccountId)
     ORDER BY m.timestamp DESC
+    LIMIT 1
 """)
     Message findNewestMessageContentBetweenAccounts(UUID firstAccountId, UUID secondAccountId);
 

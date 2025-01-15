@@ -87,9 +87,9 @@ VALUES
 
 INSERT INTO messages ("timestamp", from_id, id, to_id, content)
 VALUES
-    ('2024-12-07 09:00:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', '97d6429d-d755-4337-a2b0-31f54633c538', 'Hello, how are you?'),
-    ('2024-12-07 09:05:00', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'I am good, thank you!'),
-    ('2024-12-07 09:10:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'See you at the event.');
+    ('2024-12-07 09:00:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'Hello, how are you?'),
+    ('2024-12-07 09:05:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '31548d6b-019f-492e-ba39-07be7a1433e5', 'I am good, thank you!'),
+    ('2024-12-07 09:10:00', '31548d6b-019f-492e-ba39-07be7a1433e5', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'See you at the event.');
 
 
 INSERT INTO blocks ("timestamp", blocked_id, who_id, id)
