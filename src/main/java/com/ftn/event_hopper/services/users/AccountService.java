@@ -295,7 +295,6 @@ public class AccountService {
 
             EventOrganizer eventOrganizer = new EventOrganizer();
 
-
             eventOrganizer.setName(person.getName());
             eventOrganizer.setSurname(person.getSurname());
             eventOrganizer.setProfilePicture(person.getProfilePicture());
@@ -311,7 +310,7 @@ public class AccountService {
             eventOrganizerRepository.save(eventOrganizer);
             account.setType(PersonType.EVENT_ORGANIZER);
             account.setPerson(eventOrganizer);
-            this.save(account);
+            accountRepository.save(account);
         }
 
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
@@ -349,7 +348,7 @@ public class AccountService {
             serviceProviderRepository.save(serviceProvider);
             account.setType(PersonType.SERVICE_PROVIDER);
             account.setPerson(serviceProvider);
-            this.save(account);
+            accountRepository.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
