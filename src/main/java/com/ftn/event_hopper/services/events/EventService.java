@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.services.events;
 
 import com.ftn.event_hopper.dtos.events.*;
+import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.mapper.events.AgendaMapper;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.models.eventTypes.EventType;
@@ -117,9 +118,25 @@ public class EventService {
             eventDTO.setEventOrganizerLoggedIn(eventOrganizer.getEvents().contains(event));
         }
 
+        ConversationPreviewDTO conversation = null;
         if (person != null) {
             eventDTO.setFavorite(person.getFavoriteEvents().contains(event));
+
+            if (person.getAttendingEvents().contains(event)) {
+                EventOrganizer organizer = eventOrganizerRepository.findByEventsContaining(event).orElse(null);
+                Account organizersAccount = accountRepository.findByPersonId(organizer.getId()).orElse(null);
+                if (organizersAccount != null) {
+                    conversation = new ConversationPreviewDTO();
+                    conversation.setUsername(organizersAccount.getUsername());
+                    conversation.setName(organizer.getName());
+                    conversation.setSurname(organizer.getSurname());
+                    conversation.setProfilePictureUrl(organizer.getProfilePicture());
+                }
+            }
         }
+
+        eventDTO.setConversationInitialization(conversation);
+
         return eventDTO;
     }
 
