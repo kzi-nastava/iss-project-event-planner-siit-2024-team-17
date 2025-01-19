@@ -212,7 +212,7 @@ public class AccountService {
         Account account = accountRepository.findById(id).orElse(null);
         if(account != null){
             account.getPerson().setProfilePicture(profilePicture);
-            this.save(account);
+            accountRepository.save(account);
         }
     }
 
