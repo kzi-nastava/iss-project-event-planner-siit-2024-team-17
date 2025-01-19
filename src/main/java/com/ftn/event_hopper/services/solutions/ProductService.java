@@ -269,7 +269,7 @@ public class ProductService {
                         .noneMatch(rating -> rating.getEventOrganizer().getId().equals(eventOrganizer.getId()));
 
                 Account providerAccount = accountRepository.findByPersonId(provider.getId()).orElse(null);
-                if (providerAccount != null) {
+                if (providerAccount != null && !providerAccount.getId().equals(account.getId())) {
                     conversation = new ConversationPreviewDTO();
                     conversation.setUsername(providerAccount.getUsername());
                     conversation.setName(provider.getName());

@@ -125,7 +125,7 @@ public class EventService {
             if (person.getAttendingEvents().contains(event)) {
                 EventOrganizer organizer = eventOrganizerRepository.findByEventsContaining(event).orElse(null);
                 Account organizersAccount = accountRepository.findByPersonId(organizer.getId()).orElse(null);
-                if (organizersAccount != null) {
+                if (organizersAccount != null && !organizersAccount.getId().equals(account.getId())) {
                     conversation = new ConversationPreviewDTO();
                     conversation.setUsername(organizersAccount.getUsername());
                     conversation.setName(organizer.getName());
