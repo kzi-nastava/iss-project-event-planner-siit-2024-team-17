@@ -44,10 +44,10 @@ public class CommentController {
     }
 
     @GetMapping(value = "/pending" ,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetCommentDTO>> getPendingComments(){
-        Collection<GetCommentDTO> comments = commentService.findAllPending();
+    public ResponseEntity<Collection<SimpleCommentDTO>> getPendingComments(){
+        Collection<SimpleCommentDTO> comments = commentService.findAllPending();
 
-        return new ResponseEntity<Collection<GetCommentDTO>>(comments, HttpStatus.OK);
+        return new ResponseEntity<Collection<SimpleCommentDTO>>(comments, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,14 +71,14 @@ public class CommentController {
 
     }
 
-    @PutMapping(value = "/pending/id/approve", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/pending/{id}/approve", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedCommentDTO> approveComment(@PathVariable UUID id) {
         UpdatedCommentDTO updatedComment = commentService.approveComment(id);
 
         return new ResponseEntity<UpdatedCommentDTO>(updatedComment, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/pending/id/delete", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/pending/{id}/delete", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedCommentDTO> deleteComment(@PathVariable UUID id) {
         UpdatedCommentDTO updatedComment = commentService.deleteComment(id);
 

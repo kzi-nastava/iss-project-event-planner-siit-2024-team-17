@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.services.comments;
 
 import com.ftn.event_hopper.dtos.comments.GetCommentDTO;
+import com.ftn.event_hopper.dtos.comments.SimpleCommentDTO;
 import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
 import com.ftn.event_hopper.mapper.comments.CommentDTOMapper;
 import com.ftn.event_hopper.models.comments.Comment;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,9 +23,9 @@ public class CommentService {
     @Autowired
     private CommentDTOMapper commentDTOMapper;
 
-    public List<GetCommentDTO> findAllPending(){
+    public Collection<SimpleCommentDTO> findAllPending(){
         List<Comment> comments = commentRepository.findByStatus(CommentStatus.PENDING);
-        return commentDTOMapper.fromCommentListToGetCommentDTOCollection(comments);
+        return commentDTOMapper.fromCommentListToSimplecommentDTOCollection(comments);
     }
 
 
