@@ -2,6 +2,7 @@ package com.ftn.event_hopper.services.solutions;
 
 import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
+import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
@@ -248,19 +249,34 @@ public class ProductService {
         if (product == null || product.isDeleted() || !product.isVisible() || product.getStatus() != ProductStatus.APPROVED) {
             return null;
         }
-        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
-        EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
-
+        ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
 
         boolean pendingComment = false;
         boolean pendingRating = false;
+        ConversationPreviewDTO conversation = null;
 
-        if (eventOrganizer != null) {
-            pendingComment = product.getComments().stream()
-                    .noneMatch(comment -> comment.getAuthor().getId().equals(eventOrganizer.getId()));
-            pendingRating = product.getRatings().stream()
-                    .noneMatch(rating -> rating.getEventOrganizer().getId().equals(eventOrganizer.getId()));
+        Person person = null;
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
+                && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
+            Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            person = personRepository.findById(account.getPerson().getId()).orElse(null);
+            EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
+
+            if (eventOrganizer != null) {
+                pendingComment = product.getComments().stream()
+                        .noneMatch(comment -> comment.getAuthor().getId().equals(eventOrganizer.getId()));
+                pendingRating = product.getRatings().stream()
+                        .noneMatch(rating -> rating.getEventOrganizer().getId().equals(eventOrganizer.getId()));
+
+                Account providerAccount = accountRepository.findByPersonId(provider.getId()).orElse(null);
+                if (providerAccount != null && !providerAccount.getId().equals(account.getId())) {
+                    conversation = new ConversationPreviewDTO();
+                    conversation.setUsername(providerAccount.getUsername());
+                    conversation.setName(provider.getName());
+                    conversation.setSurname(provider.getSurname());
+                    conversation.setProfilePictureUrl(provider.getProfilePicture());
+                }
+            }
         }
 
         product.setComments(product.getComments().stream()
@@ -273,7 +289,6 @@ public class ProductService {
                 .average()
                 .orElse(0.0));
 
-        ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
 
         solutionDetailsDTO.setProvider(serviceProviderDTOMapper.fromServiceProviderToSimpleDTO(provider));
 
@@ -292,11 +307,10 @@ public class ProductService {
         }
 
 
-        if (person != null) {
-            solutionDetailsDTO.setFavorite(person.getFavoriteProducts().contains(product));
-        }
+        solutionDetailsDTO.setFavorite(person.getFavoriteProducts().contains(product));
         solutionDetailsDTO.setPendingComment(pendingComment);
         solutionDetailsDTO.setPendingRating(pendingRating);
+        solutionDetailsDTO.setConversationInitialization(conversation);
 
         return solutionDetailsDTO;
     }
