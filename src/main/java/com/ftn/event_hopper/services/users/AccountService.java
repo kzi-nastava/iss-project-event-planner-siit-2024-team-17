@@ -166,9 +166,10 @@ public class AccountService {
 
     public CreatedAccountDTO createPerson(CreatePersonAccountDTO accountDTO){
         Account account = accountDTOMapper.fromCreatePersonDTOToAccount(accountDTO);
-        CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
-        RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
-        account.setRegistrationRequest(request);
+        account.setVerified(true);
+//        CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
+//        RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
+//        account.setRegistrationRequest(request);
         this.save(account);
         return accountDTOMapper.fromAccountToCreatedDTO(account);
     }
@@ -302,7 +303,6 @@ public class AccountService {
 
             EventOrganizer eventOrganizer = new EventOrganizer();
 
-
             eventOrganizer.setName(person.getName());
             eventOrganizer.setSurname(person.getSurname());
             eventOrganizer.setProfilePicture(person.getProfilePicture());
@@ -318,7 +318,7 @@ public class AccountService {
             eventOrganizerRepository.save(eventOrganizer);
             account.setType(PersonType.EVENT_ORGANIZER);
             account.setPerson(eventOrganizer);
-            this.save(account);
+            accountRepository.save(account);
         }
 
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
@@ -356,7 +356,7 @@ public class AccountService {
             serviceProviderRepository.save(serviceProvider);
             account.setType(PersonType.SERVICE_PROVIDER);
             account.setPerson(serviceProvider);
-            this.save(account);
+            accountRepository.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
