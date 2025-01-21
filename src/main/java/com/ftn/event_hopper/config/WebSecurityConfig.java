@@ -91,6 +91,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/events/*/agenda").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/images").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/socket/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/api/accounts/active/*").permitAll()
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);

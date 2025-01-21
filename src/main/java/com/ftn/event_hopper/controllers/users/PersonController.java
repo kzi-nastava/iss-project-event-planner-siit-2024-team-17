@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.controllers.users;
 
+import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.users.PersonService;
@@ -68,11 +69,16 @@ public class PersonController {
     }
 
 
-    @PostMapping(value = "/{personId}/attending-events/{eventId}")
+    @PostMapping(value = "/attending-events/{eventId}")
     public ResponseEntity<Void> addAttendingEvent(
-            @PathVariable UUID personId,
             @PathVariable UUID eventId) {
-        boolean added = personService.addAttendingEvent(personId, eventId);
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        boolean added = personService.addAttendingEvent(account.getPerson().getId(), eventId);
         if (!added) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
