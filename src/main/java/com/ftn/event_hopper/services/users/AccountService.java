@@ -178,7 +178,7 @@ public class AccountService {
         Account account = accountRepository.findById(id).orElseGet(null);
         if(account!= null){
             personService.update(account.getPerson().getId(), personDTO);
-            this.save(account);
+            accountRepository.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
@@ -251,7 +251,7 @@ public class AccountService {
             }
 
             account.setActive(false);
-            this.save(account);
+            accountRepository.save(account);
             return;
         }
         throw new RuntimeException("Account not found.");
@@ -271,7 +271,7 @@ public class AccountService {
         if (account != null) {
             account.setActive(false);
             account.setSuspensionTimestamp(LocalDateTime.now());
-            this.save(account);
+            accountRepository.save(account);
         }
         return accountDTOMapper.fromAccountToSimpleDTO(account);
     }
@@ -318,7 +318,7 @@ public class AccountService {
             eventOrganizerRepository.save(eventOrganizer);
             account.setType(PersonType.EVENT_ORGANIZER);
             account.setPerson(eventOrganizer);
-            this.save(account);
+            accountRepository.save(account);
         }
 
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
@@ -356,7 +356,7 @@ public class AccountService {
             serviceProviderRepository.save(serviceProvider);
             account.setType(PersonType.SERVICE_PROVIDER);
             account.setPerson(serviceProvider);
-            this.save(account);
+            accountRepository.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
