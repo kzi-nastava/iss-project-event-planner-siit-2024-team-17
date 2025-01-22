@@ -226,7 +226,7 @@ public class AccountService {
             throw new RuntimeException("The old password is incorrect.");
         }
         account.setPassword(changePasswordDTO.getNewPassword());
-        accountRepository.save(account);
+        this.save(account);
     }
 
     public void deactivate(UUID accountId){
