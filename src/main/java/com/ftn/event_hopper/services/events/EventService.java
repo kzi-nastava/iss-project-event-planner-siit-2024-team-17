@@ -151,8 +151,10 @@ public class EventService {
         event.setName(eventDTO.getName());
         event.setDescription(eventDTO.getDescription());
         event.setPicture(eventDTO.getPicture());
-        EventType eventType = eventTypeRepository.findById(eventDTO.getEventTypeId()).orElse(null);
-        event.setEventType(eventType);
+        if(eventDTO.getEventTypeId() != null){
+            EventType eventType = eventTypeRepository.findById(eventDTO.getEventTypeId()).orElse(null);
+            event.setEventType(eventType);
+        }
         event.setPrivacy(eventDTO.getEventPrivacyType());
         event.setMaxAttendance(eventDTO.getMaxAttendance());
         event.setTime(eventDTO.getTime());
