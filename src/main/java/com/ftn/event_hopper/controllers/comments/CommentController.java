@@ -1,17 +1,20 @@
 package com.ftn.event_hopper.controllers.comments;
 
 
-import com.ftn.event_hopper.dtos.comments.*;
+import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
+import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
 import com.ftn.event_hopper.services.solutions.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -19,45 +22,22 @@ public class CommentController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetCommentDTO>> getComments(){
-
-        Collection<GetCommentDTO> comments = new ArrayList<GetCommentDTO>();
-
-        return new ResponseEntity<Collection<GetCommentDTO>>(comments, HttpStatus.OK);
-
-    }
-
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetCommentDTO> getComment(@PathVariable UUID id){
-        GetCommentDTO comment = new GetCommentDTO();
-
-        if (comment == null){
-            return new ResponseEntity<GetCommentDTO>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<GetCommentDTO>(comment, HttpStatus.OK);
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedCommentDTO> createComment(@RequestBody CreateCommentDTO comment){
+    public ResponseEntity<?> createComment(@RequestBody CreateCommentDTO comment){
 
-        CreatedCommentDTO createdComment = productService.addComment(comment);
+        try {
+            CreatedCommentDTO createdComment = productService.addComment(comment);
 
-        if (createdComment == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            if (createdComment == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
         }
-
-        return  new ResponseEntity<CreatedCommentDTO>(createdComment, HttpStatus.CREATED);
+        catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedCommentDTO> updateComment(@PathVariable UUID id, @RequestBody UpdateCommentDTO comment) throws Exception{
-
-        UpdatedCommentDTO updatedComment = new UpdatedCommentDTO();
-
-        return new ResponseEntity<UpdatedCommentDTO>(updatedComment, HttpStatus.OK);
-
-
-    }
 }

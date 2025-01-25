@@ -15,6 +15,7 @@ import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
@@ -80,9 +81,12 @@ public class ServiceService {
 
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (account == null) {
-            return Page.empty();
+            throw new EntityNotFoundException("Account not found");
         }
         ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+        if (serviceProvider == null) {
+            throw new EntityNotFoundException("Service provider not found");
+        }
 
         Collection<UUID> personsServices = serviceProvider.getProducts().stream()
                 .map(Product::getId)
@@ -196,9 +200,13 @@ public class ServiceService {
 
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (account == null) {
-            return null;
+            throw new EntityNotFoundException("Account not found");
         }
         ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (serviceProvider == null) {
+            throw new EntityNotFoundException("Service provider not found");
+        }
 
         newService.setId(null);
         newService.setDeleted(false);
@@ -206,10 +214,14 @@ public class ServiceService {
 
         Category category = categoryRepository.findById(service.getCategoryId()).orElse(null);
 
+        if (category == null) {
+            throw new EntityNotFoundException("Category not found");
+        }
+
         newService.setCategory(category);
 
         newService.setStatus(ProductStatus.APPROVED);
-        if (category != null && category.getStatus() == CategoryStatus.PENDING) {
+        if (category.getStatus() == CategoryStatus.PENDING) {
             newService.setStatus(ProductStatus.PENDING);
         }
 
@@ -241,7 +253,7 @@ public class ServiceService {
     public UpdatedServiceDTO update(UpdateServiceDTO service, UUID id) {
         Service existing = serviceRepository.findById(id).orElse(null);
         if (existing == null || existing.isDeleted()) {
-            return null;
+            throw new EntityNotFoundException("Service not found");
         }
 
         existing.setName(service.getName());
