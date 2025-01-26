@@ -208,6 +208,18 @@ public class ServiceService {
             throw new EntityNotFoundException("Service provider not found");
         }
 
+        if (service.getCancellationWindowDays()<0 || service.getReservationWindowDays()<0 || service.getDurationMinutes()<0) {
+            throw new IllegalArgumentException("Time windows and duration must be positive");
+        }
+
+        if (service.getDurationMinutes() > 1440) {
+            throw new IllegalArgumentException("Duration must be less than 1440 minutes");
+        }
+
+        if (service.getPictures() != null && service.getPictures().isEmpty()) {
+            throw new IllegalArgumentException("Pictures are required");
+        }
+
         newService.setId(null);
         newService.setDeleted(false);
         newService.setEditTimestamp(LocalDateTime.now());
@@ -254,6 +266,18 @@ public class ServiceService {
         Service existing = serviceRepository.findById(id).orElse(null);
         if (existing == null || existing.isDeleted()) {
             throw new EntityNotFoundException("Service not found");
+        }
+
+        if (service.getCancellationWindowDays()<0 || service.getReservationWindowDays()<0 || service.getDurationMinutes()<0) {
+            throw new IllegalArgumentException("Time windows and duration must be positive");
+        }
+
+        if (service.getDurationMinutes() > 1440) {
+            throw new IllegalArgumentException("Duration must be less than 1440 minutes");
+        }
+
+        if (service.getPictures() != null && service.getPictures().isEmpty()) {
+            throw new IllegalArgumentException("Pictures are required");
         }
 
         existing.setName(service.getName());
