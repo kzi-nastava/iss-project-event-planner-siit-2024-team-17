@@ -26,7 +26,7 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(length = 1000)
     private String description;
 
     @Column(nullable = false)
