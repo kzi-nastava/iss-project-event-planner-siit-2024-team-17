@@ -37,7 +37,6 @@ public class InvitationController {
         return new ResponseEntity<>(invitation, HttpStatus.OK);
     }
 
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedInvitationDTO> createInvitation(@RequestBody CreateInvitationDTO invitationDTO) {
         return new ResponseEntity<>(invitationService.create(invitationDTO), HttpStatus.CREATED);
@@ -52,12 +51,4 @@ public class InvitationController {
         return new ResponseEntity<>(updatedInvitation, HttpStatus.OK);
     }
 
-//    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<UpdatedInvitationDTO> rejectInvitation(@PathVariable UUID id, @RequestBody UpdateInvitationDTO invitationDTO) {
-//        UpdatedInvitationDTO updatedInvitation = invitationService.update(id, invitationDTO);
-//        if(updatedInvitation == null) {
-//            return new ResponseEntity<UpdatedInvitationDTO>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(updatedInvitation, HttpStatus.OK);
-//    }
 }

@@ -1,6 +1,8 @@
 package com.ftn.event_hopper.controllers.reservations;
 
 import com.ftn.event_hopper.dtos.reservations.*;
+import com.ftn.event_hopper.services.reservations.ReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationController {
+
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GetReservationDTO>> getReservations() {
@@ -30,27 +35,18 @@ public class ReservationController {
             return new ResponseEntity<GetReservationDTO>(HttpStatus.NOT_FOUND);
         }
 
-
-
         return new ResponseEntity<GetReservationDTO>(reservation, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/products", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedReservationProductDTO> createReservation(@RequestBody CreateReservationProductDTO reservation) {
-
-        CreatedReservationProductDTO createdReservation = new CreatedReservationProductDTO();
-
-
-        return new ResponseEntity<CreatedReservationProductDTO>(createdReservation, HttpStatus.CREATED);
-    }
+//    @PostMapping(value = "/products", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<CreatedReservationProductDTO> createReservationProduct(@RequestBody CreateReservationProductDTO reservation) {
+//
+//        //return new ResponseEntity<>(reservationService.createProductReservation(reservation), HttpStatus.CREATED);
+//    }
 
     @PostMapping(value = "/services", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedReservationServiceDTO> createReservation(@RequestBody CreateReservationServiceDTO reservation) {
+    public ResponseEntity<CreatedReservationServiceDTO> createReservationService(@RequestBody CreateReservationServiceDTO reservation) {
 
-        CreatedReservationServiceDTO createdReservation = new CreatedReservationServiceDTO();
-
-
-
-        return new ResponseEntity<CreatedReservationServiceDTO>(createdReservation, HttpStatus.CREATED);
+        return new ResponseEntity<>(reservationService.createServiceReservation(reservation), HttpStatus.CREATED);
     }
 }
