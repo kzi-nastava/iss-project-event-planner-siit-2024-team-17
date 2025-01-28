@@ -63,7 +63,7 @@ public class ReservationService {
             Optional<Account> accountOptional = accountRepository.findByPersonId(pup.getId());
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
-                Email emailToPup = new Email(account.getEmail(), subject, body, reservation.getProduct().getPictures().getFirst());
+                Email emailToPup = new Email(account.getEmail(), subject, body, reservation.getProduct().getPictures().get(0));
                 emailService.sendSimpleMail(emailToPup);
             }
         }
@@ -86,7 +86,7 @@ public class ReservationService {
             Optional<Account> accountOptional = accountRepository.findByPersonId(od.getId());
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
-                Email emailToOd = new Email(account.getEmail(), subject, body, reservation.getProduct().getPictures().getFirst());
+                Email emailToOd = new Email(account.getEmail(), subject, body, reservation.getProduct().getPictures().get(0));
                 emailService.sendSimpleMail(emailToOd);
             }
         }
