@@ -85,13 +85,17 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/accounts/check-email").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/accounts/person").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/accounts/verify/*").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/events/*").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/events/search").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/solutions/search").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/images/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/invitations/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/events/*/agenda").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/images").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/socket/**").permitAll()
                     .requestMatchers(HttpMethod.GET,"/api/accounts/active/*").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/api/locations/cities").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/api/categories").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/api/event-types").permitAll()
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);

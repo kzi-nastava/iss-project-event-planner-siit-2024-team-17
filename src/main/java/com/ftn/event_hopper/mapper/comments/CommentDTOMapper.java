@@ -1,7 +1,9 @@
 package com.ftn.event_hopper.mapper.comments;
 
+import com.ftn.event_hopper.dtos.comments.GetCommentDTO;
 import com.ftn.event_hopper.dtos.comments.SimpleCommentAuthorDTO;
 import com.ftn.event_hopper.dtos.comments.SimpleCommentDTO;
+import com.ftn.event_hopper.dtos.comments.UpdatedCommentDTO;
 import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import org.modelmapper.Converter;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 
 @Component
 public class CommentDTOMapper {
@@ -50,4 +53,18 @@ public class CommentDTOMapper {
 
         return simpleCommentAuthorDTO;
     };
+
+    public GetCommentDTO fromCommentToGetCommentDTO(Comment comment) {
+        return modelMapper.map(comment, GetCommentDTO.class);
+    }
+
+    public List<GetCommentDTO> fromCommentListToGetCommentDTOCollection(Collection<Comment> source) {
+        return source.stream()
+                .map(this::fromCommentToGetCommentDTO)
+                .toList();
+    }
+
+    public UpdatedCommentDTO fromCommentToUpdatedCommentDTO(Comment comment) {
+        return modelMapper.map(comment, UpdatedCommentDTO.class);
+    }
 }

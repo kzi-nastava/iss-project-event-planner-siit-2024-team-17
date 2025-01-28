@@ -266,9 +266,9 @@ VALUES
 
 INSERT INTO comments (status, author_id, id, product_id, content)
 VALUES
-    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
-    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f92c4b63-d2a1-49d7-8f1e-9b4c72e1a5f3', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Needs improvement.'),
-    (1, '57c05a8a-dd8b-4da8-af73-90961e423f42', '3b9e6a2c-d7f2-4a3b-b2c9-7e5f4b6a1c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc', 'Highly recommended!');
+    (0, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
+    (0, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f92c4b63-d2a1-49d7-8f1e-9b4c72e1a5f3', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Needs improvement.'),
+    (0, '57c05a8a-dd8b-4da8-af73-90961e423f42', '3b9e6a2c-d7f2-4a3b-b2c9-7e5f4b6a1c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc', 'Highly recommended!');
 
 
 INSERT INTO notifications ("timestamp", event_id, id, product_id, content)
