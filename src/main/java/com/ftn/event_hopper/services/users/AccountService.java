@@ -166,9 +166,10 @@ public class AccountService {
 
     public CreatedAccountDTO createPerson(CreatePersonAccountDTO accountDTO){
         Account account = accountDTOMapper.fromCreatePersonDTOToAccount(accountDTO);
-        CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
-        RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
-        account.setRegistrationRequest(request);
+        account.setVerified(true);
+//        CreatedRegistrationRequestDTO requestDTO = registrationRequestService.create(accountDTO.getRegistrationRequest());
+//        RegistrationRequest request = registrationRequestDTOMapper.fromCreatedDTOToRegistrationRequest(requestDTO);
+//        account.setRegistrationRequest(request);
         this.save(account);
         return accountDTOMapper.fromAccountToCreatedDTO(account);
     }
@@ -301,7 +302,6 @@ public class AccountService {
             personRepository.delete(person);
 
             EventOrganizer eventOrganizer = new EventOrganizer();
-
 
             eventOrganizer.setName(person.getName());
             eventOrganizer.setSurname(person.getSurname());

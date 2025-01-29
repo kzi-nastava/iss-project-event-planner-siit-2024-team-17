@@ -87,9 +87,9 @@ VALUES
 
 INSERT INTO messages ("timestamp", from_id, id, to_id, content)
 VALUES
-    ('2024-12-07 09:00:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', '97d6429d-d755-4337-a2b0-31f54633c538', 'Hello, how are you?'),
-    ('2024-12-07 09:05:00', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'I am good, thank you!'),
-    ('2024-12-07 09:10:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', 'See you at the event.');
+    ('2024-12-07 09:00:00', '31548d6b-019f-492e-ba39-07be7a1433e5', 'b2c9e3a5-d4f7-4b8f-b7e1-3f9c6a2d5b7e', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'Hello, how are you?'),
+    ('2024-12-07 09:05:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'e5c7b3a9-d2f6-4a1a-b8c9-7f3e6b2d9a4f', '31548d6b-019f-492e-ba39-07be7a1433e5', 'I am good, thank you!'),
+    ('2024-12-07 09:10:00', '31548d6b-019f-492e-ba39-07be7a1433e5', '7e5a3c9d-48f1-432a-b6c1-3e7a8f5b2d9e', '6a1c3423-e400-443f-93c1-9491b9dafb03', 'See you at the event.');
 
 
 INSERT INTO blocks ("timestamp", blocked_id, who_id, id)
@@ -125,7 +125,7 @@ VALUES
     (100, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Join the celebration of Queen''s 50th Anniversary, honoring five decades of remarkable achievements.', 'Queens 50th Anniversary', '18.jpg'),
     (50, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '6915ce46-d213-424b-a3c4-035767714df0', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Step into a world of spooktacular glamour at Heidi Klums Halloween Party! Enjoy jaw-dropping costumes.', 'Halloween Party', '19.jpg'),
     (400, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'f1ad3604-fef5-439a-8adb-45776a019a55', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', 'Global Innovation Summit', '20.jpg'),
-    (800, 0, '2025-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate the season at the Spring Fair! Enjoy vibrant flower displays, artisan markets, live music,', 'Spring Fair', '21.jpg');
+    (800, 0, '2025-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '57c05a8a-dd8b-4da8-af73-90961e423f42', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate the season at the Spring Fair! Enjoy vibrant flower displays, artisan markets, live music,', 'Spring Fair', '21.jpg');
 
 
 INSERT INTO persons_attending_events (event_id, person_id)
@@ -194,7 +194,7 @@ VALUES
     (5, 180, false, false, false, true, 7, 0, '2025-12-07 09:45:00', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c','894d865c-0343-4a4a-9594-6ffc4f3a5a16', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'PRODUCT', 'A cleaning service for offices', 'Office Cleaning6'),
     (3, 120, true, true, false, true, 5, 1, '2025-12-07 09:30:00', 'b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a','935e1b52-6180-419a-bbe8-909db6cd6cbc', 'a7c9e5b3-d4f2-49a1-b8c7-3e7f9a5b2c6d', 'SERVICE', 'A professional IT consultation', 'Tech Consultation'),
     (5, 180, false, true, false, true, 7, 1, '2025-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','314c1838-8cbe-471c-9403-dc49baad1977', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'SERVICE', 'A cleaning service for offices', 'Office Cleaning5'),
-    (10, 90, true, false, false, true, 3, 1, '2025-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
+    (10, 90, true, true, false, true, 3, 1, '2025-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES
@@ -212,7 +212,7 @@ VALUES
     (3, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'c4d5b6e9-8d3b-47c6-b8a7-d9c3e8b5d9b6', '45067d8d-9d86-4104-97cd-7054c48cbbc6'),
     (2, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'd4d5b6e9-8d3b-47c6-b8a7-d9c3e8b5d9b6', '1237e35c-80ff-4a2a-8245-2728cb45ee11'),
     (1, '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'e4d5b6e9-8d3b-47c6-b8a7-d9c3e8b5d9b6', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d'),
-    (3, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7f9c5d6-b9e1-4a7a-b8e6-f9b2a8d5c6b4', '2eed4933-2477-487e-8b99-c39a9ac939dd');
+    (3, '57c05a8a-dd8b-4da8-af73-90961e423f42', 'a7f9c5d6-b9e1-4a7a-b8e6-f9b2a8d5c6b4', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d');
 
 
 INSERT INTO product_prices (price_id, product_id)
@@ -266,9 +266,9 @@ VALUES
 
 INSERT INTO comments (status, author_id, id, product_id, content)
 VALUES
-    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
-    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f92c4b63-d2a1-49d7-8f1e-9b4c72e1a5f3', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Needs improvement.'),
-    (1, '57c05a8a-dd8b-4da8-af73-90961e423f42', '3b9e6a2c-d7f2-4a3b-b2c9-7e5f4b6a1c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc', 'Highly recommended!');
+    (0, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
+    (0, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f92c4b63-d2a1-49d7-8f1e-9b4c72e1a5f3', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Needs improvement.'),
+    (0, '57c05a8a-dd8b-4da8-af73-90961e423f42', '3b9e6a2c-d7f2-4a3b-b2c9-7e5f4b6a1c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc', 'Highly recommended!');
 
 
 INSERT INTO notifications ("timestamp", event_id, id, product_id, content)

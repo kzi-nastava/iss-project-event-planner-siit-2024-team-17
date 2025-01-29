@@ -242,18 +242,30 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/upgrade-to-OD/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedAccountDTO> upgradeToOD(@PathVariable UUID id) {
-        UpdatedAccountDTO updatedAccountDTO = accountService.updateToOD(id);
+    @PutMapping(value = "/upgrade-to-OD" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> upgradeToOD() {
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        UpdatedAccountDTO updatedAccountDTO = accountService.updateToOD(account.getId());
         if(updatedAccountDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/upgrade-to-PUP/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP(@PathVariable UUID id, @RequestBody CompanyDetailsDTO companyDetailsDTO) {
-        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(id, companyDetailsDTO);
+    @PutMapping(value = "/upgrade-to-PUP" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP( @RequestBody CompanyDetailsDTO companyDetailsDTO) {
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(account.getId(), companyDetailsDTO);
         if(updatedAccountDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

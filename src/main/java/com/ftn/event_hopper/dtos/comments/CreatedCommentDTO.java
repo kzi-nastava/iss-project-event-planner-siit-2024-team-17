@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.dtos.comments;
 
+import com.ftn.event_hopper.models.shared.CommentStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,6 @@ import java.util.UUID;
 public class CreatedCommentDTO {
     private UUID id;
     private String content;
-    private UUID authorId;
     private LocalDateTime createdAt;
+    private CommentStatus status;
 }

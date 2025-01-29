@@ -13,5 +13,5 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class CreateCommentDTO {
     private String content;
-    private UUID authorId;
+    private UUID productId;
 }

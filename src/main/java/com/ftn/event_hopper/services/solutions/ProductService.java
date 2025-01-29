@@ -1,26 +1,36 @@
 package com.ftn.event_hopper.services.solutions;
 
-import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
-import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
-import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
-import com.ftn.event_hopper.models.prices.Price;
+import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
+import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
+import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
+import com.ftn.event_hopper.dtos.ratings.CreateProductRatingDTO;
+import com.ftn.event_hopper.dtos.ratings.CreatedProductRatingDTO;
+import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
+import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
+import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.comments.Comment;
+import com.ftn.event_hopper.models.events.Event;
+import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.solutions.Service;
 import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.prices.PriceRepository;
+import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
+import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,6 +60,10 @@ public class ProductService {
     private PriceRepository priceRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
+    @Autowired
+    private EventOrganizerRepository eventOrganizerRepository;
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
@@ -235,6 +249,35 @@ public class ProductService {
         if (product == null || product.isDeleted() || !product.isVisible() || product.getStatus() != ProductStatus.APPROVED) {
             return null;
         }
+        ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
+
+        boolean pendingComment = false;
+        boolean pendingRating = false;
+        ConversationPreviewDTO conversation = null;
+
+        Person person = null;
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
+                && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
+            Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            person = personRepository.findById(account.getPerson().getId()).orElse(null);
+            EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
+
+            if (eventOrganizer != null) {
+                pendingComment = product.getComments().stream()
+                        .noneMatch(comment -> comment.getAuthor().getId().equals(eventOrganizer.getId()));
+                pendingRating = product.getRatings().stream()
+                        .noneMatch(rating -> rating.getEventOrganizer().getId().equals(eventOrganizer.getId()));
+
+                Account providerAccount = accountRepository.findByPersonId(provider.getId()).orElse(null);
+                if (providerAccount != null && !providerAccount.getId().equals(account.getId())) {
+                    conversation = new ConversationPreviewDTO();
+                    conversation.setUsername(providerAccount.getUsername());
+                    conversation.setName(provider.getName());
+                    conversation.setSurname(provider.getSurname());
+                    conversation.setProfilePictureUrl(provider.getProfilePicture());
+                }
+            }
+        }
 
         product.setComments(product.getComments().stream()
                 .filter(comment -> comment.getStatus() == CommentStatus.ACCEPTED)
@@ -246,7 +289,6 @@ public class ProductService {
                 .average()
                 .orElse(0.0));
 
-        ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
 
         solutionDetailsDTO.setProvider(serviceProviderDTOMapper.fromServiceProviderToSimpleDTO(provider));
 
@@ -263,11 +305,12 @@ public class ProductService {
                 || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
             return solutionDetailsDTO;
         }
-        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
-        if (person != null) {
-            solutionDetailsDTO.setFavorite(person.getFavoriteProducts().contains(product));
-        }
+
+
+        solutionDetailsDTO.setFavorite(person.getFavoriteProducts().contains(product));
+        solutionDetailsDTO.setPendingComment(pendingComment);
+        solutionDetailsDTO.setPendingRating(pendingRating);
+        solutionDetailsDTO.setConversationInitialization(conversation);
 
         return solutionDetailsDTO;
     }
@@ -324,6 +367,137 @@ public class ProductService {
     }
 
 
+    public CreatedProductRatingDTO rateProduct(CreateProductRatingDTO rating) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (person == null) {
+            throw new EntityNotFoundException("Person not found");
+        }
+
+        Product product = productRepository.findById(rating.getProductId()).orElse(null);
+
+        if (product == null) {
+            throw new EntityNotFoundException("Product not found");
+        }
+
+        if (product.getRatings().stream().anyMatch(r -> r.getEventOrganizer().getId().equals(person.getId()))) {
+            throw new IllegalArgumentException("Person has already rated this product");
+        }
+
+        if (rating.getValue() < 1 || rating.getValue() > 5) {
+            throw new IllegalArgumentException("Rating value must be between 1 and 5");
+        }
+
+        if (product.getStatus() != ProductStatus.APPROVED) {
+            throw new IllegalArgumentException("Product is not approved");
+        }
+
+        if (product.isDeleted()) {
+            throw new IllegalArgumentException("Product is deleted");
+        }
+
+        if (!product.isVisible()) {
+            throw new IllegalArgumentException("Product is not visible");
+        }
+
+        EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
+        if (eventOrganizer == null) {
+            throw new EntityNotFoundException("Event organizer not found");
+        }
+
+        boolean found = false;
+        for (Event event : eventOrganizer.getEvents()) {
+            if (reservationRepository.existsByProductAndEvent(product, event)) {
+                found = true;
+            }
+        }
+
+        if (!found) {
+            throw new IllegalArgumentException("Event organizer has not reserved this product");
+        }
+
+        Rating newRating = new Rating();
+        newRating.setId(null);
+        newRating.setValue(rating.getValue());
+        newRating.setEventOrganizer(eventOrganizer);
+
+        product.getRatings().add(newRating);
+        Product p = productRepository.save(product);
+        productRepository.flush();
+
+        CreatedProductRatingDTO ret = new CreatedProductRatingDTO();
+        ret.setId(p.getRatings().stream().filter(r -> r.getEventOrganizer().getId().equals(person.getId())).findFirst().get().getId());
+        ret.setValue(newRating.getValue());
+        ret.setProductId(product.getId());
+
+        return ret;
+    }
+
+    public CreatedCommentDTO addComment(CreateCommentDTO comment) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (person == null) {
+            throw new EntityNotFoundException("Person not found");
+        }
+
+        Product product = productRepository.findById(comment.getProductId()).orElse(null);
+
+        if (product == null) {
+            throw new EntityNotFoundException("Product not found");
+        }
+
+        if (product.getComments().stream().anyMatch(r -> r.getAuthor().getId().equals(person.getId()))) {
+            throw new IllegalArgumentException("Person has already commented on this product");
+        }
+
+        if (product.getStatus() != ProductStatus.APPROVED) {
+            throw new IllegalArgumentException("Product is not approved");
+        }
+
+        if (product.isDeleted()) {
+            throw new IllegalArgumentException("Product is deleted");
+        }
+
+        if (!product.isVisible()) {
+            throw new IllegalArgumentException("Product is not visible");
+        }
+
+        EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
+        if (eventOrganizer == null) {
+            throw new EntityNotFoundException("Event organizer not found");
+        }
+
+        boolean found = false;
+        for (Event event : eventOrganizer.getEvents()) {
+            if (reservationRepository.existsByProductAndEvent(product, event)) {
+                found = true;
+            }
+        }
+
+        if (!found) {
+            throw new IllegalArgumentException("Event organizer has not reserved this product");
+        }
+
+        Comment newComment = new Comment();
+        newComment.setId(null);
+        newComment.setContent(comment.getContent());
+        newComment.setAuthor(eventOrganizer);
+        newComment.setStatus(CommentStatus.PENDING);
+
+
+        product.getComments().add(newComment);
+        Product p = productRepository.save(product);
+        productRepository.flush();
+
+        CreatedCommentDTO ret = new CreatedCommentDTO();
+        ret.setId(p.getComments().stream().filter(c -> c.getAuthor().getId().equals(person.getId())).findFirst().get().getId());
+        ret.setContent(newComment.getContent());
+        ret.setStatus(newComment.getStatus());
+
+        return ret;
+    }
 }
 
 
