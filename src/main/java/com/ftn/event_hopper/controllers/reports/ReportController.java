@@ -47,7 +47,17 @@ public class ReportController {
         return new ResponseEntity<CreatedReportDTO>(reportService.create(report), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "suspend/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> suspend(@PathVariable UUID id){
+        try {
+            reportService.suspend(id);
+            return new ResponseEntity<>("Report deleted, user suspended.", HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>("Deleting report failed, user not suspended.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteReport(@PathVariable UUID id){
         try{
             reportService.delete(id);
