@@ -19,6 +19,6 @@ public class GetReportDTO {
     private UUID id;
     private String reason;
     private LocalDateTime timestamp;
-    private SimpleAccountDTO reporterId;
-    private SimpleAccountDTO reportedId;
+    private SimpleAccountDTO reporter;
+    private SimpleAccountDTO reported;
 }

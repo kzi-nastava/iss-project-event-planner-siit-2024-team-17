@@ -3,6 +3,7 @@ package com.ftn.event_hopper.services.reports;
 import com.ftn.event_hopper.dtos.reports.CreateReportDTO;
 import com.ftn.event_hopper.dtos.reports.CreatedReportDTO;
 import com.ftn.event_hopper.dtos.reports.GetReportDTO;
+import com.ftn.event_hopper.mapper.reports.ReportDTOMapper;
 import com.ftn.event_hopper.models.reports.Report;
 import com.ftn.event_hopper.repositories.reports.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;

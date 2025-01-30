@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.dtos.reports;
 
+import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.models.users.Person;
 import lombok.*;
 
@@ -15,6 +16,6 @@ import java.util.UUID;
 public class CreateReportDTO {
 
     private String reason;
-    private UUID reporterId;
-    private UUID reportedId;
+    private SimpleAccountDTO reporter;
+    private SimpleAccountDTO reported;
 }
