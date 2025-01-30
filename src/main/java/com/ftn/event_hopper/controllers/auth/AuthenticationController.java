@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @RestController
@@ -45,6 +47,20 @@ public class AuthenticationController {
         if (!account.isActive()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new LoginResponse(false, "Account has been deactivated."));
+        }
+
+        if (account.getSuspensionTimestamp() != null) {
+            LocalDateTime suspensionTime = account.getSuspensionTimestamp();
+            LocalDateTime threeDaysLater = suspensionTime.plusDays(3);
+
+            if (!LocalDateTime.now().isAfter(threeDaysLater)) {
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+                String formattedDate = threeDaysLater.format(formatter);
+
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new LoginResponse(false, "Account is suspended. Suspension expires on " + formattedDate));
+            }
         }
 
         //Authenticate
