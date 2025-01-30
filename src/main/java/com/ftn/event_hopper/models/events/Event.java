@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.models.events;
 
+import com.ftn.event_hopper.models.budgets.BudgetItem;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
@@ -54,5 +55,9 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_id")
+    private Set<BudgetItem> budgetItems = new HashSet<BudgetItem>();
 
 }
