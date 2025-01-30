@@ -150,17 +150,12 @@ public class PersonService {
     public void addFavoriteEvent(UUID eventId) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
                 || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) return;
-
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
-        if (person == null) return;
 
         Event event = eventRepository.findById(eventId).orElseGet(null);
+        if (person == null || person.getFavoriteEvents().contains(event)) return;
 
-
-        if (person.getFavoriteEvents().contains(event)) {
-            return;
-        }
         person.getFavoriteEvents()
                 .add(event);
         personRepository.save(person);
