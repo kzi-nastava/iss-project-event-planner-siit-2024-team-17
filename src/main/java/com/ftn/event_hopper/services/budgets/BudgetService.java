@@ -17,8 +17,10 @@ import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
+import com.ftn.event_hopper.services.categories.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,8 @@ public class BudgetService {
     private EventDTOMapper eventDTOMapper;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryService categoryService;
 
     public BudgetManagementDTO findById(UUID eventId) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -54,7 +58,7 @@ public class BudgetService {
 
         EventOrganizer organizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElseThrow(() -> new EntityNotFoundException("Event organizer not found"));
 
-        if (!organizer.getEvents().contains(event)) {
+        if (organizer.getEvents().stream().noneMatch(oe -> oe.getId().equals(eventId))) {
             throw new RuntimeException("You are not authorized to view this budget");
         }
 
@@ -73,6 +77,7 @@ public class BudgetService {
                 purchasedProducts.add(reservation.getProduct());
             }
             budgetItemManagementDTO.setPurchasedProducts(productDTOMapper.fromProductListToSimpleDTOList(purchasedProducts));
+            budgetItemManagementDTO.setMinAmount(purchasedProducts.stream().mapToDouble(product -> product.getCurrentPrice().getFinalPrice()).sum());
             budgetItemManagementDTO.setDeletable(purchasedProducts.isEmpty());
             budgetItemManagementDTOS.add(budgetItemManagementDTO);
         }
@@ -81,25 +86,36 @@ public class BudgetService {
         budgetManagementDTO.setTotalAmount(budgetItems.stream().mapToDouble(BudgetItem::getAmount).sum());
         budgetManagementDTO.setEvent(eventDTOMapper.fromEventToSimpleDTO(event));
 
+        budgetManagementDTO.getEvent().getEventType().setSuggestedCategories(
+                categoryDTOMapper.fromCategoryListToSimpleDTOList(
+                        categoryService.getCategoriesForEventType(budgetManagementDTO.getEvent().getEventType().getId())
+                )
+        );
+
+
         return budgetManagementDTO;
     }
 
     public BudgetManagementDTO update(UUID eventId, Collection<UpdateBudgetItemDTO> updateBudgetItemDTO) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(account == null) {
-            throw new EntityNotFoundException("Account not found");
+            throw new AccessDeniedException("Account not found");
         }
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         if (account.getType() != PersonType.EVENT_ORGANIZER) {
-            throw new RuntimeException("You are not authorized to view this budget");
+            throw new AccessDeniedException("You are not authorized to view this budget");
         }
 
         EventOrganizer organizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElseThrow(() -> new EntityNotFoundException("Event organizer not found"));
 
         if (!organizer.getEvents().contains(event)) {
-            throw new RuntimeException("You are not authorized to view this budget");
+            throw new AccessDeniedException("You are not authorized to view this budget");
         }
+//
+//        if (event.getTime().isBefore(LocalDateTime.now())) {
+//            throw new RuntimeException("Event has already started");
+//        }
 
         for (UpdateBudgetItemDTO updateBudgetItem : updateBudgetItemDTO) {
             if (updateBudgetItem.getAmount() < 0) {
@@ -119,16 +135,19 @@ public class BudgetService {
                 throw new RuntimeException("Amount cannot be less than the sum of the prices of the purchased products");
             }
 
-            BudgetItem budgetItem = event.getBudgetItems().stream().filter(budgetItem1 -> budgetItem1.getId().equals(updateBudgetItem.getId())).findFirst().orElseThrow(() -> new EntityNotFoundException("Budget item not found"));
-
+            if (updateBudgetItem.getId() != null) {
+                BudgetItem budgetItem = event.getBudgetItems().stream().filter(budgetItem1 -> budgetItem1.getId().equals(updateBudgetItem.getId())).findFirst().orElseThrow(() -> new EntityNotFoundException("Budget item not found"));
+            }
         }
 
+        event.getBudgetItems().removeIf(budgetItem -> updateBudgetItemDTO.stream()
+                .noneMatch(updateBudgetItem -> updateBudgetItem.getId() != null && updateBudgetItem.getId().equals(budgetItem.getId())));
         for (UpdateBudgetItemDTO updateBudgetItem : updateBudgetItemDTO) {
             if (updateBudgetItem.getId() == null) {
                 BudgetItem budgetItem = new BudgetItem();
                 budgetItem.setAmount(updateBudgetItem.getAmount());
                 budgetItem.setCategory(categoryRepository.findById(updateBudgetItem.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("Category not found")));
-                event.getBudgetItems().add(new BudgetItem());
+                event.getBudgetItems().add(budgetItem);
             } else {
                 event.getBudgetItems().stream()
                         .filter(budgetItem1 -> budgetItem1.getId().equals(updateBudgetItem.getId()))

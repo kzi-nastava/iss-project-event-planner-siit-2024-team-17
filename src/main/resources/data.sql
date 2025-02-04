@@ -199,7 +199,6 @@ VALUES
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES
     ('2024-12-07 15:30:00', '2024-12-07 14:30:00', '2024-12-07 09:00:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'b9a7f3d9-c5e4-4a2a-b1e8-a9f7b2c9d8f4', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
-    ('2024-12-07 17:00:00', '2024-12-07 16:00:00', '2024-12-07 09:30:00', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'e9d2c5f7-3e7f-4a6d-b1f7-d9b5e7d2a8b9', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
     ('2024-12-07 18:30:00', '2024-12-07 17:30:00', '2024-12-07 10:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a8e7d6f9-b5f8-42d2-9a7b-5d9f7c8d9b6a', '2eed4933-2477-487e-8b99-c39a9ac939dd');
 
 

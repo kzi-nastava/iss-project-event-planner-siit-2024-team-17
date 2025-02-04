@@ -21,7 +21,7 @@ public class BudgetController {
     @Autowired
     private BudgetService budgetService;
 
-    @GetMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{eventId}/management", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getBudgetManagement(@PathVariable("eventId") UUID eventId) {
         try {
             BudgetManagementDTO budget = budgetService.findById(eventId);
@@ -34,7 +34,7 @@ public class BudgetController {
         }
     }
 
-    @PostMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createEvent(@RequestBody Collection<UpdateBudgetItemDTO> updateBudgetItems, @PathVariable("eventId") UUID eventId){
         try {
             BudgetManagementDTO budget = budgetService.update(eventId, updateBudgetItems);

@@ -16,6 +16,7 @@ public class BudgetItemManagementDTO {
     private UUID id;
     private SimpleCategoryDTO category;
     private double amount;
+    private double minAmount;
     private boolean isDeletable;
     private Collection<SimpleProductDTO> purchasedProducts;
 }
