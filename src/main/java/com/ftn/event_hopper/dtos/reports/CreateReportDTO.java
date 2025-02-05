@@ -16,5 +16,5 @@ import java.util.UUID;
 public class CreateReportDTO {
 
     private String reason;
-    private SimpleAccountDTO reported;
+    private UUID reported;
 }

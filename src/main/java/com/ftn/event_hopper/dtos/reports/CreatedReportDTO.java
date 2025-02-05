@@ -18,6 +18,6 @@ public class CreatedReportDTO {
     private UUID id;
     private String reason;
     private LocalDateTime timestamp;
-    private SimpleAccountDTO reporter;
-    private SimpleAccountDTO reported;
+    private UUID reporter;
+    private UUID reported;
 }

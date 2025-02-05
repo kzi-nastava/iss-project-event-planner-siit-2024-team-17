@@ -40,12 +40,19 @@ public class ReportService {
     }
 
     public CreatedReportDTO create(CreateReportDTO reportDTO) {
-        Report report = reportDTOMapper.fromCreateReportDTOtoReport(reportDTO);
+        Report report = new Report();
 
         Account reporter = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         report.setReporter(reporter);
+
+        Account reported = accountRepository.findById(reportDTO.getReported()).orElse(null);
+        report.setReported(reported);
+
+        report.setReason(reportDTO.getReason());
         report.setTimestamp(LocalDateTime.now());
         this.save(report);
+
+
 
         return reportDTOMapper.fromReportToCreatedReportDTO(report);
     }
