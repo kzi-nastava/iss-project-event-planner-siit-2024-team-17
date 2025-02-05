@@ -3,12 +3,15 @@ package com.ftn.event_hopper.services.reports;
 import com.ftn.event_hopper.dtos.reports.CreateReportDTO;
 import com.ftn.event_hopper.dtos.reports.CreatedReportDTO;
 import com.ftn.event_hopper.dtos.reports.GetReportDTO;
+import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.mapper.reports.ReportDTOMapper;
 import com.ftn.event_hopper.models.reports.Report;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.repositories.reports.ReportRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
+import com.ftn.event_hopper.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +20,8 @@ import java.util.UUID;
 
 @Service
 public class ReportService {
+    @Autowired
+    private TokenUtils tokenUtils;
     @Autowired
     private ReportRepository reportRepository;
     @Autowired
@@ -36,6 +41,9 @@ public class ReportService {
 
     public CreatedReportDTO create(CreateReportDTO reportDTO) {
         Report report = reportDTOMapper.fromCreateReportDTOtoReport(reportDTO);
+
+        Account reporter = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        report.setReporter(reporter);
         report.setTimestamp(LocalDateTime.now());
         this.save(report);
 
