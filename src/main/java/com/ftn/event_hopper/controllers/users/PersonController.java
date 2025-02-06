@@ -1,6 +1,5 @@
 package com.ftn.event_hopper.controllers.users;
 
-import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.users.person.*;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.services.users.PersonService;
