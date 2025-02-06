@@ -11,6 +11,7 @@ import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,7 +95,7 @@ public class CategoryService {
     public UpdatedCategoryDTO updateCategory(UUID id, UpdateCategoryDTO category) {
         Category existing = categoryRepository.findById(id).orElse(null);
         if (existing == null) {
-            return null;
+            throw new EntityNotFoundException("Category not found");
         }
 
         existing.setName(category.getName());
@@ -129,7 +130,7 @@ public class CategoryService {
     public UpdatedCategorySuggestionDTO rejectCategorySuggestion(UUID id, UUID substituteCategoryId) {
         Category existing = categoryRepository.findById(id).orElse(null);
         if (existing == null) {
-            return null;
+            throw new EntityNotFoundException("Category not found");
         }
 
         existing.setStatus(CategoryStatus.REJECTED);
@@ -139,12 +140,12 @@ public class CategoryService {
 
         Category substitute = categoryRepository.findById(substituteCategoryId).orElse(null);
         if (substitute == null) {
-            return null;
+            throw new EntityNotFoundException("Substitute category not found");
         }
 
         Product requester = productRepository.findByCategory_Id(id);
         if (requester == null) {
-            return null;
+            throw new EntityNotFoundException("Product not found");
         }
         requester.setCategory(substitute);
         requester.setStatus(ProductStatus.APPROVED);
@@ -157,7 +158,7 @@ public class CategoryService {
     public UpdatedCategorySuggestionDTO approveCategorySuggestion(UUID id) {
         Category existing = categoryRepository.findById(id).orElse(null);
         if (existing == null) {
-            return null;
+            throw new EntityNotFoundException("Category not found");
         }
 
         existing.setStatus(CategoryStatus.APPROVED);
@@ -167,7 +168,7 @@ public class CategoryService {
 
         Product requester = productRepository.findByCategory_Id(id);
         if (requester == null) {
-            return null;
+            throw new EntityNotFoundException("Product not found");
         }
         requester.setStatus(ProductStatus.APPROVED);
         productRepository.save(requester);

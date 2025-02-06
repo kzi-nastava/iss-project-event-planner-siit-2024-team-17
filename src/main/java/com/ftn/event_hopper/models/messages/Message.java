@@ -1,7 +1,6 @@
 package com.ftn.event_hopper.models.messages;
 
 import com.ftn.event_hopper.models.users.Account;
-import com.ftn.event_hopper.models.users.Person;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +22,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column
+    @Column(length = 1000)
     private String content;
 
     @Column(nullable = false)

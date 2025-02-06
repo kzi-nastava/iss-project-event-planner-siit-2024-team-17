@@ -317,6 +317,9 @@ public class ProductService {
 
     public Collection<PriceManagementDTO> getPricesForManagement() {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
         ServiceProvider provider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
 
         if (provider == null) {
@@ -347,6 +350,20 @@ public class ProductService {
             throw new EntityNotFoundException("Product not found");
         }
 
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+        ServiceProvider provider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (provider == null) {
+            throw new EntityNotFoundException("Provider not found");
+        }
+
+        if (!provider.getProducts().contains(product)) {
+            throw new IllegalArgumentException("Provider does not own this product");
+        }
+
         Price newPrice = new Price();
 
         newPrice.setBasePrice(price.getBasePrice());
@@ -369,6 +386,9 @@ public class ProductService {
 
     public CreatedProductRatingDTO rateProduct(CreateProductRatingDTO rating) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
 
         if (person == null) {
@@ -436,6 +456,10 @@ public class ProductService {
 
     public CreatedCommentDTO addComment(CreateCommentDTO comment) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
 
         if (person == null) {

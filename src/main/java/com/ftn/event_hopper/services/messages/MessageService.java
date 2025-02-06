@@ -69,7 +69,7 @@ public class MessageService {
     public List<ConversationPreviewDTO> getUsersConversationsPreview() {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (account == null) {
-            return null;
+            throw new RuntimeException("Account not found");
         }
 
         List<ConversationPreviewDTO> conversations = new ArrayList<>();
@@ -94,12 +94,12 @@ public class MessageService {
     public List<ChatMessageDTO> getChatHistoryWithUser(String username) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (account == null) {
-            return null;
+            throw new RuntimeException("Account not found");
         }
 
         Optional<Account> otherAccount = accountRepository.findByEmail(username);
         if (otherAccount.isEmpty()) {
-            return null;
+            throw new RuntimeException("Correspondent account not found");
         }
 
         List<Message> messages = messageRepository.findMessagesBetweenAccounts(account.getId(), otherAccount.get().getId());
