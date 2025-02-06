@@ -8,9 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -60,24 +58,42 @@ public class CategoryController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedCategoryDTO> updateCategory(@PathVariable("id") UUID id, @RequestBody UpdateCategoryDTO category) {
-        UpdatedCategoryDTO updatedCategory = categoryService.updateCategory(id, category);
+    public ResponseEntity<?> updateCategory(@PathVariable("id") UUID id, @RequestBody UpdateCategoryDTO category) {
+        try {
+            UpdatedCategoryDTO updatedCategory = categoryService.updateCategory(id, category);
 
-        return new ResponseEntity<UpdatedCategoryDTO>(updatedCategory, HttpStatus.OK);
+            return new ResponseEntity<UpdatedCategoryDTO>(updatedCategory, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(value = "/suggestions/{id}/approve", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedCategorySuggestionDTO> approveCategorySuggestion(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> approveCategorySuggestion(@PathVariable("id") UUID id) {
+        try {
         UpdatedCategorySuggestionDTO updatedCategorySuggestion = categoryService.approveCategorySuggestion(id);
 
         return new ResponseEntity<UpdatedCategorySuggestionDTO>(updatedCategorySuggestion, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(value = "/suggestions/{id}/reject/{substituteCategoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedCategorySuggestionDTO> rejectCategorySuggestion(@PathVariable("id") UUID id, @PathVariable UUID substituteCategoryId) {
-        UpdatedCategorySuggestionDTO updatedCategorySuggestion = categoryService.rejectCategorySuggestion(id, substituteCategoryId);
+    public ResponseEntity<?> rejectCategorySuggestion(@PathVariable("id") UUID id, @PathVariable UUID substituteCategoryId) {
+        try {
+            UpdatedCategorySuggestionDTO updatedCategorySuggestion = categoryService.rejectCategorySuggestion(id, substituteCategoryId);
 
-        return new ResponseEntity<UpdatedCategorySuggestionDTO>(updatedCategorySuggestion, HttpStatus.OK);
+            return new ResponseEntity<UpdatedCategorySuggestionDTO>(updatedCategorySuggestion, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(value = "/{id}")

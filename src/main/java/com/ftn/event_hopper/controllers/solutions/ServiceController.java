@@ -11,9 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -21,35 +21,6 @@ import java.util.UUID;
 public class ServiceController {
     @Autowired
     private ServiceService serviceService;
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetServiceDTO>> getServices() {
-
-        Collection<GetServiceDTO> services = new ArrayList<>();
-
-        return new ResponseEntity<Collection<GetServiceDTO>>(services, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetServiceDTO> getService() {
-
-        GetServiceDTO service = new GetServiceDTO();
-
-        if (service == null) {
-            return new ResponseEntity<GetServiceDTO>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<GetServiceDTO>(service, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/visible", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetServiceDTO>> getVisibleServices() {
-
-        Collection<GetServiceDTO> services = new ArrayList<>();
-
-
-        return new ResponseEntity<Collection<GetServiceDTO>>(services, HttpStatus.OK);
-    }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID id) {
@@ -61,25 +32,32 @@ public class ServiceController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedServiceDTO> createProduct(@RequestBody CreateServiceDTO service) {
+    public ResponseEntity<?> createProduct(@RequestBody CreateServiceDTO service) {
+        try {
         CreatedServiceDTO createdService = serviceService.create(service);
-        if (createdService == null) {
-            return new ResponseEntity<CreatedServiceDTO>(HttpStatus.BAD_REQUEST);
-        }
-
         return new ResponseEntity<CreatedServiceDTO>(createdService, HttpStatus.CREATED);
+        }  catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedServiceDTO> updateProduct(@RequestBody UpdateServiceDTO service, @PathVariable UUID id) {
-
+    public ResponseEntity<?> updateProduct(@RequestBody UpdateServiceDTO service, @PathVariable UUID id) {
+        try {
         UpdatedServiceDTO updatedService = serviceService.update(service, id);
 
         return new ResponseEntity<UpdatedServiceDTO>(updatedService, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/management")
-    public ResponseEntity<PagedResponse<ServiceManagementDTO>> searchEvents(
+    public ResponseEntity<?> searchEvents(
             Pageable page,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
             @RequestParam(value = "eventTypeIds", required = false) List<UUID> eventTypeIds,
@@ -90,7 +68,7 @@ public class ServiceController {
             @RequestParam(required = false) String sortField,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection
     ){
-
+        try {
         Page<ServiceManagementDTO> paged = serviceService.searchServicesForManagement(
                 page,
                 categoryId,
@@ -111,6 +89,11 @@ public class ServiceController {
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

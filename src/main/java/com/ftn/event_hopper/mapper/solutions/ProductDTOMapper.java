@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +36,8 @@ public class ProductDTOMapper {
         Converter<Category, SimpleCategoryDTO> productConverter = context ->
                 categoryDTOMapper.fromCategoryToSimpleCategoryDTO(context.getSource());
 
-        Converter<Comment, SimpleCommentDTO> commentConverter = context ->
-                commentDTOMapper.fromCommentToSimplecommentDTO(context.getSource());
+        Converter<List<Comment>, Collection<SimpleCommentDTO>> commentConverter = context ->
+                commentDTOMapper.fromCommentListToSimplecommentDTOCollection(context.getSource());
 
         // Custom mapping for Product -> SolutionDetailsDTO
         modelMapper.typeMap(Product.class, SolutionDetailsDTO.class)
