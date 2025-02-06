@@ -39,6 +39,7 @@ public class ReportDTOMapper {
     }
 
     public GetReportDTO fromReportToGetReportDTO(Report report) {
+
         return modelMapper.map(report, GetReportDTO.class);
     }
 

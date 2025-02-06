@@ -20,8 +20,7 @@ import java.util.UUID;
 
 @Service
 public class ReportService {
-    @Autowired
-    private TokenUtils tokenUtils;
+
     @Autowired
     private ReportRepository reportRepository;
     @Autowired
