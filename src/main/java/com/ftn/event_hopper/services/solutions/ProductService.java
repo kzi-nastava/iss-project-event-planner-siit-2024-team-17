@@ -284,10 +284,12 @@ public class ProductService {
     public SolutionDetailsDTO findSolutionDetails(UUID id) {
         Product product = productRepository.findById(id).orElse(null);
 
+
         if (product == null || product.isDeleted() || !product.isVisible() || product.getStatus() != ProductStatus.APPROVED) {
             return null;
         }
         ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
+        Account accountProvider = accountRepository.findByPersonId(provider.getId()).orElse(null);
 
         boolean pendingComment = false;
         boolean pendingRating = false;
@@ -298,6 +300,14 @@ public class ProductService {
                 && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
             Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             person = personRepository.findById(account.getPerson().getId()).orElse(null);
+
+            if (accountProvider != null){
+                Block block = blockingRepository.findByWhoAndBlocked(account, accountProvider).orElse(null);
+                if (block != null) {
+                    throw new RuntimeException("Content is not available");
+                }
+            }
+
             EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
 
             if (eventOrganizer != null) {
