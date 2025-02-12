@@ -8,6 +8,7 @@ import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.budgets.BudgetItem;
 import com.ftn.event_hopper.models.events.Event;
+import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.reservations.Reservation;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Account;
@@ -66,6 +67,7 @@ public class BudgetService {
 
         BudgetManagementDTO budgetManagementDTO = new BudgetManagementDTO();
 
+        double spentAmount = 0;
         List<BudgetItemManagementDTO> budgetItemManagementDTOS = new ArrayList<>();
         for (BudgetItem budgetItem : budgetItems) {
             BudgetItemManagementDTO budgetItemManagementDTO = new BudgetItemManagementDTO();
@@ -75,6 +77,10 @@ public class BudgetService {
             List<Product> purchasedProducts = new ArrayList<>();
             for (Reservation reservation : reservationRepository.findByEvent(event)) {
                 purchasedProducts.add(reservation.getProduct());
+                Price price = reservation.getProduct().getPriceAtTimestamp(reservation.getTimestamp());
+                if(price != null) {
+                    spentAmount += price.getFinalPrice();
+                }
             }
             budgetItemManagementDTO.setPurchasedProducts(productDTOMapper.fromProductListToSimpleDTOList(purchasedProducts));
             budgetItemManagementDTO.setMinAmount(purchasedProducts.stream().mapToDouble(product -> product.getCurrentPrice().getFinalPrice()).sum());
@@ -83,7 +89,10 @@ public class BudgetService {
         }
         budgetManagementDTO.setBudgetItems(budgetItemManagementDTOS);
 
-        budgetManagementDTO.setTotalAmount(budgetItems.stream().mapToDouble(BudgetItem::getAmount).sum());
+        double totalAmount = budgetItems.stream().mapToDouble(BudgetItem::getAmount).sum();
+
+        budgetManagementDTO.setLeftAmount(totalAmount - spentAmount);
+
         budgetManagementDTO.setEvent(eventDTOMapper.fromEventToSimpleDTO(event));
 
         budgetManagementDTO.getEvent().getEventType().setSuggestedCategories(

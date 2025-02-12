@@ -90,4 +90,11 @@ public class Product {
                 .max(Comparator.comparing(Price::getTimestamp))
                 .orElse(null);
     }
+
+    public Price getPriceAtTimestamp(LocalDateTime timestamp) {
+        return prices.stream()
+                .filter(price -> price.getTimestamp().isBefore(timestamp))
+                .max(Comparator.comparing(Price::getTimestamp))
+                .orElse(null);
+    }
 }

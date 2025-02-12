@@ -196,10 +196,17 @@ VALUES
     (5, 180, false, true, false, true, 7, 1, '2025-12-07 09:45:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','314c1838-8cbe-471c-9403-dc49baad1977', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'SERVICE', 'A cleaning service for offices', 'Office Cleaning5'),
     (10, 90, true, true, false, true, 3, 1, '2025-12-07 10:00:00', 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d','2eed4933-2477-487e-8b99-c39a9ac939dd', 'd7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d', 'SERVICE', 'A professional cleaning service for homes', 'Home Cleaning');
 
+INSERT INTO budget_items (amount, category_id, id, event_id)
+VALUES
+    (6000, 'd4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'a5f8e6b7-d2d5-4376-8a9b-7c4f3b3c1e1e', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f');
+
+
+
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES
     ('2024-12-07 15:30:00', '2024-12-07 14:30:00', '2024-12-07 09:00:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'b9a7f3d9-c5e4-4a2a-b1e8-a9f7b2c9d8f4', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
-    ('2024-12-07 18:30:00', '2024-12-07 17:30:00', '2024-12-07 10:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a8e7d6f9-b5f8-42d2-9a7b-5d9f7c8d9b6a', '2eed4933-2477-487e-8b99-c39a9ac939dd');
+    ('2024-12-07 18:30:00', '2024-12-07 17:30:00', '2024-12-07 10:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a8e7d6f9-b5f8-42d2-9a7b-5d9f7c8d9b6a', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
+    ('2024-12-07 18:30:00', '2024-12-07 17:30:00', '2024-12-07 10:00:00', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a8e7d6f9-b5f8-42d2-9a7b-5d9f7c8d9b6b', '2eed4933-2477-487e-8b99-c39a9ac939dd');
 
 
 INSERT INTO ratings (value, event_organizer_id, id, product_id)
