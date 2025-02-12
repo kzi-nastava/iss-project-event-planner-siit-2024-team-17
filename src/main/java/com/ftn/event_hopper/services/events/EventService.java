@@ -4,6 +4,7 @@ import com.ftn.event_hopper.dtos.events.*;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.mapper.events.AgendaMapper;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
+import com.ftn.event_hopper.models.blocks.Block;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.events.AgendaActivity;
 import com.ftn.event_hopper.models.events.Event;
@@ -13,6 +14,7 @@ import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.events.AgendaActivityRepository;
 import com.ftn.event_hopper.repositories.events.EventRepository;
@@ -57,6 +59,8 @@ public class EventService {
     private AgendaActivityRepository agendaActivityRepository;
     @Autowired
     private AgendaMapper agendaMapper;
+    @Autowired
+    private BlockingRepository blockingRepository;
 
 
     public List<SimpleEventDTO> findAll(){
@@ -143,14 +147,29 @@ public class EventService {
     public Collection<SimpleEventDTO> findTop5(UUID userId) {
         Account account = accountRepository.findById(userId).orElseGet(null);
         Person person = account.getPerson();
-        List<Event> top5Events = eventRepository.findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(person.getLocation().getCity(), EventPrivacyType.PUBLIC, LocalDateTime.now());
-        for (Event event : top5Events) {
+        List<Event> events = eventRepository.findByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(person.getLocation().getCity(), EventPrivacyType.PUBLIC, LocalDateTime.now());
+        List<Event> filteredEvents = new ArrayList<>();
+        int counter = 0;
+        for (Event event : events) {
+            if(counter == 5){
+                break;
+            }
 
-            System.out.println("--------------");
-            System.out.println(event);
-
+            EventOrganizer eventOrganizer = eventOrganizerRepository.findByEventsContaining(event).orElse(null);
+            if(eventOrganizer != null){
+                Account organizersAccount = accountRepository.findByPersonId(person.getId()).orElse(null);
+                if (organizersAccount != null){
+                    Block block = blockingRepository.findByWhoAndBlocked(account,organizersAccount).orElse(null);
+                    if (block != null){
+                        continue;
+                    }
+                }
+            }
+            filteredEvents.add(event);
+            counter++;
         }
-        return eventDTOMapper.fromEventListToSimpleDTOList(top5Events);
+
+        return eventDTOMapper.fromEventListToSimpleDTOList(filteredEvents);
     }
 
 
