@@ -13,6 +13,7 @@ import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.blocks.Block;
 import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.prices.Price;
@@ -21,10 +22,8 @@ import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.solutions.Service;
-import com.ftn.event_hopper.models.users.Account;
-import com.ftn.event_hopper.models.users.EventOrganizer;
-import com.ftn.event_hopper.models.users.Person;
-import com.ftn.event_hopper.models.users.ServiceProvider;
+import com.ftn.event_hopper.models.users.*;
+import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
 import com.ftn.event_hopper.repositories.prices.PriceRepository;
 import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
@@ -64,6 +63,8 @@ public class ProductService {
     private ReservationRepository reservationRepository;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
+    @Autowired
+    private BlockingRepository blockingRepository;
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
@@ -100,6 +101,16 @@ public class ProductService {
             if (product.isAvailable() == false || product.isVisible() == false || product.getStatus()!= ProductStatus.APPROVED || product.isDeleted()==true) {
                 continue;
             }
+
+            //check if they are blocked
+            ServiceProvider serviceProvider = serviceProviderRepository.findByProductsContaining(product);
+            Account blocked = accountRepository.findByPersonId(serviceProvider.getId()).orElse(null);
+            if (blocked != null && blocked.getType() == PersonType.EVENT_ORGANIZER) {
+                Block block = blockingRepository.findByWhoAndBlocked(account,blocked).orElse(null);
+                if (block != null) {
+                    continue;
+                }
+            }
             filteredProducts.add(product);
         }
 
@@ -134,7 +145,6 @@ public class ProductService {
                         criteriaBuilder.equal(root.get("isVisible"), true),
                         criteriaBuilder.equal(root.get("status"), ProductStatus.APPROVED)
                 ));
-
 
 
         if (isProduct || isService) {
@@ -231,6 +241,34 @@ public class ProductService {
                 default -> throw new IllegalStateException("Unexpected value: " + sortField);
             };
         }
+
+        specification = specification.and((root, query, criteriaBuilder) -> {
+            Account who = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            Root<ServiceProvider> serviceProviderRoot = query.from(ServiceProvider.class);
+            Join<ServiceProvider, Product> productJoin = serviceProviderRoot.join("products", JoinType.INNER);
+
+            // Pravimo JOIN sa `Account` (ako `ServiceProvider` ima `personId`, koristimo subquery)
+            Subquery<Account> accountSubquery = query.subquery(Account.class);
+            Root<Account> accountRoot = accountSubquery.from(Account.class);
+            accountSubquery.select(accountRoot)
+                    .where(criteriaBuilder.equal(accountRoot.get("person"), serviceProviderRoot));
+
+            // Subquery da proverimo blokiranost
+            Subquery<Long> blockSubquery = query.subquery(Long.class);
+            Root<Block> blockRoot = blockSubquery.from(Block.class);
+            blockSubquery.select(criteriaBuilder.count(blockRoot))
+                    .where(
+                            criteriaBuilder.equal(blockRoot.get("who"), who),
+                            criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                    );
+
+            // Ako postoji blok, izbacujemo proizvode od tog service providera
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root, productJoin), // Vraćamo samo proizvode koji su povezani sa ServiceProviderom
+                    criteriaBuilder.equal(blockSubquery, 0) );
+        });
+
 
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);

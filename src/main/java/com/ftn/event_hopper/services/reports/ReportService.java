@@ -51,8 +51,6 @@ public class ReportService {
         report.setTimestamp(LocalDateTime.now());
         this.save(report);
 
-
-
         return reportDTOMapper.fromReportToCreatedReportDTO(report);
     }
 

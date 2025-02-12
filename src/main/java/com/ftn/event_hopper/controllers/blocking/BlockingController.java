@@ -21,7 +21,7 @@ public class BlockingController {
     private BlockingService blockingService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetBlockDTO>> getReports(){
+    public ResponseEntity<Collection<GetBlockDTO>> getBlocks(){
 
         Collection<GetBlockDTO> reports = blockingService.findAll();
         if(reports == null) {
@@ -31,7 +31,7 @@ public class BlockingController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetBlockDTO> getReport(@PathVariable UUID id){
+    public ResponseEntity<GetBlockDTO> getBlock(@PathVariable UUID id){
 
         GetBlockDTO report = blockingService.findById(id);
 
@@ -43,12 +43,12 @@ public class BlockingController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedBlockDTO> createReport(@RequestBody CreateBlockDTO report){
-        return new ResponseEntity<CreatedBlockDTO>(blockingService.create(report), HttpStatus.CREATED);
+    public ResponseEntity<CreatedBlockDTO> createBlock(@RequestBody CreateBlockDTO block){
+        return new ResponseEntity<CreatedBlockDTO>(blockingService.create(block), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteReport(@PathVariable UUID id){
+    public ResponseEntity<String> deleteBlock(@PathVariable UUID id){
         try{
             blockingService.delete(id);
             return new ResponseEntity<>("Block deleted.", HttpStatus.NO_CONTENT);

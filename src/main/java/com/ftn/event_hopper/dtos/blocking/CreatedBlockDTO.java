@@ -16,6 +16,6 @@ import java.util.UUID;
 public class CreatedBlockDTO {
     private UUID id;
     private LocalDateTime timestamp;
-    private SimpleAccountDTO who;
-    private SimpleAccountDTO blocked;
+    private UUID who;
+    private UUID blocked;
 }
