@@ -300,8 +300,13 @@ public class EventService {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
                 && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){
 
-            specification = specification.and((root, query, criteriaBuilder) -> {
                 Account loggedAccount = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                if (loggedAccount.getType() != PersonType.EVENT_ORGANIZER){
+
+
+                specification = specification.and((root, query, criteriaBuilder) -> {
+
 
                 Root<EventOrganizer> eventOrganizerRoot = query.from(EventOrganizer.class);
                 Join<EventOrganizer,Event> eventJoin = eventOrganizerRoot.join("events", JoinType.INNER);
@@ -344,6 +349,7 @@ public class EventService {
 
             });
 
+                }
         }
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
