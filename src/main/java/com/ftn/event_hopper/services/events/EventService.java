@@ -122,10 +122,21 @@ public class EventService {
         if (od != null){
             Account organizerAccount = accountRepository.findByPersonId(od.getId()).orElse(null);
             if (organizerAccount != null){
-                Block block = blockingRepository.findByWhoAndBlocked(account, organizerAccount).orElse(null);
-                if (block != null){
-                    throw new RuntimeException("Content is not available");
+                if (account.getType() == PersonType.SERVICE_PROVIDER){
+                    Block block = blockingRepository.findByWhoAndBlocked(account, organizerAccount).orElse(null);
+                    if (block != null){
+                        throw new RuntimeException("Content is not available");
+                    }
+                } else if (account.getType() == PersonType.AUTHENTICATED_USER) {
+                    Block odBlocked = blockingRepository.findByWhoAndBlocked(account, organizerAccount).orElse(null);
+                    Block akBlocked = blockingRepository.findByWhoAndBlocked(organizerAccount, account).orElse(null);
+
+                    if (odBlocked != null || akBlocked != null){
+                        throw new RuntimeException("Content is not available");
+                    }
+
                 }
+
             }
         }
 
@@ -290,7 +301,7 @@ public class EventService {
                 && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){
 
             specification = specification.and((root, query, criteriaBuilder) -> {
-                Account who = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                Account loggedAccount = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
                 Root<EventOrganizer> eventOrganizerRoot = query.from(EventOrganizer.class);
                 Join<EventOrganizer,Event> eventJoin = eventOrganizerRoot.join("events", JoinType.INNER);
@@ -300,13 +311,32 @@ public class EventService {
                 accountSubquery.select(accountRoot)
                         .where(criteriaBuilder.equal(accountRoot.get("person"), eventOrganizerRoot));
 
+
                 Subquery<Long> blockSubquery = query.subquery(Long.class);
                 Root<Block> blockRoot = blockSubquery.from(Block.class);
-                blockSubquery.select(criteriaBuilder.count(blockRoot))
-                        .where(
-                                criteriaBuilder.equal(blockRoot.get("who"), who),
-                                criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
-                        );
+                //if pup or ak blocks od
+                if ( loggedAccount.getType() == PersonType.SERVICE_PROVIDER ){
+                    blockSubquery.select(criteriaBuilder.count(blockRoot))
+                            .where(
+                                    criteriaBuilder.equal(blockRoot.get("who"), loggedAccount),
+                                    criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                            );
+                } else if ( loggedAccount.getType() == PersonType.AUTHENTICATED_USER ){
+
+                    blockSubquery.select(criteriaBuilder.count(blockRoot))
+                            .where(criteriaBuilder.or(
+                                    criteriaBuilder.and(
+                                            criteriaBuilder.equal(blockRoot.get("who"), accountSubquery),
+                                            criteriaBuilder.equal(blockRoot.get("blocked"), loggedAccount)
+                                    ),
+                                    criteriaBuilder.and(
+                                            criteriaBuilder.equal(blockRoot.get("who"), loggedAccount),
+                                            criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                                    )
+                            ));
+
+                }
+
                 return criteriaBuilder.and(
                         criteriaBuilder.equal(root, eventJoin),
                         criteriaBuilder.equal(blockSubquery,0)
@@ -315,6 +345,7 @@ public class EventService {
             });
 
         }
+
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
         Page<Event> filteredEvents = eventRepository.findAll(specification, pageableWithSort);
