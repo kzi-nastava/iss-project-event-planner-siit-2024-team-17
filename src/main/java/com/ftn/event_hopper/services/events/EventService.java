@@ -22,7 +22,7 @@ import com.ftn.event_hopper.repositories.locations.LocationRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
-import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +116,18 @@ public class EventService {
         //someone is logged in
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
+
+        //check if they are blocked
+        EventOrganizer od = eventOrganizerRepository.findByEventsContaining(event).orElse(null);
+        if (od != null){
+            Account organizerAccount = accountRepository.findByPersonId(od.getId()).orElse(null);
+            if (organizerAccount != null){
+                Block block = blockingRepository.findByWhoAndBlocked(account, organizerAccount).orElse(null);
+                if (block != null){
+                    throw new RuntimeException("Content is not available");
+                }
+            }
+        }
 
         if(account.getType() == PersonType.EVENT_ORGANIZER){
             EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElse(null);
@@ -274,6 +286,35 @@ public class EventService {
             sort = Sort.by(direction, sortField); // Sortira po izabranom polju i smeru
         }
 
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
+                && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){
+
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Account who = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                Root<EventOrganizer> eventOrganizerRoot = query.from(EventOrganizer.class);
+                Join<EventOrganizer,Event> eventJoin = eventOrganizerRoot.join("events", JoinType.INNER);
+
+                Subquery<Account> accountSubquery = query.subquery(Account.class);
+                Root<Account> accountRoot = accountSubquery.from(Account.class);
+                accountSubquery.select(accountRoot)
+                        .where(criteriaBuilder.equal(accountRoot.get("person"), eventOrganizerRoot));
+
+                Subquery<Long> blockSubquery = query.subquery(Long.class);
+                Root<Block> blockRoot = blockSubquery.from(Block.class);
+                blockSubquery.select(criteriaBuilder.count(blockRoot))
+                        .where(
+                                criteriaBuilder.equal(blockRoot.get("who"), who),
+                                criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                        );
+                return criteriaBuilder.and(
+                        criteriaBuilder.equal(root, eventJoin),
+                        criteriaBuilder.equal(blockSubquery,0)
+                );
+
+            });
+
+        }
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
         Page<Event> filteredEvents = eventRepository.findAll(specification, pageableWithSort);
