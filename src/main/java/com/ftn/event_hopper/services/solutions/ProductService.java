@@ -242,32 +242,34 @@ public class ProductService {
             };
         }
 
-        specification = specification.and((root, query, criteriaBuilder) -> {
-            Account who = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
+                && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){
 
-            Root<ServiceProvider> serviceProviderRoot = query.from(ServiceProvider.class);
-            Join<ServiceProvider, Product> productJoin = serviceProviderRoot.join("products", JoinType.INNER);
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Account who = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            // Pravimo JOIN sa `Account` (ako `ServiceProvider` ima `personId`, koristimo subquery)
-            Subquery<Account> accountSubquery = query.subquery(Account.class);
-            Root<Account> accountRoot = accountSubquery.from(Account.class);
-            accountSubquery.select(accountRoot)
-                    .where(criteriaBuilder.equal(accountRoot.get("person"), serviceProviderRoot));
+                Root<ServiceProvider> serviceProviderRoot = query.from(ServiceProvider.class);
+                Join<ServiceProvider, Product> productJoin = serviceProviderRoot.join("products", JoinType.INNER);
 
-            // Subquery da proverimo blokiranost
-            Subquery<Long> blockSubquery = query.subquery(Long.class);
-            Root<Block> blockRoot = blockSubquery.from(Block.class);
-            blockSubquery.select(criteriaBuilder.count(blockRoot))
-                    .where(
-                            criteriaBuilder.equal(blockRoot.get("who"), who),
-                            criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
-                    );
 
-            // Ako postoji blok, izbacujemo proizvode od tog service providera
-            return criteriaBuilder.and(
-                    criteriaBuilder.equal(root, productJoin), // Vraćamo samo proizvode koji su povezani sa ServiceProviderom
-                    criteriaBuilder.equal(blockSubquery, 0) );
-        });
+                Subquery<Account> accountSubquery = query.subquery(Account.class);
+                Root<Account> accountRoot = accountSubquery.from(Account.class);
+                accountSubquery.select(accountRoot)
+                        .where(criteriaBuilder.equal(accountRoot.get("person"), serviceProviderRoot));
+
+                Subquery<Long> blockSubquery = query.subquery(Long.class);
+                Root<Block> blockRoot = blockSubquery.from(Block.class);
+                blockSubquery.select(criteriaBuilder.count(blockRoot))
+                        .where(
+                                criteriaBuilder.equal(blockRoot.get("who"), who),
+                                criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                        );
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.equal(root, productJoin), // Vraćamo samo proizvode koji su povezani sa ServiceProviderom
+                        criteriaBuilder.equal(blockSubquery, 0) );
+            });
+        }
 
 
 
