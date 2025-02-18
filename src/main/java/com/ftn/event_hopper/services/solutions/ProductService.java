@@ -2,6 +2,7 @@ package com.ftn.event_hopper.services.solutions;
 
 import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
+import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
@@ -10,6 +11,7 @@ import com.ftn.event_hopper.dtos.ratings.CreateProductRatingDTO;
 import com.ftn.event_hopper.dtos.ratings.CreatedProductRatingDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
+import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
@@ -73,6 +75,8 @@ public class ProductService {
     private ServiceProviderDTOMapper serviceProviderDTOMapper;
     @Autowired
     private PriceDTOMapper priceDTOMapper;
+    @Autowired
+    private EventDTOMapper eventDTOMapper;
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -254,6 +258,7 @@ public class ProductService {
         boolean pendingComment = false;
         boolean pendingRating = false;
         ConversationPreviewDTO conversation = null;
+        ArrayList<SimpleEventDTO> applicableEvents = new ArrayList<>();
 
         Person person = null;
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
@@ -275,6 +280,14 @@ public class ProductService {
                     conversation.setName(provider.getName());
                     conversation.setSurname(provider.getSurname());
                     conversation.setProfilePictureUrl(provider.getProfilePicture());
+                }
+
+                if (product.isAvailable()) {
+                    for (Event event : eventOrganizer.getEvents()) {
+                        if (product.getEventTypes().stream().anyMatch(et -> event.getEventType().getId().equals(et.getId()))) {
+                            applicableEvents.add(eventDTOMapper.fromEventToSimpleDTO(event));
+                        }
+                    }
                 }
             }
         }
@@ -311,6 +324,7 @@ public class ProductService {
         solutionDetailsDTO.setPendingComment(pendingComment);
         solutionDetailsDTO.setPendingRating(pendingRating);
         solutionDetailsDTO.setConversationInitialization(conversation);
+        solutionDetailsDTO.setApplicableEvents(applicableEvents);
 
         return solutionDetailsDTO;
     }

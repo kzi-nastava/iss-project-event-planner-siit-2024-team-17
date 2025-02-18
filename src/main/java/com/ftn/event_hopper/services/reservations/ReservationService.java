@@ -75,7 +75,9 @@ public class ReservationService {
             throw new EntityNotFoundException("Provider account is not valid.");
         }
 
-
+        if (product.isAvailable() || product.isDeleted() || !product.isVisible()) {
+            throw new EntityNotFoundException("Product is not available.");
+        }
 
         if (event.getBudgetItems().stream().noneMatch(bi -> bi.getCategory().getId().equals(product.getCategory().getId()))) {
             BudgetItem budgetItem = new BudgetItem();
