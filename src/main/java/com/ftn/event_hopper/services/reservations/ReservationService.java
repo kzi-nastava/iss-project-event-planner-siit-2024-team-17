@@ -75,7 +75,7 @@ public class ReservationService {
             throw new EntityNotFoundException("Provider account is not valid.");
         }
 
-        if (product.isAvailable() || product.isDeleted() || !product.isVisible()) {
+        if (!product.isAvailable() || product.isDeleted() || !product.isVisible()) {
             throw new EntityNotFoundException("Product is not available.");
         }
 

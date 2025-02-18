@@ -297,6 +297,7 @@ public class ProductService {
                 .toList());
 
         SolutionDetailsDTO solutionDetailsDTO = productDTOMapper.fromProductToSolutionDetailsDTO(product);
+
         solutionDetailsDTO.setRating(product.getRatings().stream()
                 .mapToDouble(Rating::getValue)
                 .average()
@@ -324,7 +325,10 @@ public class ProductService {
         solutionDetailsDTO.setPendingComment(pendingComment);
         solutionDetailsDTO.setPendingRating(pendingRating);
         solutionDetailsDTO.setConversationInitialization(conversation);
-        solutionDetailsDTO.setApplicableEvents(applicableEvents);
+        if (!applicableEvents.isEmpty()) {
+            solutionDetailsDTO.setApplicableEvents(applicableEvents);
+
+        }
 
         return solutionDetailsDTO;
     }
