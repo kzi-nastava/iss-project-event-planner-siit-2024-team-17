@@ -9,6 +9,7 @@ import com.ftn.event_hopper.models.reservations.Reservation;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
+import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
@@ -103,17 +104,19 @@ public class ReservationService {
 
 
 
-        this.notifyOfReservation(account, providerAccount, this.generateProductReservationMessage(event, product, account));
+        this.notifyOfReservation(account, providerAccount, this.generateProductReservationMessage(event, product, eventOrganizer, provider));
 
         return ret;
     }
 
-    private String generateProductReservationMessage(Event event, Product product, Account account) {
+    private String generateProductReservationMessage(Event event, Product product, Person purchaser, ServiceProvider provider) {
         return String.format(
-                "Dear %s,\n Thank you for purchasing our product %s for the event %s. We hope you enjoy it!",
-                account.getUsername(),
+                "Dear %s %s,\n\nThank you for purchasing our product %s for the event %s.\nWe hope you enjoy it!\n\nBest regards,\n%s",
+                purchaser.getName(),
+                purchaser.getSurname(),
                 product.getName(),
-                event.getName()
+                event.getName(),
+                provider.getCompanyName()
         );
     }
 
