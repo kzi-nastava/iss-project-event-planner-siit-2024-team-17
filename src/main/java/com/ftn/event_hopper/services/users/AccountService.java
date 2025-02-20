@@ -179,7 +179,7 @@ public class AccountService {
         Account account = accountRepository.findById(id).orElseGet(null);
         if(account!= null){
             personService.update(account.getPerson().getId(), personDTO);
-            this.save(account);
+            accountRepository.save(account);
         }
         return accountDTOMapper.fromAccountToUpdatedDTO(account);
     }
@@ -213,7 +213,7 @@ public class AccountService {
         Account account = accountRepository.findById(id).orElse(null);
         if(account != null){
             account.getPerson().setProfilePicture(profilePicture);
-            this.save(account);
+            accountRepository.save(account);
         }
     }
 
@@ -227,7 +227,7 @@ public class AccountService {
             throw new RuntimeException("The old password is incorrect.");
         }
         account.setPassword(changePasswordDTO.getNewPassword());
-        accountRepository.save(account);
+        this.save(account);
     }
 
     public void deactivate(UUID accountId){
@@ -252,7 +252,7 @@ public class AccountService {
             }
 
             account.setActive(false);
-            this.save(account);
+            accountRepository.save(account);
             return;
         }
         throw new RuntimeException("Account not found.");
@@ -272,7 +272,7 @@ public class AccountService {
         if (account != null) {
             account.setActive(false);
             account.setSuspensionTimestamp(LocalDateTime.now());
-            this.save(account);
+            accountRepository.save(account);
         }
         return accountDTOMapper.fromAccountToSimpleDTO(account);
     }

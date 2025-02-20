@@ -36,7 +36,7 @@ public class ProductDTOMapper {
         Converter<Category, SimpleCategoryDTO> productConverter = context ->
                 categoryDTOMapper.fromCategoryToSimpleCategoryDTO(context.getSource());
 
-        Converter<Collection<Comment>, Collection<SimpleCommentDTO>> commentConverter = context ->
+        Converter<List<Comment>, Collection<SimpleCommentDTO>> commentConverter = context ->
                 commentDTOMapper.fromCommentListToSimplecommentDTOCollection(context.getSource());
 
         // Custom mapping for Product -> SolutionDetailsDTO

@@ -138,6 +138,17 @@ public class AccountController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/remove-profile-picture", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> removeProfilePicture() {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        accountService.changeProfilePicture(account.getId(), "");
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+
 
     @PostMapping(value = "/deactivate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deactivate() {

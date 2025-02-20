@@ -33,7 +33,7 @@ public class Product {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column
+    @Column(length = 1000)
     private String description;
 
     @ElementCollection
