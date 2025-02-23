@@ -10,8 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -47,5 +49,14 @@ public class ReservationController {
             errorResponse.put("message", ex.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
+    }
+
+    @GetMapping(value = "/services/{id}/terms/")
+    public ResponseEntity<Collection<LocalDateTime>> getAvailableTerms(@PathVariable("id") UUID serviceId,@RequestParam("date") String date) {
+        LocalDateTime parsedDate = LocalDateTime.parse(date);
+
+        List<LocalDateTime> terms = reservationService.findAvailableTerms(serviceId, parsedDate);
+
+        return new ResponseEntity<>(terms, HttpStatus.OK);
     }
 }

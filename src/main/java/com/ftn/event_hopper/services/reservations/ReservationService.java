@@ -20,30 +20,20 @@ import com.ftn.event_hopper.services.messages.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.util.*;
+
 import com.ftn.event_hopper.dtos.messages.NewChatMessageDTO;
 import com.ftn.event_hopper.dtos.reservations.CreateReservationProductDTO;
 import com.ftn.event_hopper.dtos.reservations.CreatedReservationProductDTO;
 import com.ftn.event_hopper.models.budgets.BudgetItem;
 import com.ftn.event_hopper.models.events.Event;
-import com.ftn.event_hopper.models.reservations.Reservation;
 import com.ftn.event_hopper.models.solutions.Product;
-import com.ftn.event_hopper.models.users.Account;
-import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.users.Person;
-import com.ftn.event_hopper.models.users.ServiceProvider;
-import com.ftn.event_hopper.repositories.events.EventRepository;
-import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
-import com.ftn.event_hopper.repositories.solutions.ProductRepository;
-import com.ftn.event_hopper.repositories.users.AccountRepository;
-import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
-import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
-import com.ftn.event_hopper.services.messages.MessageService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDateTime;
 
@@ -277,5 +267,46 @@ public class ReservationService {
         message.setSender(providerAccount.getUsername());
         message.setContent(messageText);
         messageService.sendMessage(message);
+    }
+
+    public List<LocalDateTime> findAvailableTerms(UUID serviceId, LocalDateTime date) {
+        List<LocalDateTime> availableTerms = new ArrayList<>();
+
+        com.ftn.event_hopper.models.solutions.Service service = serviceRepository.findById(serviceId).orElseThrow(() -> new EntityNotFoundException("Service not found."));
+
+        ServiceProvider serviceProvider = serviceProviderRepository.findByProductsContaining(service);
+        if (serviceProvider == null) {
+            throw new EntityNotFoundException("Service provider not found.");
+        }
+
+        LocalDateTime workStart = date.toLocalDate().atTime(serviceProvider.getWorkStart());
+        LocalDateTime workEnd = date.toLocalDate().atTime(serviceProvider.getWorkEnd());
+
+        //insert all terms
+        for(LocalDateTime i = workStart; i.isBefore(workEnd) || i.equals(workEnd) ; i = i.plusMinutes(30)){
+            availableTerms.add(i);
+        }
+
+
+        //find all reservations on that day
+        Collection<Reservation> reservations = reservationRepository.findByProductAndTimestamp(service, date);
+        if (reservations == null) {
+            throw new EntityNotFoundException("Reservation not found.");
+        }
+
+        //remove all booked terms
+        for (Reservation reservation : reservations) {
+            int duration = service.getDurationMinutes();
+            LocalDateTime start = reservation.getStartTime();
+            LocalDateTime end = reservation.getEndTime();
+            for(;start.isBefore(end); start.plusMinutes(30)){
+                availableTerms.remove(start);
+            }
+        }
+
+        //remove terms when service would last less than normal because of the booked terms
+
+
+        return availableTerms;
     }
 }
