@@ -11,6 +11,7 @@ import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
@@ -68,15 +69,67 @@ public class ReservationService {
     private ReservationDTOMapper reservationDTOMapper;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ServiceRepository serviceRepository;
 
 
     public CreatedReservationServiceDTO bookService(CreateReservationServiceDTO createReservation) {
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            throw new EntityNotFoundException("You must be logged in to make a reservation.");
+        }
+
+        EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId())
+                .orElseThrow(() -> new EntityNotFoundException("You must be an event organizer to make a reservation."));
+
+        Event event = eventRepository.findById(createReservation.getEventId())
+                .orElseThrow(() -> new EntityNotFoundException("Event not found."));
+
+        com.ftn.event_hopper.models.solutions.Service service = serviceRepository.findById(createReservation.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Service not found."));
+
+        if(eventOrganizer.getEvents().stream().noneMatch(e -> e.getId().equals(event.getId()))) {
+            throw new EntityNotFoundException("You must be the organizer of the event to make a reservation.");
+        }
+
+        if (service.getEventTypes().stream().noneMatch(et -> et.getId().equals(event.getEventType().getId()))) {
+            throw new EntityNotFoundException("Service is not available for this event type.");
+        }
+
+        ServiceProvider provider = serviceProviderRepository.findByProductsContaining(service);
+        if (provider == null) {
+            throw new EntityNotFoundException("Service provider is not reachable.");
+        }
+        Account providerAccount = accountRepository.findByPersonId(provider.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Provider account not found."));
+        if (!providerAccount.isValid()){
+            throw new EntityNotFoundException("Provider account is not valid.");
+        }
+
+        if (!service.isAvailable() || service.isDeleted() || !service.isVisible()) {
+            throw new EntityNotFoundException("Service is not available.");
+        }
+
+        if (event.getBudgetItems().stream().noneMatch(bi -> bi.getCategory().getId().equals(service.getCategory().getId()))) {
+            BudgetItem budgetItem = new BudgetItem();
+            budgetItem.setCategory(service.getCategory());
+            budgetItem.setAmount(0);
+            budgetItem.setId(null);
+            event.getBudgetItems().add(budgetItem);
+            eventRepository.save(event);
+            eventRepository.flush();
+        }
+
         Reservation reservation = reservationDTOMapper.fromCreateReservationServiceDTOtoReservation(createReservation);
         reservation.setTimestamp(LocalDateTime.now());
         this.save(reservation);
 
         sendEmailToOD(reservation);
         sendEmailToPUP(reservation);
+
+        this.notifyOfReservation(account, providerAccount, this.generateServiceReservationMessage(event, service, eventOrganizer, provider));
+
 
         return reservationDTOMapper.fromReservationToCreatedReservationServiceDTO(reservation);
 
@@ -202,6 +255,17 @@ public class ReservationService {
                 purchaser.getName(),
                 purchaser.getSurname(),
                 product.getName(),
+                event.getName(),
+                provider.getCompanyName()
+        );
+    }
+
+    private String generateServiceReservationMessage(Event event, com.ftn.event_hopper.models.solutions.Service service, Person purchaser, ServiceProvider provider) {
+        return String.format(
+                "Dear %s %s,\n\nThank you for booking our service %s for the event %s.\nWe hope you enjoy it!\n\nBest regards,\n%s",
+                purchaser.getName(),
+                purchaser.getSurname(),
+                service.getName(),
                 event.getName(),
                 provider.getCompanyName()
         );

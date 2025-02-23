@@ -13,8 +13,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class CreateReservationServiceDTO {
-    private SimpleEventDTO event;
-    private SimpleProductDTO product;
+    private UUID eventId;
+    private UUID productId;
     private LocalDateTime from;
     private LocalDateTime to;
 }
