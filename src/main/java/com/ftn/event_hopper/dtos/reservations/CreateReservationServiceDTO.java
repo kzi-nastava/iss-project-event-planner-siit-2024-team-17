@@ -15,7 +15,6 @@ import java.util.UUID;
 public class CreateReservationServiceDTO {
     private SimpleEventDTO event;
     private SimpleProductDTO product;
-    private LocalDateTime timestamp;
     private LocalDateTime from;
     private LocalDateTime to;
 }

@@ -21,7 +21,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column
+    @Column(length = 1000)
     private String content;
 
     @Column(nullable = false)

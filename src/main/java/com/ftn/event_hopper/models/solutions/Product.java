@@ -33,7 +33,7 @@ public class Product {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column
+    @Column(length = 1000)
     private String description;
 
     @ElementCollection
@@ -87,6 +87,13 @@ public class Product {
 
     public Price getCurrentPrice() {
         return prices.stream()
+                .max(Comparator.comparing(Price::getTimestamp))
+                .orElse(null);
+    }
+
+    public Price getPriceAtTimestamp(LocalDateTime timestamp) {
+        return prices.stream()
+                .filter(price -> price.getTimestamp().isBefore(timestamp))
                 .max(Comparator.comparing(Price::getTimestamp))
                 .orElse(null);
     }
