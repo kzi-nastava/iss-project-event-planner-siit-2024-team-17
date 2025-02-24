@@ -65,7 +65,6 @@ public class ReservationService {
 
     public CreatedReservationServiceDTO bookService(CreateReservationServiceDTO createReservation) {
 
-        System.out.println(createReservation.getFrom());
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(account == null) {
             throw new EntityNotFoundException("You must be logged in to make a reservation.");
@@ -121,7 +120,7 @@ public class ReservationService {
         reservation.setStartTime(createReservation.getFrom());
         reservation.setEndTime(createReservation.getTo());
         reservation.setTimestamp(LocalDateTime.now());
-        System.out.println(reservation.getStartTime());
+
         this.save(reservation);
 
 
@@ -293,9 +292,6 @@ public class ReservationService {
         LocalDateTime workStart = date.toLocalDate().atTime(serviceProvider.getWorkStart());
         LocalDateTime workEnd = date.toLocalDate().atTime(serviceProvider.getWorkEnd());
 
-        System.out.println("Working hours:");
-        System.out.println(workStart);
-        System.out.println(workEnd);
 
         //insert all terms
         for(LocalDateTime i = workStart; i.isBefore(workEnd) || i.equals(workEnd) ; i = i.plusMinutes(30)){
@@ -304,25 +300,18 @@ public class ReservationService {
 
 
         //find all reservations on that day
-        System.out.println(date);
         Collection<Reservation> reservations = reservationRepository.findByProductAndStartTime(service, date);  //comparing just dates
         if (reservations == null) {
             throw new EntityNotFoundException("Reservation not found.");
         }
 
         //remove all booked terms
-        System.out.println("Available terms:");
-        System.out.println(reservations.size());
+
         for (Reservation reservation : reservations) {
-            System.out.println("--------");
             int duration = service.getDurationMinutes();
             LocalDateTime start = reservation.getStartTime();
             LocalDateTime end = reservation.getEndTime();
-            System.out.println("Start: " + start);
-            System.out.println("End: " + end);
-            System.out.println("--------");
             for(;start.isBefore(end); start = start.plusMinutes(30)){
-                System.out.println(start);
                 availableTerms.remove(start);
             }
         }
