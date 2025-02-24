@@ -111,7 +111,14 @@ public class ReservationService {
             eventRepository.flush();
         }
 
-        Reservation reservation = reservationDTOMapper.fromCreateReservationServiceDTOtoReservation(createReservation);
+        Product product = productRepository.findById(createReservation.getProductId()).orElseThrow(() ->
+                new EntityNotFoundException("Product not found."));
+
+        Reservation reservation = new Reservation();
+        reservation.setProduct(product);
+        reservation.setEvent(event);
+        reservation.setStartTime(createReservation.getFrom());
+        reservation.setEndTime(createReservation.getTo());
         reservation.setTimestamp(LocalDateTime.now());
         this.save(reservation);
 
