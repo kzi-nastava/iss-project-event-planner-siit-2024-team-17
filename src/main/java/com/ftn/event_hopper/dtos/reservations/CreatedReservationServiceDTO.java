@@ -17,6 +17,6 @@ public class CreatedReservationServiceDTO {
     private SimpleEventDTO event;
     private SimpleProductDTO product;
     private LocalDateTime timestamp;
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 }
