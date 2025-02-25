@@ -34,7 +34,7 @@ VALUES
 
 INSERT INTO accounts (is_active, is_verified, type, suspension_timestamp, id, person_id, registration_request_id, email, password)
 VALUES
-    (TRUE, FALSE, 3, '2024-12-01 10:00:00', '97d6429d-d755-4337-a2b0-31f54633c538', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '5e6d739a-b529-44fb-98db-9cf95b7fe750', 'user1@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
+    (TRUE, TRUE, 3, '2024-12-01 10:00:00', '97d6429d-d755-4337-a2b0-31f54633c538', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f', '5e6d739a-b529-44fb-98db-9cf95b7fe750', 'user1@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
     (FALSE, TRUE, 3, NULL, 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3', '2b221736-8f5b-4c2a-ab96-2a77d7d6274e', 'user2@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
     (TRUE, TRUE, 3, '2024-12-07 14:45:00', '6a1c3423-e400-443f-93c1-9491b9dafb03', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f', '537a4529-8241-4ac4-8d1b-94bb5b50355b', 'user3@example.com', '$2a$10$Ly.0pBtncTCtqhCnklMFBerUhDO6La0f0ACuwJ/O6i8rowhDOAF36'),
 
@@ -119,17 +119,27 @@ VALUES
 
 INSERT INTO events (max_attendance, privacy, "time", event_type_id, event_organizer_id, id, location_id, description, name, picture)
 VALUES
-    (100, 0, '2025-10-10 10:00:00', 'f0dcab26-9656-491e-bcce-bf23f723e998', '57c05a8a-dd8b-4da8-af73-90961e423f42', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Kontig Tech Meetup inspires and connects tech enthusiasts and innovators. Join engaging talks', 'Tech Meetup', '15.jpeg'),
-    (200, 1, '2025-1-20 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '57c05a8a-dd8b-4da8-af73-90961e423f42', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Winter Fest celebrates the magic of the season with enchanting attractions, live performances, ', 'Winter Fest', '16.jpg'),
-    (300, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '8c216a1f-6d65-4256-95e0-6a820d5fb902', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate in style at the Big Birthday Party! Enjoy lively music, delicious food, fun games,.', 'Big Birthday party', '17.jpg'),
-    (100, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Join the celebration of Queen''s 50th Anniversary, honoring five decades of remarkable achievements.', 'Queens 50th Anniversary', '18.jpg'),
-    (50, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '6915ce46-d213-424b-a3c4-035767714df0', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Step into a world of spooktacular glamour at Heidi Klums Halloween Party! Enjoy jaw-dropping costumes.', 'Halloween Party', '19.jpg'),
-    (400, 1, '2025-12-15 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'f1ad3604-fef5-439a-8adb-45776a019a55', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', 'Global Innovation Summit', '20.jpg'),
-    (800, 0, '2025-12-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '57c05a8a-dd8b-4da8-af73-90961e423f42', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate the season at the Spring Fair! Enjoy vibrant flower displays, artisan markets, live music,', 'Spring Fair', '21.jpg');
+    (100, 0, '2025-10-17 10:00:00', 'f0dcab26-9656-491e-bcce-bf23f723e998', '57c05a8a-dd8b-4da8-af73-90961e423f42', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Kontig Tech Meetup inspires and connects tech enthusiasts and innovators. Join engaging talks', 'Tech Meetup', '15.jpeg'),
+    (200, 1, '2025-10-18 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '57c05a8a-dd8b-4da8-af73-90961e423f42', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Winter Fest celebrates the magic of the season with enchanting attractions, live performances, ', 'Winter Fest', '16.jpg'),
+    (300, 1, '2025-10-18 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '8c216a1f-6d65-4256-95e0-6a820d5fb902', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate in style at the Big Birthday Party! Enjoy lively music, delicious food, fun games,.', 'Big Birthday party', '17.jpg'),
+    (100, 1, '2025-10-20 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Join the celebration of Queen''s 50th Anniversary, honoring five decades of remarkable achievements.', 'Queens 50th Anniversary', '18.jpg'),
+    (50, 1, '2025-10-20 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '6915ce46-d213-424b-a3c4-035767714df0', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Step into a world of spooktacular glamour at Heidi Klums Halloween Party! Enjoy jaw-dropping costumes.', 'Halloween Party', '19.jpg'),
+    (400, 1, '2025-10-20 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', 'f1ad3604-fef5-439a-8adb-45776a019a55', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Birthday party', 'Global Innovation Summit', '20.jpg'),
+    (800, 0, '2025-10-20 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '57c05a8a-dd8b-4da8-af73-90961e423f42', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate the season at the Spring Fair! Enjoy vibrant flower displays, artisan markets, live music,', 'Spring Fair', '21.jpg');
 
 
 INSERT INTO persons_attending_events (event_id, person_id)
 VALUES
+    ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
+    ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
+    ('8c216a1f-6d65-4256-95e0-6a820d5fb902', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
+    ('06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
+    ('6915ce46-d213-424b-a3c4-035767714df0', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
+    ('f1ad3604-fef5-439a-8adb-45776a019a55', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
+
+
+
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f'),
     ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f'),
 
@@ -141,6 +151,13 @@ VALUES
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','57c05a8a-dd8b-4da8-af73-90961e423f42'),
     ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b','57c05a8a-dd8b-4da8-af73-90961e423f42'),
     ('8c216a1f-6d65-4256-95e0-6a820d5fb902','57c05a8a-dd8b-4da8-af73-90961e423f42'),
+    ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','31548d6b-019f-492e-ba39-07be7a1433e5'),
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b','31548d6b-019f-492e-ba39-07be7a1433e5'),
+    ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f','31548d6b-019f-492e-ba39-07be7a1433e5'),
+    ('8c216a1f-6d65-4256-95e0-6a820d5fb902','31548d6b-019f-492e-ba39-07be7a1433e5'),
+
+
+
 
     ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3');
 
