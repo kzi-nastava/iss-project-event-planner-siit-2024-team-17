@@ -20,8 +20,7 @@ import java.util.UUID;
 
 @Service
 public class ReportService {
-    @Autowired
-    private TokenUtils tokenUtils;
+
     @Autowired
     private ReportRepository reportRepository;
     @Autowired
@@ -51,8 +50,6 @@ public class ReportService {
         report.setReason(reportDTO.getReason());
         report.setTimestamp(LocalDateTime.now());
         this.save(report);
-
-
 
         return reportDTOMapper.fromReportToCreatedReportDTO(report);
     }
