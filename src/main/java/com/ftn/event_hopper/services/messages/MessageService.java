@@ -3,8 +3,10 @@ package com.ftn.event_hopper.services.messages;
 import com.ftn.event_hopper.dtos.messages.ChatMessageDTO;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.dtos.messages.NewChatMessageDTO;
+import com.ftn.event_hopper.models.blocks.Block;
 import com.ftn.event_hopper.models.messages.Message;
 import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
 import com.ftn.event_hopper.repositories.messages.MessageRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class MessageService {
     private AccountRepository accountRepository;
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private BlockingRepository blockingRepository;
 
 
     public boolean sendMessage(NewChatMessageDTO newMessage) {
@@ -45,14 +49,18 @@ public class MessageService {
         messageRepository.save(message);
         messageRepository.flush();
 
-        ChatMessageDTO messageForRecipient = new ChatMessageDTO();
-        messageForRecipient.setContent(message.getContent());
-        messageForRecipient.setTimestamp(message.getTimestamp());
-        messageForRecipient.setSender(message.getFrom().getUsername());
-        messageForRecipient.setRecipient(message.getTo().getUsername());
-        messageForRecipient.setSentByMe(false);
+        Block block = blockingRepository.findByWhoAndBlocked(recipient.get(),sender.get()).orElse(null);
+        if(block == null) {
 
-        messagingTemplate.convertAndSendToUser(newMessage.getRecipient(), "/topic/chat", messageForRecipient);
+            ChatMessageDTO messageForRecipient = new ChatMessageDTO();
+            messageForRecipient.setContent(message.getContent());
+            messageForRecipient.setTimestamp(message.getTimestamp());
+            messageForRecipient.setSender(message.getFrom().getUsername());
+            messageForRecipient.setRecipient(message.getTo().getUsername());
+            messageForRecipient.setSentByMe(false);
+
+            messagingTemplate.convertAndSendToUser(newMessage.getRecipient(), "/topic/chat", messageForRecipient);
+        }
 
         ChatMessageDTO messageForSender = new ChatMessageDTO();
         messageForSender.setContent(message.getContent());
@@ -69,12 +77,16 @@ public class MessageService {
     public List<ConversationPreviewDTO> getUsersConversationsPreview() {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (account == null) {
-            return null;
+            throw new RuntimeException("Account not found");
         }
 
         List<ConversationPreviewDTO> conversations = new ArrayList<>();
         List<Account> accounts = messageRepository.findDistinctCommunicatedUsers(account.getId());
         for (Account acc : accounts) {
+            Block block = blockingRepository.findByWhoAndBlocked(account,acc).orElse(null);
+            if (block != null) {
+                continue;
+            }
             ConversationPreviewDTO c = new ConversationPreviewDTO();
             c.setUsername(acc.getUsername());
             c.setName(acc.getPerson().getName());
@@ -94,12 +106,12 @@ public class MessageService {
     public List<ChatMessageDTO> getChatHistoryWithUser(String username) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (account == null) {
-            return null;
+            throw new RuntimeException("Account not found");
         }
 
         Optional<Account> otherAccount = accountRepository.findByEmail(username);
         if (otherAccount.isEmpty()) {
-            return null;
+            throw new RuntimeException("Correspondent account not found");
         }
 
         List<Message> messages = messageRepository.findMessagesBetweenAccounts(account.getId(), otherAccount.get().getId());

@@ -2,6 +2,7 @@ package com.ftn.event_hopper.services.solutions;
 
 import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
+import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
@@ -10,9 +11,11 @@ import com.ftn.event_hopper.dtos.ratings.CreateProductRatingDTO;
 import com.ftn.event_hopper.dtos.ratings.CreatedProductRatingDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
+import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.blocks.Block;
 import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.prices.Price;
@@ -21,10 +24,8 @@ import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.solutions.Service;
-import com.ftn.event_hopper.models.users.Account;
-import com.ftn.event_hopper.models.users.EventOrganizer;
-import com.ftn.event_hopper.models.users.Person;
-import com.ftn.event_hopper.models.users.ServiceProvider;
+import com.ftn.event_hopper.models.users.*;
+import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
 import com.ftn.event_hopper.repositories.prices.PriceRepository;
 import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
@@ -64,6 +65,8 @@ public class ProductService {
     private ReservationRepository reservationRepository;
     @Autowired
     private EventOrganizerRepository eventOrganizerRepository;
+    @Autowired
+    private BlockingRepository blockingRepository;
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
@@ -73,6 +76,8 @@ public class ProductService {
     private ServiceProviderDTOMapper serviceProviderDTOMapper;
     @Autowired
     private PriceDTOMapper priceDTOMapper;
+    @Autowired
+    private EventDTOMapper eventDTOMapper;
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -99,6 +104,16 @@ public class ProductService {
         for (Product product : allProductsByLocation) {
             if (product.isAvailable() == false || product.isVisible() == false || product.getStatus()!= ProductStatus.APPROVED || product.isDeleted()==true) {
                 continue;
+            }
+
+            //check if they are blocked
+            ServiceProvider serviceProvider = serviceProviderRepository.findByProductsContaining(product);
+            Account blocked = accountRepository.findByPersonId(serviceProvider.getId()).orElse(null);
+            if (blocked != null && blocked.getType() == PersonType.EVENT_ORGANIZER) {
+                Block block = blockingRepository.findByWhoAndBlocked(account,blocked).orElse(null);
+                if (block != null) {
+                    continue;
+                }
             }
             filteredProducts.add(product);
         }
@@ -134,7 +149,6 @@ public class ProductService {
                         criteriaBuilder.equal(root.get("isVisible"), true),
                         criteriaBuilder.equal(root.get("status"), ProductStatus.APPROVED)
                 ));
-
 
 
         if (isProduct || isService) {
@@ -232,6 +246,36 @@ public class ProductService {
             };
         }
 
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
+                && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){
+
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Account who = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                Root<ServiceProvider> serviceProviderRoot = query.from(ServiceProvider.class);
+                Join<ServiceProvider, Product> productJoin = serviceProviderRoot.join("products", JoinType.INNER);
+
+
+                Subquery<Account> accountSubquery = query.subquery(Account.class);
+                Root<Account> accountRoot = accountSubquery.from(Account.class);
+                accountSubquery.select(accountRoot)
+                        .where(criteriaBuilder.equal(accountRoot.get("person"), serviceProviderRoot));
+
+                Subquery<Long> blockSubquery = query.subquery(Long.class);
+                Root<Block> blockRoot = blockSubquery.from(Block.class);
+                blockSubquery.select(criteriaBuilder.count(blockRoot))
+                        .where(
+                                criteriaBuilder.equal(blockRoot.get("who"), who),
+                                criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                        );
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.equal(root, productJoin), // Vraćamo samo proizvode koji su povezani sa ServiceProviderom
+                        criteriaBuilder.equal(blockSubquery, 0) );
+            });
+        }
+
+
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
@@ -246,20 +290,31 @@ public class ProductService {
     public SolutionDetailsDTO findSolutionDetails(UUID id) {
         Product product = productRepository.findById(id).orElse(null);
 
+
         if (product == null || product.isDeleted() || !product.isVisible() || product.getStatus() != ProductStatus.APPROVED) {
             return null;
         }
         ServiceProvider provider = serviceProviderRepository.findByProductsContaining(product);
+        Account accountProvider = accountRepository.findByPersonId(provider.getId()).orElse(null);
 
         boolean pendingComment = false;
         boolean pendingRating = false;
         ConversationPreviewDTO conversation = null;
+        ArrayList<SimpleEventDTO> applicableEvents = new ArrayList<>();
 
         Person person = null;
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
                 && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
             Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             person = personRepository.findById(account.getPerson().getId()).orElse(null);
+
+            if (accountProvider != null){
+                Block block = blockingRepository.findByWhoAndBlocked(account, accountProvider).orElse(null);
+                if (block != null) {
+                    throw new RuntimeException("Content is not available");
+                }
+            }
+
             EventOrganizer eventOrganizer = eventOrganizerRepository.findById(person.getId()).orElse(null);
 
             if (eventOrganizer != null) {
@@ -276,6 +331,14 @@ public class ProductService {
                     conversation.setSurname(provider.getSurname());
                     conversation.setProfilePictureUrl(provider.getProfilePicture());
                 }
+
+                if (product.isAvailable()) {
+                    for (Event event : eventOrganizer.getEvents()) {
+                        if (product.getEventTypes().stream().anyMatch(et -> event.getEventType().getId().equals(et.getId()))) {
+                            applicableEvents.add(eventDTOMapper.fromEventToSimpleDTO(event));
+                        }
+                    }
+                }
             }
         }
 
@@ -284,6 +347,7 @@ public class ProductService {
                 .toList());
 
         SolutionDetailsDTO solutionDetailsDTO = productDTOMapper.fromProductToSolutionDetailsDTO(product);
+
         solutionDetailsDTO.setRating(product.getRatings().stream()
                 .mapToDouble(Rating::getValue)
                 .average()
@@ -311,12 +375,19 @@ public class ProductService {
         solutionDetailsDTO.setPendingComment(pendingComment);
         solutionDetailsDTO.setPendingRating(pendingRating);
         solutionDetailsDTO.setConversationInitialization(conversation);
+        if (!applicableEvents.isEmpty()) {
+            solutionDetailsDTO.setApplicableEvents(applicableEvents);
+
+        }
 
         return solutionDetailsDTO;
     }
 
     public Collection<PriceManagementDTO> getPricesForManagement() {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
         ServiceProvider provider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
 
         if (provider == null) {
@@ -347,6 +418,20 @@ public class ProductService {
             throw new EntityNotFoundException("Product not found");
         }
 
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+        ServiceProvider provider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (provider == null) {
+            throw new EntityNotFoundException("Provider not found");
+        }
+
+        if (!provider.getProducts().contains(product)) {
+            throw new IllegalArgumentException("Provider does not own this product");
+        }
+
         Price newPrice = new Price();
 
         newPrice.setBasePrice(price.getBasePrice());
@@ -369,6 +454,9 @@ public class ProductService {
 
     public CreatedProductRatingDTO rateProduct(CreateProductRatingDTO rating) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
 
         if (person == null) {
@@ -436,6 +524,10 @@ public class ProductService {
 
     public CreatedCommentDTO addComment(CreateCommentDTO comment) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
 
         if (person == null) {

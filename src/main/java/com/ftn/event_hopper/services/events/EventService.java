@@ -4,6 +4,7 @@ import com.ftn.event_hopper.dtos.events.*;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
 import com.ftn.event_hopper.mapper.events.AgendaMapper;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
+import com.ftn.event_hopper.models.blocks.Block;
 import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.events.AgendaActivity;
 import com.ftn.event_hopper.models.events.Event;
@@ -13,6 +14,7 @@ import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.events.AgendaActivityRepository;
 import com.ftn.event_hopper.repositories.events.EventRepository;
@@ -20,7 +22,7 @@ import com.ftn.event_hopper.repositories.locations.LocationRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
-import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,8 @@ public class EventService {
     private AgendaActivityRepository agendaActivityRepository;
     @Autowired
     private AgendaMapper agendaMapper;
+    @Autowired
+    private BlockingRepository blockingRepository;
 
 
     public List<SimpleEventDTO> findAll(){
@@ -113,6 +117,29 @@ public class EventService {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
 
+        //check if they are blocked
+        EventOrganizer od = eventOrganizerRepository.findByEventsContaining(event).orElse(null);
+        if (od != null){
+            Account organizerAccount = accountRepository.findByPersonId(od.getId()).orElse(null);
+            if (organizerAccount != null){
+                if (account.getType() == PersonType.SERVICE_PROVIDER){
+                    Block block = blockingRepository.findByWhoAndBlocked(account, organizerAccount).orElse(null);
+                    if (block != null){
+                        throw new RuntimeException("Content is not available");
+                    }
+                } else if (account.getType() == PersonType.AUTHENTICATED_USER) {
+                    Block odBlocked = blockingRepository.findByWhoAndBlocked(account, organizerAccount).orElse(null);
+                    Block akBlocked = blockingRepository.findByWhoAndBlocked(organizerAccount, account).orElse(null);
+
+                    if (odBlocked != null || akBlocked != null){
+                        throw new RuntimeException("Content is not available");
+                    }
+
+                }
+
+            }
+        }
+
         if(account.getType() == PersonType.EVENT_ORGANIZER){
             EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElse(null);
             eventDTO.setEventOrganizerLoggedIn(eventOrganizer.getEvents().contains(event));
@@ -143,14 +170,29 @@ public class EventService {
     public Collection<SimpleEventDTO> findTop5(UUID userId) {
         Account account = accountRepository.findById(userId).orElseGet(null);
         Person person = account.getPerson();
-        List<Event> top5Events = eventRepository.findTop5ByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(person.getLocation().getCity(), EventPrivacyType.PUBLIC, LocalDateTime.now());
-        for (Event event : top5Events) {
+        List<Event> events = eventRepository.findByLocationCityAndPrivacyAndTimeAfterOrderByMaxAttendanceDesc(person.getLocation().getCity(), EventPrivacyType.PUBLIC, LocalDateTime.now());
+        List<Event> filteredEvents = new ArrayList<>();
+        int counter = 0;
+        for (Event event : events) {
+            if(counter == 5){
+                break;
+            }
 
-            System.out.println("--------------");
-            System.out.println(event);
-
+            EventOrganizer eventOrganizer = eventOrganizerRepository.findByEventsContaining(event).orElse(null);
+            if(eventOrganizer != null){
+                Account organizersAccount = accountRepository.findByPersonId(person.getId()).orElse(null);
+                if (organizersAccount != null){
+                    Block block = blockingRepository.findByWhoAndBlocked(account,organizersAccount).orElse(null);
+                    if (block != null){
+                        continue;
+                    }
+                }
+            }
+            filteredEvents.add(event);
+            counter++;
         }
-        return eventDTOMapper.fromEventListToSimpleDTOList(top5Events);
+
+        return eventDTOMapper.fromEventListToSimpleDTOList(filteredEvents);
     }
 
 
@@ -253,6 +295,61 @@ public class EventService {
             }
 
             sort = Sort.by(direction, sortField); // Sortira po izabranom polju i smeru
+        }
+
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
+                && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){
+
+                Account loggedAccount = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                if (loggedAccount.getType() != PersonType.EVENT_ORGANIZER){
+
+
+                specification = specification.and((root, query, criteriaBuilder) -> {
+
+
+                Root<EventOrganizer> eventOrganizerRoot = query.from(EventOrganizer.class);
+                Join<EventOrganizer,Event> eventJoin = eventOrganizerRoot.join("events", JoinType.INNER);
+
+                Subquery<Account> accountSubquery = query.subquery(Account.class);
+                Root<Account> accountRoot = accountSubquery.from(Account.class);
+                accountSubquery.select(accountRoot)
+                        .where(criteriaBuilder.equal(accountRoot.get("person"), eventOrganizerRoot));
+
+
+                Subquery<Long> blockSubquery = query.subquery(Long.class);
+                Root<Block> blockRoot = blockSubquery.from(Block.class);
+                //if pup or ak blocks od
+                if ( loggedAccount.getType() == PersonType.SERVICE_PROVIDER ){
+                    blockSubquery.select(criteriaBuilder.count(blockRoot))
+                            .where(
+                                    criteriaBuilder.equal(blockRoot.get("who"), loggedAccount),
+                                    criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                            );
+                } else if ( loggedAccount.getType() == PersonType.AUTHENTICATED_USER ){
+
+                    blockSubquery.select(criteriaBuilder.count(blockRoot))
+                            .where(criteriaBuilder.or(
+                                    criteriaBuilder.and(
+                                            criteriaBuilder.equal(blockRoot.get("who"), accountSubquery),
+                                            criteriaBuilder.equal(blockRoot.get("blocked"), loggedAccount)
+                                    ),
+                                    criteriaBuilder.and(
+                                            criteriaBuilder.equal(blockRoot.get("who"), loggedAccount),
+                                            criteriaBuilder.equal(blockRoot.get("blocked"), accountSubquery)
+                                    )
+                            ));
+
+                }
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.equal(root, eventJoin),
+                        criteriaBuilder.equal(blockSubquery,0)
+                );
+
+            });
+
+                }
         }
 
         Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);

@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MessageController {
@@ -36,20 +38,32 @@ public class MessageController {
     }
 
     @GetMapping(value = "/api/chat/conversations-preview", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ConversationPreviewDTO>> getUsersConversationsPreview() {
+    public ResponseEntity<?> getUsersConversationsPreview() {
+        try {
         List<ConversationPreviewDTO> conversations = messageService.getUsersConversationsPreview();
         if (conversations == null) {
             return new ResponseEntity<Collection<ConversationPreviewDTO>>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Collection<ConversationPreviewDTO>>(conversations, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/api/chat/history/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ChatMessageDTO>> getChatHistoryWithUser(@PathVariable String username) {
-        List<ChatMessageDTO> messages = messageService.getChatHistoryWithUser(username);
-        if (messages == null) {
-            return new ResponseEntity<Collection<ChatMessageDTO>>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getChatHistoryWithUser(@PathVariable String username) {
+        try {
+            List<ChatMessageDTO> messages = messageService.getChatHistoryWithUser(username);
+            if (messages == null) {
+                return new ResponseEntity<Collection<ChatMessageDTO>>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<Collection<ChatMessageDTO>>(messages, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Collection<ChatMessageDTO>>(messages, HttpStatus.OK);
     }
 }

@@ -3,13 +3,18 @@ package com.ftn.event_hopper.services.users;
 import com.ftn.event_hopper.dtos.users.serviceProvider.*;
 import com.ftn.event_hopper.mapper.comments.CommentDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
+import com.ftn.event_hopper.models.blocks.Block;
 import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.ratings.Rating;
 import com.ftn.event_hopper.models.shared.CommentStatus;
+import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.ServiceProvider;
+import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
+import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -24,7 +29,10 @@ public class ServiceProviderService {
     private ServiceProviderDTOMapper serviceProviderDTOMapper;
     @Autowired
     private CommentDTOMapper commentDTOMapper;
-
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private BlockingRepository blockingRepository;
 
     public SimpleServiceProviderDTO findOne(UUID id) {
         ServiceProvider serviceProvider = serviceProviderRepository.findById(id).orElseGet(null);
@@ -93,6 +101,20 @@ public class ServiceProviderService {
 
         if (provider == null) {
             return null;
+        }
+        Account accountProvider = accountRepository.findByPersonId(provider.getId()).orElse(null);
+
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
+                && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account))
+        {
+            Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (accountProvider != null){
+                Block block = blockingRepository.findByWhoAndBlocked(account, accountProvider).orElse(null);
+                if (block != null) {
+                    throw new RuntimeException("Content is not available");
+                }
+            }
         }
 
         List<Rating> ratings = provider.getProducts().stream()
