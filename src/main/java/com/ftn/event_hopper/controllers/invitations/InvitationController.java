@@ -37,7 +37,6 @@ public class InvitationController {
         return new ResponseEntity<>(invitation, HttpStatus.OK);
     }
 
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedInvitationDTO> createInvitation(@RequestBody CreateInvitationDTO invitationDTO) {
         return new ResponseEntity<>(invitationService.create(invitationDTO), HttpStatus.CREATED);

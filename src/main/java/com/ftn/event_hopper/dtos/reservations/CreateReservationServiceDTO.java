@@ -1,5 +1,7 @@
 package com.ftn.event_hopper.dtos.reservations;
 
+import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
+import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

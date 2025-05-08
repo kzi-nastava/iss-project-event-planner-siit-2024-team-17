@@ -34,7 +34,6 @@ public class InvitationDTOMapper  {
         Converter<Event, SimpleEventDTO> invitationConverter = context ->
                 eventDTOMapper.fromEventToSimpleDTO(context.getSource());
 
-        // Custom mapping for Product -> ProductDTO
         modelMapper.typeMap(Invitation.class, InvitationDTO.class)
                 .addMappings(mapper -> mapper.using(invitationConverter)
                         .map(Invitation::getEvent, InvitationDTO::setEvent));

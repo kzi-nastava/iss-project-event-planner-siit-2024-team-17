@@ -2,6 +2,7 @@ package com.ftn.event_hopper.dtos.reservations;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,14 +10,15 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
+@AllArgsConstructor
 @NoArgsConstructor
-public class CreatedReservationServiceDTO {
+@Setter
+@Getter
+public class ReservationDTO {
     private UUID id;
     private SimpleEventDTO event;
     private SimpleProductDTO product;
     private LocalDateTime timestamp;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDateTime from;
+    private LocalDateTime to;
 }
