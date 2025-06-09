@@ -85,6 +85,8 @@ public class Product {
     )
     private Set<EventType> eventTypes = new HashSet<EventType>();
 
+
+
     public Price getCurrentPrice() {
         return prices.stream()
                 .max(Comparator.comparing(Price::getTimestamp))

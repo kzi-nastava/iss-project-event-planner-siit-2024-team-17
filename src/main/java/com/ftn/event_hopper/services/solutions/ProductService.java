@@ -9,6 +9,7 @@ import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
 import com.ftn.event_hopper.dtos.ratings.CreateProductRatingDTO;
 import com.ftn.event_hopper.dtos.ratings.CreatedProductRatingDTO;
+import com.ftn.event_hopper.dtos.solutions.ProductForManagementDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
@@ -286,6 +287,126 @@ public class ProductService {
 
         return all;
         }
+
+
+    public Page<ProductForManagementDTO> findAllForManagement(Pageable page,
+                                                              UUID categoryId,
+                                                              List<UUID> eventTypeIds,
+                                                              Double minPrice,
+                                                              Double maxPrice,
+                                                              Boolean isAvailable,
+                                                              String searchContent,
+                                                              String sortField,
+                                                              String sortDirection) {
+
+        Specification<Product> specification = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("isDeleted"), false)
+                ));
+
+
+        specification = specification.and((root, query, criteriaBuilder) -> {
+            List<UUID> productIds = productRepository.findProductIds();
+            List<UUID> serviceIds = serviceRepository.findServiceIds();
+
+            for (UUID serviceId : serviceIds) {
+                productIds.remove(serviceId);
+            }
+
+            Predicate productPredicate = root.get("id").in(productIds);
+
+            return productPredicate;
+        });
+
+
+
+
+        if (categoryId != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("category").get("id"), categoryId));
+        }
+
+        if (eventTypeIds != null && !eventTypeIds.isEmpty()) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    root.get("eventTypes").get("id").in(eventTypeIds));
+        }
+
+        if (minPrice != null) {
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Product> subRoot = subquery.from(Product.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.greaterThanOrEqualTo(pricesJoin.get("finalPrice"), minPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
+        }
+
+        // handle list of prices in Product and make comparing to the newest one
+        if (maxPrice != null) {
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Product> subRoot = subquery.from(Product.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.lessThanOrEqualTo(pricesJoin.get("finalPrice"), maxPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
+        }
+
+        if (isAvailable != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("isAvailable"), isAvailable));
+        }
+
+        if (StringUtils.hasText(searchContent)) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchContent.toLowerCase() + "%"),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchContent.toLowerCase() + "%")
+                    ));
+        }
+
+
+        Sort sort = Sort.unsorted();
+        if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
+            sort = switch (sortField) {
+                case "basePrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
+                case "discount" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
+                case "finalPrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
+                default ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+            };
+        }
+
+
+
+
+
+        Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+
+        Page<Product> filteredProducts = productRepository.findAll(specification, pageableWithSort);
+
+        Page<ProductForManagementDTO> all = productDTOMapper.fromProductPageToProductForManagementDTOPage(filteredProducts);
+
+
+        return all;
+    }
+
+
 
     public SolutionDetailsDTO findSolutionDetails(UUID id) {
         Product product = productRepository.findById(id).orElse(null);
