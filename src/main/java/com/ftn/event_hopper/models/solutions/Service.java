@@ -17,15 +17,15 @@ import lombok.*;
 @DiscriminatorValue("SERVICE")
 public class Service extends Product {
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int durationMinutes;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int reservationWindowDays;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int cancellationWindowDays;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean isAutoAccept;
 }

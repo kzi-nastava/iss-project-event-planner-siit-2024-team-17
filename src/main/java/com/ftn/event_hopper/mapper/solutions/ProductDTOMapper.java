@@ -3,14 +3,13 @@ package com.ftn.event_hopper.mapper.solutions;
 import com.ftn.event_hopper.dtos.categories.SimpleCategoryDTO;
 import com.ftn.event_hopper.dtos.comments.SimpleCommentDTO;
 import com.ftn.event_hopper.dtos.eventTypes.SimpleEventTypeDTO;
-import com.ftn.event_hopper.dtos.solutions.ProductForManagementDTO;
-import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
-import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
+import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
 import com.ftn.event_hopper.mapper.comments.CommentDTOMapper;
 import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.solutions.Product;
+import com.ftn.event_hopper.models.solutions.Service;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -82,5 +81,13 @@ public class ProductDTOMapper {
 
     public SolutionDetailsDTO fromProductToSolutionDetailsDTO(Product product) {
         return modelMapper.map(product, SolutionDetailsDTO.class);
+    }
+
+    public Product fromCreateProductDTOToProduct(CreateProductDTO product) {
+        return modelMapper.map(product, Product.class);
+    }
+
+    public CreatedProductDTO fromProductToCreatedProductDTO(Product newProduct) {
+        return modelMapper.map(newProduct, CreatedProductDTO.class);
     }
 }

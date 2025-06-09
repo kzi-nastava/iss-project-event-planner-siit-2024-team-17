@@ -23,6 +23,18 @@ public class ProductController {
     private ProductService productService;
 
 
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createProduct(@RequestBody CreateProductDTO product) {
+        try {
+            CreatedProductDTO createdProduct = productService.create(product);
+            return new ResponseEntity<CreatedProductDTO>(createdProduct, HttpStatus.CREATED);
+        }  catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/management")
         public ResponseEntity<?> searchProducts(
             Pageable page,
@@ -145,15 +157,6 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
-
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedProductDTO> createProduct(@RequestBody CreateProductDTO product) {
-        CreatedProductDTO createdProduct = new CreatedProductDTO();
-
-
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
-    }
 
     
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

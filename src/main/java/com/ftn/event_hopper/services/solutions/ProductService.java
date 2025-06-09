@@ -9,24 +9,26 @@ import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
 import com.ftn.event_hopper.dtos.ratings.CreateProductRatingDTO;
 import com.ftn.event_hopper.dtos.ratings.CreatedProductRatingDTO;
-import com.ftn.event_hopper.dtos.solutions.ProductForManagementDTO;
-import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
-import com.ftn.event_hopper.dtos.solutions.SolutionDetailsDTO;
+import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.mapper.users.ServiceProviderDTOMapper;
 import com.ftn.event_hopper.models.blocks.Block;
+import com.ftn.event_hopper.models.categories.Category;
 import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.prices.Price;
 import com.ftn.event_hopper.models.ratings.Rating;
+import com.ftn.event_hopper.models.shared.CategoryStatus;
 import com.ftn.event_hopper.models.shared.CommentStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.solutions.Service;
 import com.ftn.event_hopper.models.users.*;
 import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
+import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
+import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.prices.PriceRepository;
 import com.ftn.event_hopper.repositories.reservations.ReservationRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
@@ -68,7 +70,10 @@ public class ProductService {
     private EventOrganizerRepository eventOrganizerRepository;
     @Autowired
     private BlockingRepository blockingRepository;
-
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private EventTypeRepository eventTypeRepository;
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
@@ -90,6 +95,68 @@ public class ProductService {
         Product product = productRepository.findById(id).orElse(null);
         return productDTOMapper.fromProductToSimpleDTO(product);
     }
+
+    public CreatedProductDTO create(CreateProductDTO product) {
+        Product newProduct = productDTOMapper.fromCreateProductDTOToProduct(product);
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+        ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (serviceProvider == null) {
+            throw new EntityNotFoundException("Service provider not found");
+        }
+
+        if (product.getPictures() != null && product.getPictures().isEmpty()) {
+            throw new IllegalArgumentException("Pictures are required");
+        }
+
+        newProduct.setId(null);
+        newProduct.setDeleted(false);
+        newProduct.setEditTimestamp(LocalDateTime.now());
+
+        Category category = categoryRepository.findById(product.getCategoryId()).orElse(null);
+
+        if (category == null) {
+            throw new EntityNotFoundException("Category not found");
+        }
+
+        newProduct.setCategory(category);
+
+        newProduct.setStatus(ProductStatus.APPROVED);
+        if (category.getStatus() == CategoryStatus.PENDING) {
+            newProduct.setStatus(ProductStatus.PENDING);
+        }
+
+        newProduct.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(product.getEventTypesIds())));
+
+        double finalPrice = product.getBasePrice() * (1 - product.getDiscount() / 100);
+        finalPrice = Math.round(finalPrice * 100.0) / 100.0;
+
+        Price price = new Price(
+                null,
+                product.getBasePrice(),
+                product.getDiscount(),
+                finalPrice,
+                LocalDateTime.now());
+        List<Price> prices = new ArrayList<>();
+        prices.add(price);
+        newProduct.setPrices(prices);
+
+        newProduct = productRepository.save(newProduct);
+        productRepository.flush();
+
+        serviceProvider.getProducts().add(newProduct);
+        serviceProviderRepository.save(serviceProvider);
+        serviceProviderRepository.flush();
+
+        return productDTOMapper.fromProductToCreatedProductDTO(newProduct);
+    }
+
+
+
 
     public Collection<SimpleProductDTO> findTop5(UUID usersId) {
         Account account = accountRepository.findById(usersId).orElse(null);

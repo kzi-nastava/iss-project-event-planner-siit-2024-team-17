@@ -108,9 +108,10 @@ public class PersonService {
     }
 
     public void addFavoriteSolution(UUID solutionId) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) return;
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Person person = personRepository.findById(account.getPerson().getId()).orElse(null);
-        if (person == null) return;
 
         Product solution = productRepository.findById(solutionId).orElseGet(null);
         if (solution instanceof Service service) {
@@ -123,12 +124,15 @@ public class PersonService {
             personRepository.save(person);
             personRepository.flush();
         } else {
-            if (account.getPerson().getFavoriteProducts().contains(solution)) {
+            if (person.getFavoriteProducts().contains(solution)) {
                 return;
             }
+
             person.getFavoriteProducts()
                     .add(solution);
+
             personRepository.save(person);
+
             personRepository.flush();
         }
     }
