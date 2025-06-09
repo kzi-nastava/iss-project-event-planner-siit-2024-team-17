@@ -90,4 +90,8 @@ public class ProductDTOMapper {
     public CreatedProductDTO fromProductToCreatedProductDTO(Product newProduct) {
         return modelMapper.map(newProduct, CreatedProductDTO.class);
     }
+
+    public UpdatedProductDTO fromProductToUpdatedProductDTO(Product newProduct) {
+        return modelMapper.map(newProduct, UpdatedProductDTO.class);
+    }
 }

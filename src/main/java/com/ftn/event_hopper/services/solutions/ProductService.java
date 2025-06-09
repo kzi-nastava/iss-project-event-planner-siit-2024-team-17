@@ -156,8 +156,48 @@ public class ProductService {
         return productDTOMapper.fromProductToCreatedProductDTO(newProduct);
     }
 
+    public CreatedProductDTO update(UpdateProductDTO product, UUID id) {
+        Product existing = productRepository.findById(id).orElse(null);
+
+        if (existing == null || existing.isDeleted()) {
+            throw new EntityNotFoundException("Product not found");
+        }
+
+        CreateProductDTO createProduct = new CreateProductDTO();
+        createProduct.setName(product.getName());
+        createProduct.setDescription(product.getDescription());
+        createProduct.setPictures(product.getPictures());
+        createProduct.setAvailable(product.isAvailable());
+        createProduct.setVisible(product.isVisible());
+        createProduct.setBasePrice(existing.getCurrentPrice().getBasePrice());
+        createProduct.setDiscount(existing.getCurrentPrice().getDiscount());
+        createProduct.setEventTypesIds(product.getEventTypesIds());
+        createProduct.setCategoryId(existing.getCategory().getId());
 
 
+        if (product.getPictures() != null && product.getPictures().isEmpty()) {
+            throw new IllegalArgumentException("Pictures are required");
+        }
+
+        deleteProduct(existing.getId());
+        CreatedProductDTO created = create(createProduct);
+
+
+        return created;
+    }
+
+
+    public boolean deleteProduct(UUID id) {
+        Product existing = productRepository.findById(id).orElse(null);
+        if (existing == null || existing.isDeleted()) {
+            return false;
+        }
+
+        existing.setDeleted(true);
+        productRepository.save(existing);
+        productRepository.flush();
+        return true;
+    }
 
     public Collection<SimpleProductDTO> findTop5(UUID usersId) {
         Account account = accountRepository.findById(usersId).orElse(null);
@@ -602,6 +642,9 @@ public class ProductService {
         Set<Product> products = provider.getProducts();
         List<PriceManagementDTO> prices = new ArrayList<>();
         for (Product product : products) {
+            if (product.isDeleted()){
+                continue;
+            }
             Price newestPrice = product.getPrices().get(product.getPrices().size() - 1);
 
             PriceManagementDTO price = new PriceManagementDTO();
