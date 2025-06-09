@@ -50,6 +50,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class ProductService {
@@ -371,7 +372,18 @@ public class ProductService {
                         criteriaBuilder.equal(root.get("isDeleted"), false)
                 ));
 
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+        ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
 
+        if (serviceProvider == null) {
+            throw new EntityNotFoundException("Service provider not found");
+        }
+        Set<Product> pupProducts = serviceProvider.getProducts();
+
+        System.out.println("PUP NAME" + serviceProvider.getName());
         specification = specification.and((root, query, criteriaBuilder) -> {
             List<UUID> productIds = productRepository.findProductIds();
             List<UUID> serviceIds = serviceRepository.findServiceIds();
@@ -380,9 +392,14 @@ public class ProductService {
                 productIds.remove(serviceId);
             }
 
-            Predicate productPredicate = root.get("id").in(productIds);
+            Set<UUID> pupsProductsIds = pupProducts.stream()
+                    .map(Product::getId)
+                    .collect(Collectors.toSet());
 
-            return productPredicate;
+            productIds.removeIf(productId -> !pupsProductsIds.contains(productId));
+
+
+            return root.get("id").in(productIds);
         });
 
 
