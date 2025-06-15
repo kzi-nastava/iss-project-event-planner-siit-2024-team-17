@@ -8,6 +8,8 @@ import com.ftn.event_hopper.models.locations.Location;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Converter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -104,7 +106,9 @@ public class ServiceProviderDTOMapper {
 
     public ServiceProvider fromCreateServiceProviderDTOToServiceProvider(CreateServiceProviderDTO dto) {
         ServiceProvider serviceProvider = modelMapper.map(dto, ServiceProvider.class);
-        serviceProvider.setWorkStart(LocalTime.now());
+        serviceProvider.setWorkStart(dto.getWorkStart());
+        serviceProvider.setWorkEnd(dto.getWorkEnd());
+
         serviceProvider.setCompanyLocation(locationDTOMapper.fromCreateDTOToLocation(dto.getCompanyLocation()));
         return serviceProvider;
     }

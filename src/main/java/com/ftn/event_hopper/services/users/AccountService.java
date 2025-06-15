@@ -123,6 +123,8 @@ public class AccountService {
                 profileForPerson.setCompanyPhoneNumber(serviceProvider.get().getCompanyPhoneNumber());
                 profileForPerson.setCompanyDescription(serviceProvider.get().getCompanyDescription());
                 profileForPerson.setCompanyPhotos(serviceProvider.get().getCompanyPhotos());
+                profileForPerson.setWorkStart(serviceProvider.get().getWorkStart());
+                profileForPerson.setWorkEnd(serviceProvider.get().getWorkEnd());
 
                 SimpleLocationDTO location = new SimpleLocationDTO();
                 location.setAddress(serviceProvider.get().getCompanyLocation().getAddress());
