@@ -13,6 +13,8 @@ import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.blocking.BlockingRepository;
 import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -44,10 +46,12 @@ public class ServiceProviderService {
         return serviceProviderDTOMapper.fromServiceProviderListToSimpleDTOList(serviceProviders);
     }
 
+    //this is never used i will snap
     public CreatedServiceProviderDTO create(CreateServiceProviderDTO providerDTO){
         ServiceProvider provider = serviceProviderDTOMapper.fromCreateServiceProviderDTOToServiceProvider(providerDTO);
-        provider.setWorkStart(LocalTime.now());
         this.save(provider);
+        Logger logger = LoggerFactory.getLogger(ServiceProviderService.class.getName());
+        logger.info("Service provider created: " + provider.getWorkEnd().toString());
         return serviceProviderDTOMapper.fromServiceProviderToCreatedDTO(provider);
     }
 
