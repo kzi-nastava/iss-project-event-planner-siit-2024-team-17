@@ -66,6 +66,17 @@ public class AccountService {
         return accountRepository.findByEmail(email);
     }
 
+    public List<SimpleAccountDTO> findByEmails(List<String> emails) {
+        ArrayList<SimpleAccountDTO> accounts = new ArrayList<>();
+        for(String email : emails) {
+            Optional<Account> result = accountRepository.findByEmail(email);
+            if(result.isPresent()){
+                accounts.add(accountDTOMapper.fromAccountToSimpleDTO(result.get()));
+            }
+        }
+        return accounts;
+    }
+
     public SimpleAccountDTO findOneSimpleAccount(UUID id) {
         return accountDTOMapper.fromAccountToSimpleDTO(accountRepository.findById(id).orElseGet(null));
     }

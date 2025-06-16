@@ -1,7 +1,9 @@
 package com.ftn.event_hopper.controllers.invitations;
 
 import com.ftn.event_hopper.dtos.invitations.*;
+import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.services.invitations.InvitationService;
+import com.ftn.event_hopper.services.users.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class InvitationController {
     @Autowired
     private InvitationService invitationService;
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<InvitationDTO>> getInvitations() {
