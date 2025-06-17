@@ -27,6 +27,7 @@ public class SinglePageEventDTO {
     private SimpleLocationDTO location;
     private EventPrivacyType privacy;
     private boolean eventOrganizerLoggedIn;
+    private boolean anyEventOrganizerLoggedIn;
     private boolean favorite;
     private ConversationPreviewDTO conversationInitialization;
 }

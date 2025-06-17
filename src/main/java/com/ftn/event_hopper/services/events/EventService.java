@@ -113,6 +113,7 @@ public class EventService {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
                 || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
             eventDTO.setEventOrganizerLoggedIn(false);
+            eventDTO.setAnyEventOrganizerLoggedIn(false);
             return eventDTO;
         }
 
@@ -143,7 +144,9 @@ public class EventService {
             }
         }
 
+        eventDTO.setAnyEventOrganizerLoggedIn(false);
         if(account.getType() == PersonType.EVENT_ORGANIZER){
+            eventDTO.setAnyEventOrganizerLoggedIn(true);
             EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElse(null);
             eventDTO.setEventOrganizerLoggedIn(eventOrganizer.getEvents().contains(event));
         }
@@ -252,6 +255,11 @@ public class EventService {
             return new ArrayList<>();
         }
         Event event = eventOpt.get();
+
+        Logger logger = LoggerFactory.getLogger(EventService.class);
+        logger.info("Ratings" + event.getRatings().toString());
+        logger.info("ID OF EVENT" + String.valueOf(event.getId()));
+        logger.info("size OF EVENT" + event.getRatings().size());
 
         return event.getRatings().stream()
                 .collect(Collectors.groupingBy(
