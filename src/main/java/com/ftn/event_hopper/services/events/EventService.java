@@ -37,6 +37,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+import com.ftn.event_hopper.models.events.EventRating;
+
 
 
 @Service
@@ -167,6 +170,11 @@ public class EventService {
         return eventDTO;
     }
 
+    public int getMaximumAttendance(UUID id){
+        Event event = eventRepository.findById(id).orElseGet(null);
+        return event.getMaxAttendance();
+    }
+
     public Collection<SimpleEventDTO> findTop5(UUID userId) {
         Account account = accountRepository.findById(userId).orElseGet(null);
         Person person = account.getPerson();
@@ -235,6 +243,25 @@ public class EventService {
         event.setAgendaActivities(activities);
         eventRepository.save(event);
         return event;
+    }
+
+
+    public List<RatingTimeSeriesDTO> getAverageRatingsOverTime(UUID eventId) {
+        Optional<Event> eventOpt = eventRepository.findById(eventId);
+        if(eventOpt.isEmpty()){
+            return new ArrayList<>();
+        }
+        Event event = eventOpt.get();
+
+        return event.getRatings().stream()
+                .collect(Collectors.groupingBy(
+                        rating -> rating.getTimestamp().toLocalDate().atStartOfDay(), // group by day
+                        Collectors.averagingInt(EventRating::getValue)
+                ))
+                .entrySet().stream()
+                .map(entry -> new RatingTimeSeriesDTO(entry.getKey(), entry.getValue()))
+                .sorted(Comparator.comparing(RatingTimeSeriesDTO::getTimestamp))
+                .collect(Collectors.toList());
     }
 
 

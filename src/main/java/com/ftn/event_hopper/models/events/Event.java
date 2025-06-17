@@ -41,6 +41,9 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime time;
 
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EventRating> ratings = new HashSet<>();
+
     @Column
     private String picture;
 

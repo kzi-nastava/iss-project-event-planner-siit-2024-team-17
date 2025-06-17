@@ -128,6 +128,19 @@ VALUES
     (800, 0, '2025-10-21 14:00:00', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '57c05a8a-dd8b-4da8-af73-90961e423f42', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate the season at the Spring Fair! Enjoy vibrant flower displays, artisan markets, live music,', 'Spring Fair', '21.jpg');
 
 
+INSERT INTO event_ratings (id, account_id, event_id, value, timestamp) VALUES
+     ('081bf22f-a4d5-4e6a-8529-408d2b19aa12', '97d6429d-d755-4337-a2b0-31f54633c538', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 2, '2025-10-20 20:52:00'),
+     ('f988a63c-0100-4d74-8dd4-1f8103e34336', 'd7e7937b-02f3-47d7-bf64-f6e1555ff828', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 5, '2025-10-20 18:01:00'),
+     ('55e5bf53-f325-43bc-a3e8-794bc42291b6', '6a1c3423-e400-443f-93c1-9491b9dafb03', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 2, '2025-10-20 18:14:00'),
+     ('52f09031-3802-43de-b8f6-8a41a6bc1223', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 4, '2025-10-20 19:48:00'),
+     ('c85e9025-0e0b-46a7-92d6-d836d79b8396', '1b02e7df-ea2a-4cb2-b93b-a067a7f12fc6', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 4, '2025-10-20 20:07:00'),
+     ('56ba23d2-bc01-474e-9e6c-fdf8f4a1265b', '31548d6b-019f-492e-ba39-07be7a1433e5', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 5, '2025-10-20 18:24:00'),
+     ('2416016d-1893-4573-9840-3d4f70f29019', 'ae7adea0-516c-47b5-ae7b-10abcb32752d', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 3, '2025-10-20 20:59:00'),
+     ('2a38f115-833f-4341-802f-b9620d649527', '49a1dae3-323c-460b-bbcd-0fc1132e6bb1', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 5, '2025-10-20 19:55:00'),
+     ('907f547c-b974-4b44-afbd-67e13085d612', '035ad44b-2ca3-4775-be2d-c65e6c1eb084', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 2, '2025-10-20 20:40:00'),
+     ('5fa8173a-2acd-4849-9cb1-b7ad9ff39476', 'e527b2da-66ae-4076-8301-d3a9dc3c5860', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 5, '2025-10-20 19:20:00');
+
+
 INSERT INTO persons_attending_events (event_id, person_id)
 VALUES
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
