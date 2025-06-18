@@ -6,17 +6,14 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+@Entity
+@Table(name = "event_ratings")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-
-@Entity
-@Table(name = "event_ratings")
 public class EventRating {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -28,10 +25,7 @@ public class EventRating {
     private LocalDateTime timestamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+
 }

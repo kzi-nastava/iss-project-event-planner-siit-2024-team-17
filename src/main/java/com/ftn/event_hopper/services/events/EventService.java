@@ -23,6 +23,8 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -250,16 +252,19 @@ public class EventService {
 
 
     public List<RatingTimeSeriesDTO> getAverageRatingsOverTime(UUID eventId) {
-        Optional<Event> eventOpt = eventRepository.findById(eventId);
+        Optional<Event> eventOpt = eventRepository.findByIdWithRatings(eventId);
+
         if(eventOpt.isEmpty()){
             return new ArrayList<>();
         }
         Event event = eventOpt.get();
+        Hibernate.initialize(event.getRatings());
+
 
         Logger logger = LoggerFactory.getLogger(EventService.class);
-        logger.info("Ratings" + event.getRatings().toString());
+        logger.info("Ratings" + eventRepository.findById(eventId).get().getRatings().toString());
         logger.info("ID OF EVENT" + String.valueOf(event.getId()));
-        logger.info("size OF EVENT" + event.getRatings().size());
+        logger.info("size OF EVENT" + eventRepository.findById(eventId).get().getRatings().size());
 
         return event.getRatings().stream()
                 .collect(Collectors.groupingBy(

@@ -45,6 +45,7 @@ public class Event {
     @JoinColumn(name = "event_id")
     private Set<EventRating> ratings = new HashSet<>();
 
+
     @Column
     private String picture;
 
