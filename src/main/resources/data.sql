@@ -232,7 +232,11 @@ VALUES
     ('06aee816-a4ec-4d3c-9d9c-2c0f6bb96285','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
     ('6915ce46-d213-424b-a3c4-035767714df0','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
     ('f1ad3604-fef5-439a-8adb-45776a019a55','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
-    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3');
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'b7c9e2d4-a5b3-49c8-b2f7-d4a1c7e6f2d3'),
+    ('4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', '20343059-c4dd-4608-81aa-104f415e8085'),    --admin
+    ('f1ad3604-fef5-439a-8adb-45776a019a55', '20343059-c4dd-4608-81aa-104f415e8085'),
+    ('8c216a1f-6d65-4256-95e0-6a820d5fb902', '20343059-c4dd-4608-81aa-104f415e8085')
+;
 
 
 INSERT INTO invitations (status, "timestamp", event_id, id, picture, target_email)

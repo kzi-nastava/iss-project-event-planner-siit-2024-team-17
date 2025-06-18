@@ -115,7 +115,7 @@ public class EventService {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
                 || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
             eventDTO.setEventOrganizerLoggedIn(false);
-            eventDTO.setAnyEventOrganizerLoggedIn(false);
+            eventDTO.setGraphAuthorized(false);
             return eventDTO;
         }
 
@@ -146,9 +146,13 @@ public class EventService {
             }
         }
 
-        eventDTO.setAnyEventOrganizerLoggedIn(false);
+        eventDTO.setGraphAuthorized(false);
+        if(account.getType() == PersonType.EVENT_ORGANIZER || account.getType() == PersonType.ADMIN){
+            eventDTO.setGraphAuthorized(true);
+        }
+
+        //is the owner logged in
         if(account.getType() == PersonType.EVENT_ORGANIZER){
-            eventDTO.setAnyEventOrganizerLoggedIn(true);
             EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElse(null);
             eventDTO.setEventOrganizerLoggedIn(eventOrganizer.getEvents().contains(event));
         }
