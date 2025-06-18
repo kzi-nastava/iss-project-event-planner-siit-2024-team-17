@@ -260,22 +260,36 @@ public class EventService {
         Event event = eventOpt.get();
         Hibernate.initialize(event.getRatings());
 
+        // Group ratings by day, get sum and count per day
+        Map<LocalDateTime, List<EventRating>> groupedByDay = event.getRatings().stream()
+                .collect(Collectors.groupingBy(r -> r.getTimestamp().toLocalDate().atStartOfDay()));
 
-        Logger logger = LoggerFactory.getLogger(EventService.class);
-        logger.info("Ratings" + eventRepository.findById(eventId).get().getRatings().toString());
-        logger.info("ID OF EVENT" + String.valueOf(event.getId()));
-        logger.info("size OF EVENT" + eventRepository.findById(eventId).get().getRatings().size());
-
-        return event.getRatings().stream()
-                .collect(Collectors.groupingBy(
-                        rating -> rating.getTimestamp().toLocalDate().atStartOfDay(), // group by day
-                        Collectors.averagingInt(EventRating::getValue)
-                ))
-                .entrySet().stream()
-                .map(entry -> new RatingTimeSeriesDTO(entry.getKey(), entry.getValue()))
-                .sorted(Comparator.comparing(RatingTimeSeriesDTO::getTimestamp))
+        // Sort days ascending
+        List<LocalDateTime> sortedDays = groupedByDay.keySet().stream()
+                .sorted()
                 .collect(Collectors.toList());
+
+        List<RatingTimeSeriesDTO> result = new ArrayList<>();
+        double cumulativeSum = 0;
+        int cumulativeCount = 0;
+
+        for (LocalDateTime day : sortedDays) {
+            List<EventRating> ratingsForDay = groupedByDay.get(day);
+            double sumForDay = ratingsForDay.stream().mapToInt(EventRating::getValue).sum();
+            int countForDay = ratingsForDay.size();
+
+            cumulativeSum += sumForDay;
+            cumulativeCount += countForDay;
+
+            double cumulativeAverage = cumulativeSum / cumulativeCount;
+
+            double roundedAverage = Math.round(cumulativeAverage * 100.0) / 100.0;
+            result.add(new RatingTimeSeriesDTO(day, roundedAverage));
+        }
+
+        return result;
     }
+
 
 
     public Page<SimpleEventDTO> findAll(
