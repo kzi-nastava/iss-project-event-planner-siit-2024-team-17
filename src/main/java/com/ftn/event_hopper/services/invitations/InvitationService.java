@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.services.invitations;
 
+import com.ftn.event_hopper.dtos.events.GraphDataDTO;
 import com.ftn.event_hopper.dtos.invitations.*;
 import com.ftn.event_hopper.mapper.invitations.InvitationDTOMapper;
 import com.ftn.event_hopper.models.emails.Email;
@@ -75,6 +76,17 @@ public class InvitationService {
         }
         return invitationDTOMapper.fromInvitationToUpdatedInvitationDTO(invitation);
 
+    }
+
+    public GraphDataDTO getStatisticsForEvent(UUID eventId, GraphDataDTO graphDataDTO){
+        List<Invitation> invitationsAccepted = invitationRepository.findByEventIdAndStatus(eventId, InvitationStatus.ACCEPTED);
+        List<Invitation> invitationsPending = invitationRepository.findByEventIdAndStatus(eventId, InvitationStatus.PENDING);
+        List<Invitation> invitationsDeclines = invitationRepository.findByEventIdAndStatus(eventId, InvitationStatus.DECLINED);
+
+        graphDataDTO.setNumPendingInvitations(invitationsPending.size());
+        graphDataDTO.setNumAcceptedInvitations(invitationsAccepted.size());
+        graphDataDTO.setNumDeclinesInvitations(invitationsDeclines.size());
+        return graphDataDTO;
     }
 
     public Invitation save(Invitation invitation) {

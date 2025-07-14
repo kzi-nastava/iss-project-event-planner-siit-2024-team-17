@@ -23,6 +23,8 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+import com.ftn.event_hopper.models.events.EventRating;
+
 
 
 @Service
@@ -110,6 +115,7 @@ public class EventService {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
                 || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
             eventDTO.setEventOrganizerLoggedIn(false);
+            eventDTO.setGraphAuthorized(false);
             return eventDTO;
         }
 
@@ -140,6 +146,12 @@ public class EventService {
             }
         }
 
+        eventDTO.setGraphAuthorized(false);
+        if(account.getType() == PersonType.EVENT_ORGANIZER || account.getType() == PersonType.ADMIN){
+            eventDTO.setGraphAuthorized(true);
+        }
+
+        //is the owner logged in
         if(account.getType() == PersonType.EVENT_ORGANIZER){
             EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId()).orElse(null);
             eventDTO.setEventOrganizerLoggedIn(eventOrganizer.getEvents().contains(event));
@@ -165,6 +177,11 @@ public class EventService {
         eventDTO.setConversationInitialization(conversation);
 
         return eventDTO;
+    }
+
+    public int getMaximumAttendance(UUID id){
+        Event event = eventRepository.findById(id).orElseGet(null);
+        return event.getMaxAttendance();
     }
 
     public Collection<SimpleEventDTO> findTop5(UUID userId) {
@@ -236,6 +253,47 @@ public class EventService {
         eventRepository.save(event);
         return event;
     }
+
+
+    public List<RatingTimeSeriesDTO> getAverageRatingsOverTime(UUID eventId) {
+        Optional<Event> eventOpt = eventRepository.findByIdWithRatings(eventId);
+
+        if(eventOpt.isEmpty()){
+            return new ArrayList<>();
+        }
+        Event event = eventOpt.get();
+        Hibernate.initialize(event.getRatings());
+
+        // Group ratings by day, get sum and count per day
+        Map<LocalDateTime, List<EventRating>> groupedByDay = event.getRatings().stream()
+                .collect(Collectors.groupingBy(r -> r.getTimestamp().toLocalDate().atStartOfDay()));
+
+        // Sort days ascending
+        List<LocalDateTime> sortedDays = groupedByDay.keySet().stream()
+                .sorted()
+                .collect(Collectors.toList());
+
+        List<RatingTimeSeriesDTO> result = new ArrayList<>();
+        double cumulativeSum = 0;
+        int cumulativeCount = 0;
+
+        for (LocalDateTime day : sortedDays) {
+            List<EventRating> ratingsForDay = groupedByDay.get(day);
+            double sumForDay = ratingsForDay.stream().mapToInt(EventRating::getValue).sum();
+            int countForDay = ratingsForDay.size();
+
+            cumulativeSum += sumForDay;
+            cumulativeCount += countForDay;
+
+            double cumulativeAverage = cumulativeSum / cumulativeCount;
+
+            double roundedAverage = Math.round(cumulativeAverage * 100.0) / 100.0;
+            result.add(new RatingTimeSeriesDTO(day, roundedAverage));
+        }
+
+        return result;
+    }
+
 
 
     public Page<SimpleEventDTO> findAll(

@@ -2,10 +2,7 @@ package com.ftn.event_hopper.controllers.events;
 
 
 import com.ftn.event_hopper.dtos.PagedResponse;
-import com.ftn.event_hopper.dtos.events.CreateEventDTO;
-import com.ftn.event_hopper.dtos.events.GetEventAgendasDTO;
-import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
-import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
+import com.ftn.event_hopper.dtos.events.*;
 import com.ftn.event_hopper.dtos.invitations.InvitationDTO;
 import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.models.events.Event;
@@ -59,6 +56,19 @@ public class EventController {
         }
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
+
+    @GetMapping("/{eventId}/graph")
+    public ResponseEntity<GraphDataDTO> getGraphData(@PathVariable UUID eventId) {
+        List<RatingTimeSeriesDTO> timeSeries = eventService.getAverageRatingsOverTime(eventId);
+        GraphDataDTO graphDTO = new GraphDataDTO();
+        graphDTO.setMaxAttendance(eventService.getMaximumAttendance(eventId));
+        graphDTO.setRatings(timeSeries);
+        graphDTO = invitationService.getStatisticsForEvent(eventId, graphDTO);
+
+        return ResponseEntity.ok(graphDTO);
+    }
+
+
 
     @GetMapping(value = "/guest-list/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SimpleAccountDTO>> getGuestList(@PathVariable UUID eventId) {
