@@ -30,7 +30,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(length = 1000)
@@ -84,6 +84,8 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "event_type_id", referencedColumnName = "id")
     )
     private Set<EventType> eventTypes = new HashSet<EventType>();
+
+
 
     public Price getCurrentPrice() {
         return prices.stream()
