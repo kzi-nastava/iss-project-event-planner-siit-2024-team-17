@@ -177,7 +177,13 @@ INSERT INTO invitations (status, "timestamp", event_id, id, picture, target_emai
 VALUES
     (0, '2024-12-08 12:00:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'f5b2d3c9-7e6a-49a1-b8c5-3e7f9d2a4b6c', 'https://example.com/invitation1.jpg', 'vanjakostic03@gmail.com'),
     (1, '2024-12-09 15:30:00', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '7f2a3b9e-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'https://example.com/invitation2.jpg', 'attendee2@example.com'),
-    (2, '2024-12-10 20:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', '3c9a7b2e-4d5f-4a8b-b1c7-5f3e2d9b6a4c', 'https://example.com/invitation3.jpg', 'attendee3@example.com');
+    (2, '2024-12-10 20:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', '3c9a7b2e-4d5f-4a8b-b1c7-5f3e2d9b6a4c', 'https://example.com/invitation3.jpg', 'attendee3@example.com'),
+
+    (0, '2024-12-09 15:30:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '3f4c5e78-9a0b-4e72-91d2-13c40f672812', 'https://example.com/invitation2.jpg', 'organizer1@example.com'),
+    (1, '2024-12-09 15:30:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'a19e0b3f-4f89-44c7-8d2b-bc4f9164a524', 'https://example.com/invitation2.jpg', 'organizer3@example.com'),
+    (1, '2024-12-09 15:30:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '07f8c1a6-e611-48a5-b147-9b4ffb9ac2fa', 'https://example.com/invitation2.jpg', 'pup3@example.com'),
+    (1, '2024-12-09 15:30:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'd2a3287f-14aa-4a29-a8ff-c63c45e60c13', 'https://example.com/invitation2.jpg', 'admin@example.com');
+
 
 
 INSERT INTO prices (base_price, discount, final_price, "timestamp", id)

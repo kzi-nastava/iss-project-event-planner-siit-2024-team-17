@@ -41,6 +41,11 @@ public class InvitationService {
         return invitationDTOMapper.fromInvitationToInvitationDTO(invitation);
     }
 
+    public List<InvitationDTO> findAttendingEvent(UUID eventId) {
+        List<Invitation> invitations = invitationRepository.findByEventIdAndStatus(eventId, InvitationStatus.ACCEPTED);
+        return invitationDTOMapper.fromInvitationListToInvitationDTOList(invitations);
+    }
+
     public CreatedInvitationDTO create(CreateInvitationDTO invitationDTO) {
         Invitation invitation = invitationDTOMapper.fromCreateInvitationDTOtoInvitation(invitationDTO);
         invitation.setStatus(InvitationStatus.PENDING);

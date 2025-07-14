@@ -6,10 +6,14 @@ import com.ftn.event_hopper.dtos.events.CreateEventDTO;
 import com.ftn.event_hopper.dtos.events.GetEventAgendasDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
+import com.ftn.event_hopper.dtos.invitations.InvitationDTO;
+import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.services.events.EventService;
+import com.ftn.event_hopper.services.invitations.InvitationService;
+import com.ftn.event_hopper.services.users.AccountService;
 import com.ftn.event_hopper.services.users.EventOrganizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,7 +35,10 @@ public class EventController {
     private EventService eventService;
     @Autowired
     private EventOrganizerService eventOrganizerService;
-
+    @Autowired
+    private InvitationService invitationService;
+    @Autowired
+    private AccountService accountService;
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,6 +58,21 @@ public class EventController {
             return new ResponseEntity<GetEventAgendasDTO>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(events, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/guest-list/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<SimpleAccountDTO>> getGuestList(@PathVariable UUID eventId) {
+        List<InvitationDTO> invitation = invitationService.findAttendingEvent(eventId);
+        List<String> emails = invitation.stream()
+                .map(InvitationDTO::getTargetEmail)
+                .toList();
+
+        List<SimpleAccountDTO> accounts = accountService.findByEmails(emails);
+
+        if (accounts == null) {
+            return new ResponseEntity<List<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping(value = "/organizer",produces = MediaType.APPLICATION_JSON_VALUE)
