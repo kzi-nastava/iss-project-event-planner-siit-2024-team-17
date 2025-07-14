@@ -5,6 +5,7 @@ import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import lombok.*;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -32,6 +33,8 @@ public class ProfileForPersonDTO {
     private String companyEmail;
     private String companyPhoneNumber;
     private String companyDescription;
+    private LocalTime workStart;
+    private LocalTime workEnd;
     private SimpleLocationDTO companyLocation;
     private List<String> companyPhotos;
 }

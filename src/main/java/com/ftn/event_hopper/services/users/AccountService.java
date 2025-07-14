@@ -21,6 +21,8 @@ import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import com.ftn.event_hopper.services.registrationRequests.RegistrationRequestService;
 import com.ftn.event_hopper.services.verification.VerificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -123,6 +125,9 @@ public class AccountService {
                 profileForPerson.setCompanyPhoneNumber(serviceProvider.get().getCompanyPhoneNumber());
                 profileForPerson.setCompanyDescription(serviceProvider.get().getCompanyDescription());
                 profileForPerson.setCompanyPhotos(serviceProvider.get().getCompanyPhotos());
+                profileForPerson.setWorkStart(serviceProvider.get().getWorkStart());
+                profileForPerson.setWorkEnd(serviceProvider.get().getWorkEnd());
+
 
                 SimpleLocationDTO location = new SimpleLocationDTO();
                 location.setAddress(serviceProvider.get().getCompanyLocation().getAddress());

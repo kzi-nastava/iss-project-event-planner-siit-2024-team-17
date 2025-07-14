@@ -8,6 +8,7 @@ import lombok.*;
 import java.time.LocalTime;
 import java.util.List;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,4 +21,6 @@ public class CreateServiceProviderDTO extends CreatePersonDTO {
     private String companyPhoneNumber;
     private List<String> companyPhotos;
     private CreateLocationDTO companyLocation;
+    private LocalTime workStart;
+    private LocalTime workEnd;
 }
