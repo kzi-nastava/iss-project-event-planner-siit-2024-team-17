@@ -14,8 +14,7 @@ public class Role implements GrantedAuthority {
     private PersonType personType;
 
     @Override
-    public String getAuthority(){
-        return personType.toString();
+    public String getAuthority() {
+        return "ROLE_" + personType.name();  // e.g., ROLE_SERVICE_PROVIDER
     }
-
 }

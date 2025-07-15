@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,27 +26,9 @@ public class AccountController {
     @Autowired
     private VerificationService verificationService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccountDTO>> getAccounts() {
-        List<AccountDTO> accounts = accountService.findAllAccounts();
-        if(accounts == null) {
-            return new ResponseEntity<Collection<AccountDTO>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(accounts, HttpStatus.OK);
-    }
-
     @PostMapping(value = "/check-email")
     public ResponseEntity<Boolean> isEmailTaken(@RequestBody String email) {
         return accountService.findByEmail(email).isPresent() ? new ResponseEntity<>(true, HttpStatus.OK) : new ResponseEntity<>(false, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/simple",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<SimpleAccountDTO>> getSimpleAccounts() {
-        List<SimpleAccountDTO> accounts = accountService.findAllSimpleAccounts();
-        if(accounts == null) {
-            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -115,6 +98,7 @@ public class AccountController {
     }
 
 
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileForPersonDTO> getProfile() {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -128,6 +112,7 @@ public class AccountController {
         return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
     @PostMapping(value = "/change-profile-picture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeProfilePicture(@RequestBody String newProfilePicture) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -138,6 +123,7 @@ public class AccountController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
     @PostMapping(value = "/remove-profile-picture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> removeProfilePicture() {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -149,7 +135,7 @@ public class AccountController {
     }
 
 
-
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
     @PostMapping(value = "/deactivate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deactivate() {
         try {
@@ -188,6 +174,7 @@ public class AccountController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
     @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
         try {
@@ -216,6 +203,7 @@ public class AccountController {
         return new ResponseEntity<>(accountService.createServiceProvider(accountDTO), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedAccountDTO> updateAccount(@RequestBody UpdatePersonDTO personDTO) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -229,6 +217,7 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('SERVICE_PROVIDER')")
     @PutMapping(value = "/company", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedCompanyAccountDTO> updateCompanyAccount(@RequestBody UpdateCompanyAccountDTO companyAccountDTO) {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -242,6 +231,7 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('AUTHENTICATED_USER')")
     @PutMapping(value = "/upgrade-to-OD" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedAccountDTO> upgradeToOD() {
 
@@ -257,6 +247,7 @@ public class AccountController {
         return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('AUTHENTICATED_USER')")
     @PutMapping(value = "/upgrade-to-PUP" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedAccountDTO> upgradeToPUP( @RequestBody CompanyDetailsDTO companyDetailsDTO) {
 

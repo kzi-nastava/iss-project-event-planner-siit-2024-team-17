@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class EventTypeController {
     @Autowired
     private CategoryService categoryService;
 
+    //not just in admin panel but when creating an event etc
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EventTypeManagementDTO> getEventTypesForManagement() {
         List<SimpleEventTypeDTO> eventTypes = eventTypeService.findAll();
@@ -42,6 +44,7 @@ public class EventTypeController {
         return new ResponseEntity<>(eventTypesDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleEventTypeDTO> updateEventType(@PathVariable UUID id, @RequestBody UpdateEventTypeDTO updateEventType) {
         try{
@@ -53,6 +56,7 @@ public class EventTypeController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleEventTypeDTO> createEventType(@RequestBody CreateEventTypeDTO createEventTypeDTO) {
         try{
@@ -63,6 +67,7 @@ public class EventTypeController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deactivateEventType(@PathVariable UUID id) {
         try{

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +58,7 @@ public class EventController {
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN')")
     @GetMapping("/{eventId}/graph")
     public ResponseEntity<GraphDataDTO> getGraphData(@PathVariable UUID eventId) {
         List<RatingTimeSeriesDTO> timeSeries = eventService.getAverageRatingsOverTime(eventId);
@@ -85,6 +87,7 @@ public class EventController {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('EVENT_ORGANIZER')")
     @GetMapping(value = "/organizer",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleEventDTO>> getOrganizerEvents(){
         List<SimpleEventDTO> events = eventService.findForOrganizer();
@@ -145,6 +148,7 @@ public class EventController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('EVENT_ORGANIZER')")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateEventDTO> createEvent(@RequestBody CreateEventDTO eventDTO){
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
