@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +56,7 @@ public class SolutionController{
         return new ResponseEntity<>(solution, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
     @GetMapping(value = "/persons-top-5", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleProductDTO>> getTop5Solutions(){
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

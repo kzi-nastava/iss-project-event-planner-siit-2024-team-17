@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<GetReportDTO>> getReports(){
 
@@ -30,6 +32,7 @@ public class ReportController {
         return new ResponseEntity<>(reports, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetReportDTO> getReport(@PathVariable UUID id){
 
@@ -47,6 +50,7 @@ public class ReportController {
         return new ResponseEntity<CreatedReportDTO>(reportService.create(report), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "suspend/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> suspend(@PathVariable UUID id){
         try {
@@ -57,6 +61,7 @@ public class ReportController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteReport(@PathVariable UUID id){
         try{
