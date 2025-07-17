@@ -157,6 +157,9 @@ public class EventController {
         }
         Event event = eventService.create(eventDTO);
 
+        if(event == null){
+            return new ResponseEntity<CreateEventDTO>(HttpStatus.BAD_REQUEST);
+        }
         eventOrganizerService.addEvent(account.getPerson().getId(), event.getId());
 
         return new ResponseEntity<CreateEventDTO>(HttpStatus.CREATED);
