@@ -27,6 +27,7 @@ import com.ftn.event_hopper.services.budgets.BudgetService;
 import com.ftn.event_hopper.services.categories.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,6 +39,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -83,6 +85,7 @@ public class BudgetServiceTest {
     }
 
     @Test
+    @DisplayName("Should return valid BudgetManagementDTO when event is found and user is authorized")
     void shouldReturnBudgetManagementDTOWhenValidEventAndAuthorized() {
         UUID eventId = UUID.randomUUID();
 
@@ -127,10 +130,11 @@ public class BudgetServiceTest {
 
         assertNotNull(dto);
         assertEquals(1, dto.getBudgetItems().size());
-        assertEquals(50.0, dto.getLeftAmount()); // 100 - 50 spent
+        assertEquals(50.0, dto.getLeftAmount());
     }
 
     @Test
+    @DisplayName("Should throw EntityNotFoundException when event is not found")
     void shouldThrowExceptionWhenEventNotFound() {
         UUID eventId = UUID.randomUUID();
         when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
@@ -139,9 +143,10 @@ public class BudgetServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw RuntimeException when user is not an event organizer")
     void shouldThrowWhenNotEventOrganizer() {
         Account account = new Account();
-        account.setType(PersonType.AUTHENTICATED_USER); // Not an event organizer
+        account.setType(PersonType.AUTHENTICATED_USER);
 
         Authentication auth = new TestingAuthenticationToken(account, null);
         SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -156,6 +161,175 @@ public class BudgetServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw EntityNotFoundException when account is null")
+    void shouldThrowWhenAccountIsNull() {
+        Authentication auth = new TestingAuthenticationToken(null, null);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
+
+        UUID eventId = UUID.randomUUID();
+
+        assertThrows(EntityNotFoundException.class, () -> budgetService.findById(eventId));
+    }
+
+    @Test
+    @DisplayName("Should throw EntityNotFoundException when event organizer is not found")
+    void shouldThrowWhenEventOrganizerNotFound() {
+        UUID eventId = UUID.randomUUID();
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        Authentication auth = new TestingAuthenticationToken(account, null);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(new Event()));
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> budgetService.findById(eventId));
+    }
+
+    @Test
+    @DisplayName("Should throw RuntimeException when event is not owned by organizer")
+    void shouldThrowWhenEventNotOwnedByOrganizer() {
+        UUID eventId = UUID.randomUUID();
+        Event event = new Event();
+        event.setId(eventId);
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        Authentication auth = new TestingAuthenticationToken(account, null);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of());
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.of(organizer));
+
+        assertThrows(RuntimeException.class, () -> budgetService.findById(eventId));
+    }
+
+    @Test
+    @DisplayName("Should return empty BudgetManagementDTO when no budget items exist")
+    void shouldMarkBudgetItemsAsDeletableWhenNoReservations() {
+        UUID eventId = UUID.randomUUID();
+        Event event = new Event();
+        event.setId(eventId);
+
+        BudgetItem item = new BudgetItem();
+        item.setId(UUID.randomUUID());
+        item.setAmount(100.0);
+        Category category = new Category();
+        item.setCategory(category);
+        event.setBudgetItems(Set.of(item));
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        Authentication auth = new TestingAuthenticationToken(account, null);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of(event));
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.of(organizer));
+
+        SimpleEventDTO eventSimpleDTO = new SimpleEventDTO();
+        SimpleEventTypeDTO typeDTO = new SimpleEventTypeDTO();
+        typeDTO.setId(UUID.randomUUID());
+        eventSimpleDTO.setEventType(typeDTO);
+
+        when(eventDTOMapper.fromEventToSimpleDTO(event)).thenReturn(eventSimpleDTO);
+        when(categoryService.getCategoriesForEventType(typeDTO.getId())).thenReturn(List.of());
+
+        BudgetManagementDTO dto = budgetService.findById(eventId);
+
+        assertNotNull(dto);
+        assertEquals(1, dto.getBudgetItems().size());
+        assertTrue(new ArrayList<>(dto.getBudgetItems()).get(0).isDeletable());
+    }
+
+    @Test
+    @DisplayName("Should skip price when price at timestamp is null")
+    void shouldSkipPriceWhenPriceAtTimestampIsNull() {
+        UUID eventId = UUID.randomUUID();
+        Event event = new Event();
+        event.setId(eventId);
+
+        BudgetItem item = new BudgetItem();
+        item.setId(UUID.randomUUID());
+        item.setAmount(200.0);
+        Category category = new Category();
+        item.setCategory(category);
+        event.setBudgetItems(Set.of(item));
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        Authentication auth = new TestingAuthenticationToken(account, null);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of(event));
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.of(organizer));
+
+        Reservation reservation = new Reservation();
+        reservation.setTimestamp(LocalDateTime.now());
+
+        Product product = mock(Product.class);
+        when(product.getPriceAtTimestamp(any())).thenReturn(null);
+        reservation.setProduct(product);
+        when(reservationRepository.findByEvent(event)).thenReturn(List.of(reservation));
+
+        when(categoryDTOMapper.fromCategoryToSimpleCategoryDTO(category)).thenReturn(new SimpleCategoryDTO());
+        when(productDTOMapper.fromProductListToSimpleDTOList(Mockito.anyList())).thenReturn(List.of(new SimpleProductDTO()));
+
+        SimpleEventDTO eventSimpleDTO = new SimpleEventDTO();
+        SimpleEventTypeDTO typeDTO = new SimpleEventTypeDTO();
+        typeDTO.setId(UUID.randomUUID());
+        eventSimpleDTO.setEventType(typeDTO);
+
+        when(eventDTOMapper.fromEventToSimpleDTO(event)).thenReturn(eventSimpleDTO);
+        when(categoryService.getCategoriesForEventType(typeDTO.getId())).thenReturn(List.of());
+        when(categoryDTOMapper.fromCategoryListToSimpleDTOList(any())).thenReturn(List.of());
+
+        when(product.getCurrentPrice()).thenReturn(new Price());
+
+        BudgetManagementDTO dto = budgetService.findById(eventId);
+
+        assertEquals(200.0, dto.getLeftAmount());
+    }
+
+
+
+    @Test
+    @DisplayName("Should throw RuntimeException when amount is negative")
     void shouldUpdateBudgetItemsSuccessfully() {
         UUID eventId = UUID.randomUUID();
         UUID budgetItemId = UUID.randomUUID();
@@ -195,7 +369,6 @@ public class BudgetServiceTest {
         SimpleEventDTO eventSimpleDTO = new SimpleEventDTO();
         eventSimpleDTO.setEventType(eventTypeDTO);
 
-        // Mocks
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(eventOrganizerRepository.findById(any())).thenReturn(Optional.of(organizer));
         when(reservationRepository.findByEvent(event)).thenReturn(List.of(reservation));
@@ -217,6 +390,7 @@ public class BudgetServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw RuntimeException when amount is negative")
     void shouldThrowIfAmountIsNegative() {
         UUID eventId = UUID.randomUUID();
         UpdateBudgetItemDTO dto = new UpdateBudgetItemDTO();
@@ -233,10 +407,138 @@ public class BudgetServiceTest {
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(eventOrganizerRepository.findById(any())).thenReturn(Optional.of(organizer));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            budgetService.update(eventId, List.of(dto));
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> budgetService.update(eventId, List.of(dto)));
 
         assertEquals("Amount cannot be negative", exception.getMessage());
     }
+
+    @Test
+    @DisplayName("Should throw EntityNotFoundException when event is not found")
+    void shouldThrowWhenEventNotFound() {
+        UUID eventId = UUID.randomUUID();
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(EntityNotFoundException.class, () -> budgetService.update(eventId, List.of(new UpdateBudgetItemDTO())));
+
+        assertEquals("Event not found", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw EntityNotFoundException when organizer not found")
+    void shouldThrowWhenOrganizerNotFound() {
+        UUID eventId = UUID.randomUUID();
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(account, null));
+
+        Event event = new Event();
+        event.setId(eventId);
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(EntityNotFoundException.class, () -> budgetService.update(eventId, List.of(new UpdateBudgetItemDTO())));
+
+        assertEquals("Event organizer not found", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw AccessDeniedException when organizer does not own event")
+    void shouldThrowWhenOrganizerDoesNotOwnEvent() {
+        UUID eventId = UUID.randomUUID();
+
+        Event event = new Event();
+        event.setId(eventId);
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Collections.emptySet());
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(account, null));
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.of(organizer));
+
+        assertThrows(AccessDeniedException.class, () -> budgetService.update(eventId, List.of(new UpdateBudgetItemDTO())));
+    }
+
+    @Test
+    @DisplayName("Should throw EntityNotFoundException when new budget item's category not found")
+    void shouldThrowWhenCategoryNotFound() {
+        UUID eventId = UUID.randomUUID();
+        UUID categoryId = UUID.randomUUID();
+
+        Event event = new Event();
+        event.setId(eventId);
+        event.setBudgetItems(new HashSet<>());
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of(event));
+
+        UpdateBudgetItemDTO newItem = new UpdateBudgetItemDTO();
+        newItem.setAmount(100.0);
+        newItem.setCategoryId(categoryId);
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(account, null));
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.of(organizer));
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(EntityNotFoundException.class, () -> budgetService.update(eventId, List.of(newItem)));
+
+        assertEquals("Category not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw EntityNotFoundException when updating non-existing budget item")
+    void shouldThrowWhenBudgetItemNotFound() {
+        UUID eventId = UUID.randomUUID();
+        UUID budgetItemId = UUID.randomUUID();
+
+        UpdateBudgetItemDTO dto = new UpdateBudgetItemDTO();
+        dto.setId(budgetItemId);
+        dto.setAmount(50.0);
+
+        Event event = new Event();
+        event.setId(eventId);
+        event.setBudgetItems(new HashSet<>());
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of(event));
+
+        Account account = new Account();
+        account.setType(PersonType.EVENT_ORGANIZER);
+        Person person = new Person();
+        person.setId(UUID.randomUUID());
+        account.setPerson(person);
+
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(account, null));
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.of(organizer));
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> budgetService.update(eventId, List.of(dto)));
+
+        assertEquals("Budget item not found", exception.getMessage());
+    }
+
+
+
 }
