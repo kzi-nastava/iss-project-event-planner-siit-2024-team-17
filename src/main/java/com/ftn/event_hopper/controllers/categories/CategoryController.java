@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -42,6 +43,7 @@ public class CategoryController {
         return new ResponseEntity<CreatedCategoryDTO>(createdCategory, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/suggestions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedCategorySuggestionDTO> suggestCategoryCreation(@RequestBody CreateCategorySuggestionDTO suggestion) {
         CreatedCategorySuggestionDTO createdCategorySuggestion = categoryService.createSuggestion(suggestion);
@@ -50,6 +52,7 @@ public class CategoryController {
         return new ResponseEntity<CreatedCategorySuggestionDTO>(createdCategorySuggestion, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/suggestions", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CategorySuggestionDTO>> getCategoriesSuggestions() {
         Collection<CategorySuggestionDTO> suggestions =  categoryService.findAllSuggestions();
@@ -70,6 +73,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/suggestions/{id}/approve", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> approveCategorySuggestion(@PathVariable("id") UUID id) {
         try {
@@ -83,6 +87,8 @@ public class CategoryController {
         }
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/suggestions/{id}/reject/{substituteCategoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> rejectCategorySuggestion(@PathVariable("id") UUID id, @PathVariable UUID substituteCategoryId) {
         try {
@@ -96,6 +102,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable("id") UUID id) {
         boolean deleted = categoryService.deleteCategory(id);

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -27,6 +28,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/pending" ,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleCommentDTO>> getPendingComments(){
         Collection<SimpleCommentDTO> comments = commentService.findAllPending();
@@ -52,6 +54,7 @@ public class CommentController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/pending/{id}/approve", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedCommentDTO> approveComment(@PathVariable UUID id) {
         UpdatedCommentDTO updatedComment = commentService.approveComment(id);
@@ -59,6 +62,7 @@ public class CommentController {
         return new ResponseEntity<UpdatedCommentDTO>(updatedComment, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/pending/{id}/delete", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatedCommentDTO> deleteComment(@PathVariable UUID id) {
         UpdatedCommentDTO updatedComment = commentService.deleteComment(id);
