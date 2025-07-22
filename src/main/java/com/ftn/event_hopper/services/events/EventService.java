@@ -226,7 +226,7 @@ public class EventService {
 
         List<CreateAgendaActivityDTO> activitiesDTO = eventDTO.getAgendaActivities();
 
-        if(eventDTO.getName() == null || eventDTO.getDescription() == null || eventDTO.getMaxAttendance() <= 0 || eventDTO.getTime() == null || eventDTO.getEventPrivacyType() == null || eventDTO.getAgendaActivities().isEmpty()){
+        if(eventDTO.getName() == null || eventDTO.getDescription() == null || eventDTO.getMaxAttendance() <= 0 || eventDTO.getTime() == null || eventDTO.getEventPrivacyType() == null  || eventDTO.getPicture() == null || eventDTO.getAgendaActivities().isEmpty()){
             return null;
         }
         Location eventLocation = new Location();

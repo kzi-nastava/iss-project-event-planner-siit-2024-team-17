@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.mapper.events;
 
+import com.ftn.event_hopper.dtos.events.CreatedEventDTO;
 import com.ftn.event_hopper.dtos.events.SinglePageEventDTO;
 import com.ftn.event_hopper.mapper.locations.LocationDTOMapper;
 import com.ftn.event_hopper.models.eventTypes.EventType;
@@ -51,6 +52,10 @@ public class EventDTOMapper {
 
     public SinglePageEventDTO fromEventToSinglePageDTO(Event event) {
         return modelMapper.map(event, SinglePageEventDTO.class);
+    }
+
+    public CreatedEventDTO fromEventToCreatedEventDTO(Event event) {
+        return modelMapper.map(event, CreatedEventDTO.class);
     }
 
     public List<SimpleEventDTO> fromEventListToSimpleDTOList(List<Event> events) {
