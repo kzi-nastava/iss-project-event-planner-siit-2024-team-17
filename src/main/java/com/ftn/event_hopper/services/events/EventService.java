@@ -214,8 +214,21 @@ public class EventService {
 
 
     public Event create(CreateEventDTO eventDTO) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)) {
+            return null;
+        }
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account.getType() != PersonType.EVENT_ORGANIZER){
+            return null;
+        }
+
         List<CreateAgendaActivityDTO> activitiesDTO = eventDTO.getAgendaActivities();
 
+        if(eventDTO.getName() == null || eventDTO.getDescription() == null || eventDTO.getMaxAttendance() <= 0 || eventDTO.getTime() == null || eventDTO.getEventPrivacyType() == null || eventDTO.getAgendaActivities().isEmpty()){
+            return null;
+        }
         Location eventLocation = new Location();
         eventLocation.setAddress(eventDTO.getLocation().getAddress());
         eventLocation.setCity(eventDTO.getLocation().getCity());
@@ -224,6 +237,8 @@ public class EventService {
         locationRepository.save(eventLocation);
 
         Event event = new Event();
+
+
         event.setName(eventDTO.getName());
         event.setDescription(eventDTO.getDescription());
         event.setPicture(eventDTO.getPicture());
