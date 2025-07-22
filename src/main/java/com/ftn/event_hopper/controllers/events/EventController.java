@@ -5,6 +5,7 @@ import com.ftn.event_hopper.dtos.PagedResponse;
 import com.ftn.event_hopper.dtos.events.*;
 import com.ftn.event_hopper.dtos.invitations.InvitationDTO;
 import com.ftn.event_hopper.dtos.users.account.SimpleAccountDTO;
+import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.users.Account;
 import com.ftn.event_hopper.models.users.PersonType;
@@ -37,6 +38,8 @@ public class EventController {
     private InvitationService invitationService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private EventDTOMapper eventDTOMapper;
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -150,19 +153,20 @@ public class EventController {
 
     @PreAuthorize("hasRole('EVENT_ORGANIZER')")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreateEventDTO> createEvent(@RequestBody CreateEventDTO eventDTO){
+    public ResponseEntity<CreatedEventDTO> createEvent(@RequestBody CreateEventDTO eventDTO){
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(account == null || account.getType() != PersonType.EVENT_ORGANIZER){
-            return new ResponseEntity<CreateEventDTO>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Event event = eventService.create(eventDTO);
 
         if(event == null){
-            return new ResponseEntity<CreateEventDTO>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         eventOrganizerService.addEvent(account.getPerson().getId(), event.getId());
 
-        return new ResponseEntity<CreateEventDTO>(HttpStatus.CREATED);
+        return new ResponseEntity<>(eventDTOMapper.fromEventToCreatedEventDTO(event), HttpStatus.CREATED);
+
     }
 
 
