@@ -1,4 +1,4 @@
-package com.ftn.event_hopper.controller;
+package com.ftn.event_hopper.controller.budgets;
 
 import com.ftn.event_hopper.dtos.budgets.BudgetManagementDTO;
 import com.ftn.event_hopper.dtos.budgets.UpdateBudgetItemDTO;
@@ -27,15 +27,15 @@ public class BudgetsControllerIntegrationTest {
     @Autowired
     private TokenUtils tokenUtils;
 
-    private final UUID eventId = UUID.fromString("6915ce46-d213-424b-a3c4-035767714df0");
+    private final UUID eventId = UUID.fromString("2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f");
 
     private HttpHeaders getHeadersWithCorrectToken() {
         Account account = new Account();
-        account.setId(UUID.fromString("49a1dae3-323c-460b-bbcd-0fc1132e6bb1"));
+        account.setId(UUID.fromString("035ad44b-2ca3-4775-be2d-c65e6c1eb084"));
         account.setActive(true);
         account.setVerified(true);
         account.setType(PersonType.EVENT_ORGANIZER);
-        account.setEmail("organzier2@example.com");
+        account.setEmail("organizer3@example.com");
 
         String token = tokenUtils.generateToken(account);
 
@@ -46,25 +46,12 @@ public class BudgetsControllerIntegrationTest {
 
 
     @Test
-    @DisplayName("Should return budget management successfully")
+    @DisplayName("GET /api/budgets/:eventId/management - Should return budget management successfully")
     void shouldReturnBudgetManagementSuccessfully() {
-        Account account = new Account();
-        account.setId(UUID.fromString("49a1dae3-323c-460b-bbcd-0fc1132e6bb1"));
-        account.setActive(true);
-        account.setVerified(true);
-        account.setType(PersonType.EVENT_ORGANIZER); // Assuming type `2` corresponds to `EVENT_ORGANIZER`
-        account.setEmail("organzier2@example.com");
-
-
-        String token = tokenUtils.generateToken(account);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token); // Authorization: Bearer <token>
+        HttpHeaders headers = getHeadersWithCorrectToken();
 
         HttpEntity<?> request = new HttpEntity<>(headers);
 
-
-        // When
         ResponseEntity<BudgetManagementDTO> response = restTemplate.exchange(
                 "/api/budgets/" + eventId + "/management",
                 HttpMethod.GET,
@@ -72,14 +59,18 @@ public class BudgetsControllerIntegrationTest {
                 new ParameterizedTypeReference<>() {}
         );
 
-        // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(eventId, response.getBody().getEvent().getId());
+        assertNotNull(response.getBody().getBudgetItems());
+        assertFalse(response.getBody().getBudgetItems().isEmpty());
+        assertTrue(response.getBody().getBudgetItems().stream()
+                .anyMatch(item -> item.getCategory().getId()
+                        .equals(UUID.fromString("d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d"))));
     }
 
     @Test
-    @DisplayName("Should return error for invalid event ID")
+    @DisplayName("GET /api/budgets/:eventId/management - Should return error for invalid event ID")
     void shouldReturnErrorForInvalidEventId() {
         HttpEntity<?> request = new HttpEntity<>(getHeadersWithCorrectToken());
 
@@ -98,19 +89,14 @@ public class BudgetsControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should return error for unauthorized access")
+    @DisplayName("UPDATE /api/budgets/:eventId - Should add budget items successfully")
     void shouldAddBudgetItemsSuccessfully() {
         UpdateBudgetItemDTO item1 = new UpdateBudgetItemDTO();
         item1.setId(null);
         item1.setCategoryId(UUID.fromString("d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d"));
-        item1.setAmount(500.0);
+        item1.setAmount(270);
 
-        UpdateBudgetItemDTO item2 = new UpdateBudgetItemDTO();
-        item2.setId(null);
-        item2.setCategoryId(UUID.fromString("a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c"));
-        item2.setAmount(300.0);
-
-        Collection<UpdateBudgetItemDTO> addItems = List.of(item1, item2);
+        Collection<UpdateBudgetItemDTO> addItems = List.of(item1);
 
         HttpEntity<Collection<UpdateBudgetItemDTO>> request = new HttpEntity<>(addItems, getHeadersWithCorrectToken());
 
@@ -124,10 +110,16 @@ public class BudgetsControllerIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(eventId, response.getBody().getEvent().getId());
+        assertNotNull(response.getBody().getBudgetItems().stream()
+                .filter(item -> item.getCategory().getId()
+                        .equals(UUID.fromString("d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d")))
+                .findFirst().orElse(null));
+        assertEquals(0, response.getBody().getLeftAmount());
+
     }
 
     @Test
-    @DisplayName("Should return error for unauthorized access")
+    @DisplayName("UPDATE /api/budgets/:eventId - Should return error for invalid event")
     void shouldReturnErrorWhenWrongEventIdFails() {
         HttpEntity<Collection<UpdateBudgetItemDTO>> request = new HttpEntity<>(List.of(), getHeadersWithCorrectToken());
 

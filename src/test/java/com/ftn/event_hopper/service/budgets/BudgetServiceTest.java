@@ -134,7 +134,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when event is not found")
+    @DisplayName("findById - Should throw EntityNotFoundException when event is not found")
     void shouldThrowExceptionWhenEventNotFound() {
         UUID eventId = UUID.randomUUID();
         when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
@@ -143,7 +143,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when user is not an event organizer")
+    @DisplayName("findById - Should throw RuntimeException when user is not an event organizer")
     void shouldThrowWhenNotEventOrganizer() {
         Account account = new Account();
         account.setType(PersonType.AUTHENTICATED_USER);
@@ -161,7 +161,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when account is null")
+    @DisplayName("findById - Should throw EntityNotFoundException when account is null")
     void shouldThrowWhenAccountIsNull() {
         Authentication auth = new TestingAuthenticationToken(null, null);
         SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -174,7 +174,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when event organizer is not found")
+    @DisplayName("findById - Should throw EntityNotFoundException when event organizer is not found")
     void shouldThrowWhenEventOrganizerNotFound() {
         UUID eventId = UUID.randomUUID();
 
@@ -196,7 +196,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when event is not owned by organizer")
+    @DisplayName("findById - Should throw RuntimeException when event is not owned by organizer")
     void shouldThrowWhenEventNotOwnedByOrganizer() {
         UUID eventId = UUID.randomUUID();
         Event event = new Event();
@@ -223,7 +223,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should return empty BudgetManagementDTO when no budget items exist")
+    @DisplayName("findById - Should mark as deletable when no reservations exist")
     void shouldMarkBudgetItemsAsDeletableWhenNoReservations() {
         UUID eventId = UUID.randomUUID();
         Event event = new Event();
@@ -260,6 +260,7 @@ public class BudgetServiceTest {
 
         when(eventDTOMapper.fromEventToSimpleDTO(event)).thenReturn(eventSimpleDTO);
         when(categoryService.getCategoriesForEventType(typeDTO.getId())).thenReturn(List.of());
+        when(reservationRepository.findByEvent(event)).thenReturn(Collections.emptyList());
 
         BudgetManagementDTO dto = budgetService.findById(eventId);
 
@@ -269,7 +270,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should skip price when price at timestamp is null")
+    @DisplayName("findById - Should skip price when price at timestamp is null")
     void shouldSkipPriceWhenPriceAtTimestampIsNull() {
         UUID eventId = UUID.randomUUID();
         Event event = new Event();
@@ -300,7 +301,6 @@ public class BudgetServiceTest {
         when(eventOrganizerRepository.findById(person.getId())).thenReturn(Optional.of(organizer));
 
         Reservation reservation = new Reservation();
-        reservation.setTimestamp(LocalDateTime.now());
 
         Product product = mock(Product.class);
         when(product.getPriceAtTimestamp(any())).thenReturn(null);
@@ -329,7 +329,7 @@ public class BudgetServiceTest {
 
 
     @Test
-    @DisplayName("Should throw RuntimeException when amount is negative")
+    @DisplayName("update - Should update existing budget item amount and persist the event")
     void shouldUpdateBudgetItemsSuccessfully() {
         UUID eventId = UUID.randomUUID();
         UUID budgetItemId = UUID.randomUUID();
@@ -357,8 +357,6 @@ public class BudgetServiceTest {
 
         Product product = Mockito.mock(Product.class);
         Price price = new Price();
-        price.setFinalPrice(0.0);
-        product.setPrices(List.of(price));
 
         Reservation reservation = new Reservation();
         reservation.setProduct(product);
@@ -390,7 +388,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when amount is negative")
+    @DisplayName("update - Should throw RuntimeException when amount is negative")
     void shouldThrowIfAmountIsNegative() {
         UUID eventId = UUID.randomUUID();
         UpdateBudgetItemDTO dto = new UpdateBudgetItemDTO();
@@ -413,7 +411,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when event is not found")
+    @DisplayName("update - Should throw EntityNotFoundException when event is not found")
     void shouldThrowWhenEventNotFound() {
         UUID eventId = UUID.randomUUID();
 
@@ -425,7 +423,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when organizer not found")
+    @DisplayName("update - Should throw EntityNotFoundException when organizer not found")
     void shouldThrowWhenOrganizerNotFound() {
         UUID eventId = UUID.randomUUID();
 
@@ -448,7 +446,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw AccessDeniedException when organizer does not own event")
+    @DisplayName("update - Should throw AccessDeniedException when organizer does not own event")
     void shouldThrowWhenOrganizerDoesNotOwnEvent() {
         UUID eventId = UUID.randomUUID();
 
@@ -473,7 +471,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when new budget item's category not found")
+    @DisplayName("update - Should throw EntityNotFoundException when new budget item's category not found")
     void shouldThrowWhenCategoryNotFound() {
         UUID eventId = UUID.randomUUID();
         UUID categoryId = UUID.randomUUID();
@@ -507,7 +505,7 @@ public class BudgetServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw EntityNotFoundException when updating non-existing budget item")
+    @DisplayName("update - Should throw EntityNotFoundException when updating non-existing budget item")
     void shouldThrowWhenBudgetItemNotFound() {
         UUID eventId = UUID.randomUUID();
         UUID budgetItemId = UUID.randomUUID();
@@ -539,6 +537,204 @@ public class BudgetServiceTest {
         assertEquals("Budget item not found", exception.getMessage());
     }
 
+    @Test
+    @DisplayName("update - Should add new budget item when ID is null")
+    void shouldAddNewBudgetItemWhenIdIsNull() {
+        UUID eventId = UUID.randomUUID();
+        UUID categoryId = UUID.randomUUID();
 
+        Event event = new Event();
+        event.setId(eventId);
+
+        Category category = new Category();
+        category.setId(categoryId);
+
+        event.setBudgetItems(new HashSet<>(List.of()));
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of(event));
+
+        UpdateBudgetItemDTO newItem = new UpdateBudgetItemDTO();
+        newItem.setId(null);
+        newItem.setAmount(200.0);
+        newItem.setCategoryId(categoryId);
+
+        Product product = Mockito.mock(Product.class);
+        Price price = new Price();
+
+        Reservation reservation = new Reservation();
+        reservation.setProduct(product);
+
+        SimpleEventTypeDTO eventTypeDTO = new SimpleEventTypeDTO();
+        eventTypeDTO.setId(UUID.randomUUID());
+
+        SimpleEventDTO eventSimpleDTO = new SimpleEventDTO();
+        eventSimpleDTO.setEventType(eventTypeDTO);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventOrganizerRepository.findById(any())).thenReturn(Optional.of(organizer));
+        when(reservationRepository.findByEvent(event)).thenReturn(List.of(reservation));
+        when(product.getCurrentPrice()).thenReturn(price);
+        when(product.getPriceAtTimestamp(any())).thenReturn(price);
+        when(eventDTOMapper.fromEventToSimpleDTO(event)).thenReturn(eventSimpleDTO);
+        when(categoryService.getCategoriesForEventType(eventTypeDTO.getId()))
+                .thenReturn(List.of(new Category()));
+        when(categoryDTOMapper.fromCategoryListToSimpleDTOList(anyList()))
+                .thenReturn(List.of(new SimpleCategoryDTO()));
+
+        BudgetManagementDTO result = budgetService.update(eventId, List.of(newItem));
+
+        assertNotNull(result);
+        assertEquals(200.0, event.getBudgetItems().iterator().next().getAmount());
+
+        verify(eventRepository, times(1)).save(event);
+        verify(eventRepository, times(1)).flush();
+    }
+
+    @Test
+    @DisplayName("update - Should remove budget items not present in update list")
+    void shouldRemoveBudgetItemsNotInUpdateList() {
+        UUID eventId = UUID.randomUUID();
+        UUID budgetItemIdA = UUID.randomUUID();
+        UUID budgetItemIdB = UUID.randomUUID();
+        UUID categoryId = UUID.randomUUID();
+
+        Event event = new Event();
+        event.setId(eventId);
+
+        Category category = new Category();
+        category.setId(categoryId);
+
+        BudgetItem existingBudgetItemA = new BudgetItem();
+        existingBudgetItemA.setId(budgetItemIdA);
+        existingBudgetItemA.setAmount(100.0);
+        existingBudgetItemA.setCategory(category);
+
+        BudgetItem existingBudgetItemB = new BudgetItem();
+        existingBudgetItemB.setId(budgetItemIdB);
+        existingBudgetItemB.setAmount(100.0);
+        existingBudgetItemB.setCategory(category);
+
+        event.setBudgetItems(new HashSet<>(List.of(existingBudgetItemA, existingBudgetItemB)));
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of(event));
+
+        UpdateBudgetItemDTO updatedItem = new UpdateBudgetItemDTO();
+        updatedItem.setId(budgetItemIdA);
+        updatedItem.setAmount(200.0);
+
+        Product product = Mockito.mock(Product.class);
+        Price price = new Price();
+
+        Reservation reservation = new Reservation();
+        reservation.setProduct(product);
+
+        SimpleEventTypeDTO eventTypeDTO = new SimpleEventTypeDTO();
+        eventTypeDTO.setId(UUID.randomUUID());
+
+        SimpleEventDTO eventSimpleDTO = new SimpleEventDTO();
+        eventSimpleDTO.setEventType(eventTypeDTO);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventOrganizerRepository.findById(any())).thenReturn(Optional.of(organizer));
+        when(reservationRepository.findByEvent(event)).thenReturn(List.of(reservation));
+        when(product.getCurrentPrice()).thenReturn(price);
+        when(product.getPriceAtTimestamp(any())).thenReturn(price);
+        when(eventDTOMapper.fromEventToSimpleDTO(event)).thenReturn(eventSimpleDTO);
+        when(categoryService.getCategoriesForEventType(eventTypeDTO.getId()))
+                .thenReturn(List.of(new Category()));
+        when(categoryDTOMapper.fromCategoryListToSimpleDTOList(anyList()))
+                .thenReturn(List.of(new SimpleCategoryDTO()));
+
+        BudgetManagementDTO result = budgetService.update(eventId, List.of(updatedItem));
+
+        assertNotNull(result);
+        assertEquals(1, event.getBudgetItems().size());
+        BudgetItem next = event.getBudgetItems().iterator().next();
+        assertEquals(budgetItemIdA, next.getId());
+        assertEquals(200.0, next.getAmount());
+
+        verify(eventRepository, times(1)).save(event);
+        verify(eventRepository, times(1)).flush();
+    }
+
+    @Test
+    @DisplayName("update - Should throw if category for new budget item doesn't exist")
+    void shouldThrowIfNewItemCategoryNotFound() {
+        UUID eventId = UUID.randomUUID();
+        UUID budgetItemId = UUID.randomUUID();
+        UUID categoryId = null;
+
+        Event event = new Event();
+        event.setId(eventId);
+
+        Category category = new Category();
+        category.setId(categoryId);
+
+        BudgetItem existingBudgetItem = new BudgetItem();
+        existingBudgetItem.setId(budgetItemId);
+        existingBudgetItem.setAmount(100.0);
+        existingBudgetItem.setCategory(category);
+
+        event.setBudgetItems(new HashSet<>(List.of(existingBudgetItem)));
+
+        EventOrganizer organizer = new EventOrganizer();
+        organizer.setEvents(Set.of(event));
+
+        UpdateBudgetItemDTO updatedItem = new UpdateBudgetItemDTO();
+        updatedItem.setId(budgetItemId);
+        updatedItem.setAmount(200.0);
+
+        Product product = Mockito.mock(Product.class);
+        Price price = new Price();
+
+        Reservation reservation = new Reservation();
+        reservation.setProduct(product);
+
+        SimpleEventTypeDTO eventTypeDTO = new SimpleEventTypeDTO();
+        eventTypeDTO.setId(UUID.randomUUID());
+
+        SimpleEventDTO eventSimpleDTO = new SimpleEventDTO();
+        eventSimpleDTO.setEventType(eventTypeDTO);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventOrganizerRepository.findById(any())).thenReturn(Optional.of(organizer));
+        when(reservationRepository.findByEvent(event)).thenReturn(List.of(reservation));
+        when(product.getCurrentPrice()).thenReturn(price);
+        when(product.getPriceAtTimestamp(any())).thenReturn(price);
+        when(eventDTOMapper.fromEventToSimpleDTO(event)).thenReturn(eventSimpleDTO);
+        when(categoryService.getCategoriesForEventType(eventTypeDTO.getId()))
+                .thenReturn(List.of(new Category()));
+        when(categoryDTOMapper.fromCategoryListToSimpleDTOList(anyList()))
+                .thenReturn(List.of(new SimpleCategoryDTO()));
+
+        BudgetManagementDTO result = budgetService.update(eventId, List.of(updatedItem));
+
+        assertNotNull(result);
+        assertEquals(200.0, event.getBudgetItems().iterator().next().getAmount());
+
+        verify(eventRepository, times(1)).save(event);
+        verify(eventRepository, times(1)).flush();
+    }
+
+    @Test
+    @DisplayName("Should deny update if account is not organizer")
+    void shouldDenyIfUserNotEventOrganizer() {
+        Account account = new Account();
+        account.setType(PersonType.AUTHENTICATED_USER);
+
+        Authentication auth = new TestingAuthenticationToken(account, null);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+
+        SecurityContextHolder.setContext(context);
+
+        UUID eventId = UUID.randomUUID();
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(new Event()));
+
+        assertThrows(AccessDeniedException.class, () -> budgetService.update(eventId, Collections.emptyList()));
+    }
 
 }
