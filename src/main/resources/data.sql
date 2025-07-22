@@ -290,8 +290,6 @@ VALUES
 
 INSERT INTO reservations (end_time, start_time, "timestamp", event_id, id, product_id)
 VALUES
-    ('2024-12-07 15:30:00', '2024-12-07 14:30:00', '2024-12-07 09:00:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'b9a7f3d9-c5e4-4a2a-b1e8-a9f7b2c9d8f4', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
-    ('2024-12-07 18:30:00', '2024-12-07 17:30:00', '2024-12-07 10:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', 'a8e7d6f9-b5f8-42d2-9a7b-5d9f7c8d9b6a', '2eed4933-2477-487e-8b99-c39a9ac939dd'),
     ('2024-12-07 18:30:00', '2024-12-07 17:30:00', '2024-12-07 10:00:00', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a8e7d6f9-b5f8-42d2-9a7b-5d9f7c8d9b6b', '2eed4933-2477-487e-8b99-c39a9ac939dd');
 
 
@@ -324,7 +322,6 @@ VALUES
     ('5de088d0-7bff-44f5-b144-51d6a24e740b', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
     ('5de088d0-7bff-44f5-b144-51d6a24e740b', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d'),
     ('f0dcab26-9656-491e-bcce-bf23f723e998', '1237e35c-80ff-4a2a-8245-2728cb45ee11'),
-    ('4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '45067d8d-9d86-4104-97cd-7054c48cbbc6'),
     ('5de088d0-7bff-44f5-b144-51d6a24e740b', '45067d8d-9d86-4104-97cd-7054c48cbbc6'),
     ('4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '894d865c-0343-4a4a-9594-6ffc4f3a5a16');
 
