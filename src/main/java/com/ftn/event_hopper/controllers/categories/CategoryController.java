@@ -43,7 +43,7 @@ public class CategoryController {
         return new ResponseEntity<CreatedCategoryDTO>(createdCategory, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SERVICE_PROVIDER')")
     @PostMapping(value = "/suggestions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreatedCategorySuggestionDTO> suggestCategoryCreation(@RequestBody CreateCategorySuggestionDTO suggestion) {
         CreatedCategorySuggestionDTO createdCategorySuggestion = categoryService.createSuggestion(suggestion);
