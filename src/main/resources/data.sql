@@ -193,7 +193,6 @@ VALUES
 INSERT INTO persons_attending_events (event_id, person_id)
 VALUES
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
-    ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
     ('8c216a1f-6d65-4256-95e0-6a820d5fb902', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
     ('06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
     ('6915ce46-d213-424b-a3c4-035767714df0', 'abd3ba1c-76a1-44c5-8204-6cbbcfbfda5d'),
@@ -202,7 +201,6 @@ VALUES
 
 
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'd7b9e5c3-a6f4-49a2-b8c1-7e3f9a2d6b4f'),
-    ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '4b9c7f5a-d3e2-42a1-b6c8-3f7e9d5a2c6f'),
 
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','d7b5e9c3-a2f4-49b8-b6c1-3f9a7e5b2c8d'),
 
@@ -212,7 +210,6 @@ VALUES
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','57c05a8a-dd8b-4da8-af73-90961e423f42'),
     ('8c216a1f-6d65-4256-95e0-6a820d5fb902','57c05a8a-dd8b-4da8-af73-90961e423f42'),
     ('3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a','31548d6b-019f-492e-ba39-07be7a1433e5'),
-    ('2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f','31548d6b-019f-492e-ba39-07be7a1433e5'),
     ('8c216a1f-6d65-4256-95e0-6a820d5fb902','31548d6b-019f-492e-ba39-07be7a1433e5'),
 
 
@@ -242,7 +239,6 @@ VALUES
 INSERT INTO invitations (status, "timestamp", event_id, id, picture, target_email)
 VALUES
     (0, '2024-12-08 12:00:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', 'f5b2d3c9-7e6a-49a1-b8c5-3e7f9d2a4b6c', 'https://example.com/invitation1.jpg', 'vanjakostic03@gmail.com'),
-    (1, '2024-12-09 15:30:00', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', '7f2a3b9e-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'https://example.com/invitation2.jpg', 'attendee2@example.com'),
     (2, '2024-12-10 20:00:00', '4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b', '3c9a7b2e-4d5f-4a8b-b1c7-5f3e2d9b6a4c', 'https://example.com/invitation3.jpg', 'attendee3@example.com'),
 
     (0, '2024-12-09 15:30:00', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '3f4c5e78-9a0b-4e72-91d2-13c40f672812', 'https://example.com/invitation2.jpg', 'organizer1@example.com'),
@@ -356,7 +352,7 @@ VALUES
 
 INSERT INTO comments (status, author_id, id, product_id, content)
 VALUES
-    (0, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
+    (1, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'e52d2a61-abc7-42e9-82d4-7b3f52a4a1c5', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Great product!'),
     (0, '3f2b7e9a-6d4c-4b8f-b2a1-5c7e3d9f6b2a', 'f92c4b63-d2a1-49d7-8f1e-9b4c72e1a5f3', '2eed4933-2477-487e-8b99-c39a9ac939dd', 'Needs improvement.'),
     (0, '57c05a8a-dd8b-4da8-af73-90961e423f42', '3b9e6a2c-d7f2-4a3b-b2c9-7e5f4b6a1c8d', '935e1b52-6180-419a-bbe8-909db6cd6cbc', 'Highly recommended!');
 
