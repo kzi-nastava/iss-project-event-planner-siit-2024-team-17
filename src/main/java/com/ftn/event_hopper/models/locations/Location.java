@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.models.locations;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -11,10 +12,23 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+
+@Entity
+@Table(name = "locations")
 public class Location {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private String city;
+
+    @Column(nullable = false)
     private String address;
-    private double latitude;
-    private double longitude;
+
+    @Column(nullable = true)
+    private Double latitude;
+
+    @Column(nullable = true)
+    private Double longitude;
 }

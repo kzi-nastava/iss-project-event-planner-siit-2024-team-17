@@ -1,5 +1,7 @@
 package com.ftn.event_hopper.dtos.users.person;
 
+import com.ftn.event_hopper.dtos.location.LocationDTO;
+import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
 import com.ftn.event_hopper.models.users.PersonType;
 import lombok.*;
 
@@ -18,10 +20,5 @@ public class CreatedPersonDTO {
     private String profilePicture;
     private String phoneNumber;
     private PersonType type;
-    private UUID locationId;
-    private Collection<UUID> notificationsIds;
-    private Collection<UUID> attendingEventsIds;
-    private Collection<UUID> favoriteEventsIds;
-    private Collection<UUID> favoriteProductsIds;
-    private UUID accountId;
+    private SimpleLocationDTO location;
 }

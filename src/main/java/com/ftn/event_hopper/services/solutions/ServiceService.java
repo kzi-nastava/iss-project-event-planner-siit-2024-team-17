@@ -1,0 +1,301 @@
+package com.ftn.event_hopper.services.solutions;
+
+import com.ftn.event_hopper.dtos.solutions.*;
+import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
+import com.ftn.event_hopper.mapper.solutions.ServiceDTOMapper;
+import com.ftn.event_hopper.models.categories.Category;
+import com.ftn.event_hopper.models.prices.Price;
+import com.ftn.event_hopper.models.shared.CategoryStatus;
+import com.ftn.event_hopper.models.shared.ProductStatus;
+import com.ftn.event_hopper.models.solutions.Product;
+import com.ftn.event_hopper.models.solutions.Service;
+import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.ServiceProvider;
+import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
+import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
+import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
+import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+@org.springframework.stereotype.Service
+public class ServiceService {
+    @Autowired
+    private ServiceRepository serviceRepository;
+
+    @Autowired
+    private ServiceDTOMapper serviceDTOMapper;
+
+    @Autowired
+    private PriceDTOMapper priceDTOMapper;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private EventTypeRepository eventTypeRepository;
+    @Autowired
+    private ServiceProviderRepository serviceProviderRepository;
+
+
+    public boolean deleteService(UUID id) {
+        Service existing = serviceRepository.findById(id).orElse(null);
+        if (existing == null || existing.isDeleted()) {
+            return false;
+        } 
+
+        existing.setDeleted(true);
+        serviceRepository.save(existing);
+        serviceRepository.flush();
+        return true;
+    }
+
+    public Service saveService(Service service) {
+        return serviceRepository.save(service);
+    }
+
+    public Page<ServiceManagementDTO> searchServicesForManagement(Pageable page,
+                                                                  UUID categoryId,
+                                                                  List<UUID> eventTypeIds,
+                                                                  Double minPrice,
+                                                                  Double maxPrice,
+                                                                  Boolean isAvailable,
+                                                                  String searchContent,
+                                                                  String sortField,
+                                                                  String sortDirection
+    ) {
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+        ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+        if (serviceProvider == null) {
+            throw new EntityNotFoundException("Service provider not found");
+        }
+
+        Collection<UUID> personsServices = serviceProvider.getProducts().stream()
+                .map(Product::getId)
+                .toList();
+
+        Specification<Service> specification = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("isDeleted"), false));
+
+        specification = specification.and((root, query, criteriaBuilder) ->
+                root.get("id").in(personsServices));
+
+        if (categoryId != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("category").get("id"), categoryId));
+        }
+
+        if (eventTypeIds != null && !eventTypeIds.isEmpty()) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    root.join("eventTypes").get("id").in(eventTypeIds));
+        }
+
+        // handle list of prices in Product and make comparing to the newest one
+        if (minPrice != null) {
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Service> subRoot = subquery.from(Service.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.greaterThanOrEqualTo(pricesJoin.get("finalPrice"), minPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
+        }
+
+        // handle list of prices in Product and make comparing to the newest one
+        if (maxPrice != null) {
+            specification = specification.and((root, query, criteriaBuilder) -> {
+                Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+                Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                Root<Service> subRoot = subquery.from(Service.class);
+                Join<Object, Object> subPricesJoin = subRoot.join("prices", JoinType.INNER);
+                subquery.select(criteriaBuilder.greatest(subPricesJoin.get("timestamp").as(LocalDateTime.class)))
+                        .where(criteriaBuilder.equal(subRoot.get("id"), root.get("id")));
+
+                return criteriaBuilder.and(
+                        criteriaBuilder.lessThanOrEqualTo(pricesJoin.get("finalPrice"), maxPrice),
+                        criteriaBuilder.equal(pricesJoin.get("timestamp"), subquery)
+                );
+            });
+        }
+
+        if (isAvailable != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("isAvailable"), isAvailable));
+        }
+
+        if (StringUtils.hasText(searchContent)) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + searchContent.toLowerCase() + "%"),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchContent.toLowerCase() + "%")
+                    ));
+        }
+
+        // handle sorting and convert field accordingly to the field in the database
+        Sort sort = Sort.unsorted();
+        if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
+            sort = switch (sortField) {
+                case "basePrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.basePrice");
+                case "discount" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.discount");
+                case "finalPrice" ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices.finalPrice");
+                default ->
+                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+            };
+        }
+
+        Pageable pageableWithSort = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+
+        Page<Service> filteredServices = serviceRepository.findAll(specification, pageableWithSort);
+
+        Page<ServiceManagementDTO> all = serviceDTOMapper.fromServicePageToServiceManagementDTOPage(filteredServices);
+
+        // map list of prices to the newest one
+        for (ServiceManagementDTO dto : all) {
+            Service service = filteredServices.stream()
+                    .filter(s -> s.getId().equals(dto.getId()))
+                    .findFirst()
+                    .orElse(null);
+            if (service != null && service.getPrices() != null && !service.getPrices().isEmpty()) {
+                service.getPrices().stream()
+                        .max(Comparator.comparing(Price::getTimestamp)).ifPresent(
+                                recentPrice -> dto.setPrice(priceDTOMapper.fromPriceToSimplePriceDTO(recentPrice))
+                        );
+
+            }
+        }
+
+        return all;
+
+    }
+
+    public CreatedServiceDTO create(CreateServiceDTO service) {
+        Service newService = serviceDTOMapper.fromCreateServiceDTOToService(service);
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (account == null) {
+            throw new EntityNotFoundException("Account not found");
+        }
+        ServiceProvider serviceProvider = serviceProviderRepository.findById(account.getPerson().getId()).orElse(null);
+
+        if (serviceProvider == null) {
+            throw new EntityNotFoundException("Service provider not found");
+        }
+
+        if (service.getCancellationWindowDays()<0 || service.getReservationWindowDays()<0 || service.getDurationMinutes()<0) {
+            throw new IllegalArgumentException("Time windows and duration must be positive");
+        }
+
+        if (service.getDurationMinutes() > 1440) {
+            throw new IllegalArgumentException("Duration must be less than 1440 minutes");
+        }
+
+        if (service.getPictures() != null && service.getPictures().isEmpty()) {
+            throw new IllegalArgumentException("Pictures are required");
+        }
+
+        newService.setId(null);
+        newService.setDeleted(false);
+        newService.setEditTimestamp(LocalDateTime.now());
+
+        Category category = categoryRepository.findById(service.getCategoryId()).orElse(null);
+
+        if (category == null) {
+            throw new EntityNotFoundException("Category not found");
+        }
+
+        newService.setCategory(category);
+
+        newService.setStatus(ProductStatus.APPROVED);
+        if (category.getStatus() == CategoryStatus.PENDING) {
+            newService.setStatus(ProductStatus.PENDING);
+        }
+
+        newService.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(service.getEventTypesIds())));
+
+        double finalPrice = service.getBasePrice() * (1 - service.getDiscount() / 100);
+        finalPrice = Math.round(finalPrice * 100.0) / 100.0;
+
+        Price price = new Price(
+                null,
+                service.getBasePrice(),
+                service.getDiscount(),
+                finalPrice,
+                LocalDateTime.now());
+        List<Price> prices = new ArrayList<>();
+        prices.add(price);
+        newService.setPrices(prices);
+
+        newService = serviceRepository.save(newService);
+        serviceRepository.flush();
+
+        serviceProvider.getProducts().add(newService);
+        serviceProviderRepository.save(serviceProvider);
+        serviceProviderRepository.flush();
+
+        return serviceDTOMapper.fromServiceToCreatedServiceDTO(newService);
+    }
+
+    public UpdatedServiceDTO update(UpdateServiceDTO service, UUID id) {
+        Service existing = serviceRepository.findById(id).orElse(null);
+        if (existing == null || existing.isDeleted()) {
+            throw new EntityNotFoundException("Service not found");
+        }
+
+        if (service.getCancellationWindowDays()<0 || service.getReservationWindowDays()<0 || service.getDurationMinutes()<0) {
+            throw new IllegalArgumentException("Time windows and duration must be positive");
+        }
+
+        if (service.getDurationMinutes() > 1440) {
+            throw new IllegalArgumentException("Duration must be less than 1440 minutes");
+        }
+
+        if (service.getPictures() != null && service.getPictures().isEmpty()) {
+            throw new IllegalArgumentException("Pictures are required");
+        }
+
+        existing.setName(service.getName());
+        existing.setDescription(service.getDescription());
+        existing.setPictures((List<String>) service.getPictures());
+        existing.setAvailable(service.isAvailable());
+        existing.setVisible(service.isVisible());
+        existing.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(service.getEventTypesIds())));
+        existing.setDurationMinutes(service.getDurationMinutes());
+        existing.setReservationWindowDays(service.getReservationWindowDays());
+        existing.setCancellationWindowDays(service.getCancellationWindowDays());
+        existing.setAutoAccept(service.isAutoAccept());
+
+        Service updated = serviceRepository.save(existing);
+        serviceRepository.flush();
+        return serviceDTOMapper.fromServiceToUpdatedServiceDTO(updated);
+    }
+
+
+
+}

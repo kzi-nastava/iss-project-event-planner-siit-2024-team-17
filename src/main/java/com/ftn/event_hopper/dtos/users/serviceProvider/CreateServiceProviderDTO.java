@@ -1,12 +1,13 @@
 package com.ftn.event_hopper.dtos.users.serviceProvider;
 
 
+import com.ftn.event_hopper.dtos.location.CreateLocationDTO;
 import com.ftn.event_hopper.dtos.users.person.CreatePersonDTO;
 import lombok.*;
 
-import java.sql.Time;
-import java.util.Collection;
-import java.util.UUID;
+import java.time.LocalTime;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -17,9 +18,9 @@ public class CreateServiceProviderDTO extends CreatePersonDTO {
     private String companyName;
     private String companyEmail;
     private String companyDescription;
-    private String[] companyPhotos;
-    private Time workStart;
-
-    private UUID companyLocationId;
-    private Collection<UUID> productsIds;
+    private String companyPhoneNumber;
+    private List<String> companyPhotos;
+    private CreateLocationDTO companyLocation;
+    private LocalTime workStart;
+    private LocalTime workEnd;
 }

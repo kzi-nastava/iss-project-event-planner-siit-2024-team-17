@@ -1,36 +1,68 @@
 package com.ftn.event_hopper.models.events;
 
-import com.ftn.event_hopper.models.agendaActivities.AgendaActivity;
+import com.ftn.event_hopper.models.budgets.BudgetItem;
 import com.ftn.event_hopper.models.eventTypes.EventType;
-import com.ftn.event_hopper.models.invitations.Invitation;
 import com.ftn.event_hopper.models.locations.Location;
-import com.ftn.event_hopper.models.users.EventOrganizer;
 import com.ftn.event_hopper.models.shared.EventPrivacyType;
-import com.ftn.event_hopper.models.solutions.Product;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Event {
 
+@Entity
+@Table(name = "events")
+public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private int maxAttendance;
+
+    @Column
     private String description;
-    private EventPrivacyType eventPrivacyType;
-    private LocalDateTime startTime;
+
+    @Column(nullable = false)
+    private EventPrivacyType privacy;
+
+    @Column(nullable = false)
+    private LocalDateTime time;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_id")
+    private Set<EventRating> ratings = new HashSet<>();
+
+
+    @Column
     private String picture;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "event_type_id", nullable = true)
     private EventType eventType;
-    private AgendaActivity agendaActivity;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_id")
+    private Set<AgendaActivity> agendaActivities = new HashSet<AgendaActivity>();
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
-    private ArrayList<Product> products = new ArrayList<Product>();
-    private ArrayList<Invitation> invitations = new ArrayList<Invitation>();
-    private EventOrganizer eventOrganizer;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "event_id")
+    private Set<BudgetItem> budgetItems = new HashSet<BudgetItem>();
+
 }

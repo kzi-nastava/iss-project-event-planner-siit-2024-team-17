@@ -1,6 +1,6 @@
 package com.ftn.event_hopper.models.prices;
 
-import com.ftn.event_hopper.models.solutions.Product;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,13 +9,26 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+
+@Entity
+@Table(name = "prices")
 public class Price {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private double basePrice;
+
+    @Column(nullable = false)
     private double discount;
+
+    @Column(nullable = false)
     private double finalPrice;
-    private Product product;
+
+    @Column(nullable = false)
     private LocalDateTime timestamp;
 }

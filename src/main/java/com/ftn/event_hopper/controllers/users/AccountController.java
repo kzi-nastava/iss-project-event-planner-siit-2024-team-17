@@ -1,186 +1,266 @@
 package com.ftn.event_hopper.controllers.users;
 
 import com.ftn.event_hopper.dtos.users.account.*;
-import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.dtos.users.person.ProfileForPersonDTO;
+import com.ftn.event_hopper.dtos.users.person.UpdatePersonDTO;
+import com.ftn.event_hopper.dtos.users.serviceProvider.CompanyDetailsDTO;
+import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.verification.VerificationTokenState;
+import com.ftn.event_hopper.services.users.AccountService;
+import com.ftn.event_hopper.services.verification.VerificationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private VerificationService verificationService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<GetAccountDTO>> getAccounts() {
-        // Temporarily faking the data
-        Collection<GetAccountDTO> accounts = new ArrayList<>();
+    @PostMapping(value = "/check-email")
+    public ResponseEntity<Boolean> isEmailTaken(@RequestBody String email) {
+        return accountService.findByEmail(email).isPresent() ? new ResponseEntity<>(true, HttpStatus.OK) : new ResponseEntity<>(false, HttpStatus.OK);
+    }
 
-        GetAccountDTO account1 = new GetAccountDTO();
-        account1.setId(UUID.randomUUID());
-        account1.setEmail("mapa@gmail.com");
-        account1.setPassword("Marija123");
-        account1.setVerified(true);
-        account1.setActive(true);
-        account1.setType(PersonType.EVENT_ORGANIZER);
-        account1.setSuspensionTimeStamp(LocalDateTime.now());
-        account1.setPersonId(UUID.randomUUID());
-        account1.setRegistrationRequestId(null);
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccountDTO> getAccount(@PathVariable UUID id) {
+        AccountDTO account = accountService.findOneAccount(id);
+        if (account == null) {
+            return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
 
-        GetAccountDTO account2 = new GetAccountDTO();
-        account2.setId(UUID.randomUUID());
-        account2.setEmail("mapa@gmail.com");
-        account2.setPassword("Marija123");
-        account2.setVerified(true);
-        account2.setActive(true);
-        account2.setType(PersonType.EVENT_ORGANIZER);
-        account2.setSuspensionTimeStamp(LocalDateTime.now());
-        account2.setPersonId(UUID.randomUUID());
-        account2.setRegistrationRequestId(null);
+    @GetMapping(value = "/{id}/simple", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleAccountDTO> getSimpleAccount(@PathVariable UUID id) {
+        SimpleAccountDTO account = accountService.findOneSimpleAccount(id);
+        if (account == null) {
+            return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
 
 
-        accounts.add(account1);
-        accounts.add(account2);
-
+    @GetMapping(value = "/valid", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getValidAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllValid();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
 
-
     @GetMapping(value = "/verified", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetAccountDTO> getVerifiedAccounts() {
-        // Temporarily faking the data, should be a call to a getVerifiedAccounts method
-        GetAccountDTO account = new GetAccountDTO();
-        account.setId(UUID.randomUUID());
-        account.setEmail("mapa@gmail.com");
-        account.setPassword("Marija123");
-        account.setVerified(true);
-        account.setActive(true);
-        account.setType(PersonType.EVENT_ORGANIZER);
-        account.setSuspensionTimeStamp(LocalDateTime.now());
-        account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequestId(null);
-
-        return new ResponseEntity<>(account, HttpStatus.OK);
+    public ResponseEntity<Collection<SimpleAccountDTO>> getVerifiedAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllVerified();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
-
-
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetAccountDTO> getLoginAccount() {
-        // Temporarily faking the data, should be a call to a getVerifiedAccounts method
-        GetAccountDTO account = new GetAccountDTO();
-        account.setId(UUID.randomUUID());
-        account.setEmail("mapa@gmail.com");
-        account.setPassword("Marija123");
-        account.setVerified(true);
-        account.setActive(true);
-        account.setType(PersonType.EVENT_ORGANIZER);
-        account.setSuspensionTimeStamp(LocalDateTime.now());
-        account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequestId(null);
-
-        return new ResponseEntity<>(account, HttpStatus.OK);
-    }
-
 
 
     @GetMapping(value = "/active", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetAccountDTO> getActiveAccounts() {
-        // Temporarily faking the data, should be a call to a getActiveAccounts method
-        GetAccountDTO account = new GetAccountDTO();
-        account.setId(UUID.randomUUID());
-        account.setEmail("mapa@gmail.com");
-        account.setPassword("Marija123");
-        account.setVerified(true);
-        account.setActive(true);
-        account.setType(PersonType.EVENT_ORGANIZER);
-        account.setSuspensionTimeStamp(LocalDateTime.now());
-        account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequestId(null);
+    public ResponseEntity<Collection<SimpleAccountDTO>> getActiveAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllActive();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
 
+    @GetMapping(value = "/active/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleAccountDTO> getActiveByEmail(@PathVariable String email) {
+        SimpleAccountDTO account = accountService.findActiveByEmail(email);
+        if(account == null) {
+            return new ResponseEntity<SimpleAccountDTO>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetAccountDTO> getAccount(@RequestBody LoginDTO loginDTO ) {
-        // Temporarily faking the data
-        GetAccountDTO account = new GetAccountDTO();
-
-        if (account == null) {
-            return new ResponseEntity<GetAccountDTO>(HttpStatus.NOT_FOUND);
+    @GetMapping(value = "/inactive", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<SimpleAccountDTO>> getInactiveAccounts() {
+        List<SimpleAccountDTO> accounts = accountService.findAllInactive();
+        if(accounts == null) {
+            return new ResponseEntity<Collection<SimpleAccountDTO>>(HttpStatus.NOT_FOUND);
         }
-
-
-        account.setId(UUID.randomUUID());
-        account.setEmail(loginDTO.getEmail());
-        account.setPassword(loginDTO.getPassword());
-        account.setVerified(true);
-        account.setActive(true);
-        account.setType(PersonType.EVENT_ORGANIZER);
-        account.setSuspensionTimeStamp(LocalDateTime.now());
-        account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequestId(null);
-
-        if(account.getEmail().equals(loginDTO.getEmail()) && account.getPassword().equals(loginDTO.getPassword())){
-            return new ResponseEntity<>(account, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreatedAccountDTO> createAccount(@RequestBody CreateAccountDTO account) {
-        CreatedAccountDTO createdAccount = new CreatedAccountDTO();
-        createdAccount.setId(UUID.randomUUID());
-        createdAccount.setEmail(account.getEmail());
-        createdAccount.setPassword(account.getPassword());
-        createdAccount.setVerified(account.isVerified());
-        createdAccount.setActive(account.isActive());
-        createdAccount.setType(account.getType());
-        createdAccount.setSuspensionTimeStamp(account.getSuspensionTimeStamp());
-        createdAccount.setPersonId(account.getPersonId());
-        createdAccount.setRegistrationRequestId(account.getRegistrationRequestId());
 
-        return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
+    @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileForPersonDTO> getProfile() {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        ProfileForPersonDTO profileForPerson = accountService.getProfile(account.getId());
+        if (profileForPerson == null) {
+            return new ResponseEntity<ProfileForPersonDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(profileForPerson, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdatedAccountDTO> updateAccount(@PathVariable UUID id, @RequestBody UpdateAccountDTO account) {
-        // Temporarily faking the update process
-        UpdatedAccountDTO updatedAccount = new UpdatedAccountDTO();
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
+    @PostMapping(value = "/change-profile-picture", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeProfilePicture(@RequestBody String newProfilePicture) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        accountService.changeProfilePicture(account.getId(), newProfilePicture);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 
-        updatedAccount.setId(UUID.randomUUID());
-        updatedAccount.setPassword(account.getPassword());
-        updatedAccount.setVerified(account.isVerified());
-        updatedAccount.setActive(account.isActive());
-        updatedAccount.setType(account.getType());
-        updatedAccount.setSuspensionTimeStamp(account.getSuspensionTimeStamp());
-        updatedAccount.setPersonId(account.getPersonId());
-        updatedAccount.setRegistrationRequestId(account.getRegistrationRequestId());
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
+    @PostMapping(value = "/remove-profile-picture", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> removeProfilePicture() {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        accountService.changeProfilePicture(account.getId(), "");
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 
+
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
+    @PostMapping(value = "/deactivate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deactivate() {
+        try {
+            Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            accountService.deactivate(account.getId());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // Success
+        } catch (RuntimeException ex) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+
+
+    @GetMapping(value = "/verify/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<VerificationTokenState> verify(@PathVariable String token) {
+        VerificationTokenState state = verificationService.verifyToken(token);
+        if(state == VerificationTokenState.EXPIRED) {
+            accountService.deleteByEmail(verificationService.getEmailByToken(token));
+        }
+
+        if(state == VerificationTokenState.ACCEPTED) {
+            accountService.verify(verificationService.getEmailByToken(token));
+        }
+        return new ResponseEntity<>(state, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/resend-verification-email/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> resendVerificationEmail(@PathVariable String token) {
+        String email = verificationService.getEmailByToken(token);
+        Boolean success = verificationService.sendVerificationEmail(email);
+        if(success){
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
+    @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+        try {
+            Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            accountService.changePassword(account.getId(), changePasswordDTO);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Success
+        } catch (RuntimeException ex) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+
+    @PostMapping(value = "/person", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedAccountDTO> createAccount(@RequestBody CreatePersonAccountDTO accountDTO) {
+        return new ResponseEntity<>(accountService.createPerson(accountDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/event-organizer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedEventOrganizerAccountDTO> createAccount(@RequestBody CreateEventOrganizerAccountDTO accountDTO) {
+        return new ResponseEntity<>(accountService.createEventOrganizer(accountDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/service-provider", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreatedServiceProviderAccountDTO> createAccount(@RequestBody CreateServiceProviderAccountDTO accountDTO) {
+        return new ResponseEntity<>(accountService.createServiceProvider(accountDTO), HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAnyRole('EVENT_ORGANIZER', 'ADMIN', 'SERVICE_PROVIDER', 'AUTHENTICATED_USER')")
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> updateAccount(@RequestBody UpdatePersonDTO personDTO) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NO_CONTENT);
+        }
+        UpdatedAccountDTO updatedAccount = accountService.update(account.getId(), personDTO);
+        if(updatedAccount == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteAccount(@PathVariable UUID id) {
-        // Temporarily faking the data, should be a call to a get by id method
-        GetAccountDTO account = new GetAccountDTO();
-        account.setId(UUID.randomUUID());
-        account.setEmail("mapa@gmail.com");
-        account.setPassword("Marija123");
-        account.setVerified(true);
-        account.setActive(true);
-        account.setType(PersonType.EVENT_ORGANIZER);
-        account.setSuspensionTimeStamp(LocalDateTime.now());
-        account.setPersonId(UUID.randomUUID());
-        account.setRegistrationRequestId(null);
-
-
-        account.setActive(false);
-        return new ResponseEntity<>("Account with ID " + id + " deleted successfully.", HttpStatus.NO_CONTENT);
+    @PreAuthorize("hasRole('SERVICE_PROVIDER')")
+    @PutMapping(value = "/company", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedCompanyAccountDTO> updateCompanyAccount(@RequestBody UpdateCompanyAccountDTO companyAccountDTO) {
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedCompanyAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        UpdatedCompanyAccountDTO updatedAccount = accountService.updateCompanyAccount(account.getId(), companyAccountDTO);
+        if(updatedAccount == null) {
+            return new ResponseEntity<UpdatedCompanyAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedAccount, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('AUTHENTICATED_USER')")
+    @PutMapping(value = "/upgrade-to-OD" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> upgradeToOD() {
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        UpdatedAccountDTO updatedAccountDTO = accountService.updateToOD(account.getId());
+        if(updatedAccountDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('AUTHENTICATED_USER')")
+    @PutMapping(value = "/upgrade-to-PUP" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdatedAccountDTO> upgradeToPUP( @RequestBody CompanyDetailsDTO companyDetailsDTO) {
+
+        Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(account == null) {
+            return new ResponseEntity<UpdatedAccountDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        UpdatedAccountDTO updatedAccountDTO = accountService.updateToPUP(account.getId(), companyDetailsDTO);
+        if(updatedAccountDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedAccountDTO, HttpStatus.OK);
+    }
+
 }

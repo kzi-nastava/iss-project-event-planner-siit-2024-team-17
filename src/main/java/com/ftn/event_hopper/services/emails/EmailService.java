@@ -1,0 +1,102 @@
+package com.ftn.event_hopper.services.emails;
+
+import com.ftn.event_hopper.models.emails.Email;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.UUID;
+
+@Service
+public class EmailService {
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}") private String sender;
+
+    // To send a simple email
+    public String sendSimpleMail(Email email)
+    {
+        try {
+
+            SimpleMailMessage mailMessage= new SimpleMailMessage();
+
+            // Setting up necessary details
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(email.getTo());
+            mailMessage.setText(email.getBody());
+            mailMessage.setSubject(email.getSubject());
+
+            javaMailSender.send(mailMessage);
+            return "Mail Sent Successfully...";
+        }
+
+        catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    // To send an email with attachment
+    public String
+    sendMailWithAttachment(Email email) {
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper;
+
+        try {
+
+            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            mimeMessageHelper.setFrom(sender);
+            mimeMessageHelper.setTo(email.getTo());
+            mimeMessageHelper.setText(email.getBody());
+            mimeMessageHelper.setSubject(
+                    email.getSubject());
+
+            FileSystemResource file = new FileSystemResource(new File(email.getAttachment()));
+
+            mimeMessageHelper.addAttachment(file.getFilename(), file);
+            javaMailSender.send(mimeMessage);
+            return "Mail sent Successfully";
+        }
+        catch (MessagingException e) {
+            return "Error while sending mail!!!";
+        }
+    }
+
+    public String getAcceptInvitation(UUID invitaionId) {
+        return "If you want to join us, please click the link below to confirm your presence: \n\n"
+                + getAcceptationLink(invitaionId) +"\n\n";
+    }
+
+    private String getAcceptationLink(UUID invitationId) {
+        return "http://localhost:4200/invitations/" + invitationId;
+
+    }
+
+
+
+    public boolean sendVerificationEmail(String email, String subject, String body) {
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(email);
+            mailMessage.setSubject(subject);
+            mailMessage.setText(body);
+
+            javaMailSender.send(mailMessage);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+
+}
