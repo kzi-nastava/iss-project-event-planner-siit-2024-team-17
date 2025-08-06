@@ -104,6 +104,7 @@ VALUES
     ('c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a'),
     ('b1d5d5c5-f6c1-4039-a8a5-4fc3ea0a4e2a', '4e7ec0af-af4e-463b-abe9-d8c2ba317d0a'),
     ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', '5de088d0-7bff-44f5-b144-51d6a24e740b'),
+    ('c7d2b4f3-8c4f-432e-8b5c-9a1d3f1b8d5a', '5de088d0-7bff-44f5-b144-51d6a24e740b'),
     ('d4f4e6b7-d2d5-4376-8a9b-7c4f3b3c1e7d', 'f0dcab26-9656-491e-bcce-bf23f723e998');
 
 INSERT INTO company_pictures (service_provider_id, picture_url)
