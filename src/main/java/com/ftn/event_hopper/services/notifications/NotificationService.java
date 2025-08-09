@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.services.notifications;
 
 import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
+import com.ftn.event_hopper.dtos.notifications.SimpleNotificationDTO;
 import com.ftn.event_hopper.models.notifications.Notification;
 import com.ftn.event_hopper.models.users.Person;
 import com.ftn.event_hopper.repositories.notifications.NotificationRepository;
@@ -19,7 +20,7 @@ public class NotificationService {
     @Autowired
     private PersonRepository personRepository;
 
-    public void sendNotification(CreateNotificationDTO createNotificationDTO, UUID personId) {
+    public boolean sendNotification(CreateNotificationDTO createNotificationDTO, UUID personId) {
         Notification notification = new Notification();
         notification.setContent(createNotificationDTO.getContent().trim());
         notification.setTimestamp(LocalDateTime.now());
@@ -32,7 +33,18 @@ public class NotificationService {
         if (person != null) {
             person.getNotifications().add(notification);
             personRepository.save(person);
+            return true;
         }
 
+        return false;
+
+    }
+
+    public SimpleNotificationDTO findOne(UUID id) {
+        Notification notification = notificationRepository.findById(id).orElse(null);
+        SimpleNotificationDTO simpleNotificationDTO = new SimpleNotificationDTO();
+        simpleNotificationDTO.setContent(notification.getContent());
+        simpleNotificationDTO.setTimestamp(notification.getTimestamp());
+        return simpleNotificationDTO;
     }
 }
