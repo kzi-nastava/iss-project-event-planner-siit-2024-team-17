@@ -2,9 +2,13 @@ package com.ftn.event_hopper.services.notifications;
 
 import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.dtos.notifications.SimpleNotificationDTO;
+import com.ftn.event_hopper.models.events.Event;
 import com.ftn.event_hopper.models.notifications.Notification;
+import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.users.Person;
+import com.ftn.event_hopper.repositories.events.EventRepository;
 import com.ftn.event_hopper.repositories.notifications.NotificationRepository;
+import com.ftn.event_hopper.repositories.solutions.ProductRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +23,26 @@ public class NotificationService {
     private NotificationRepository notificationRepository;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
-    public boolean sendNotification(CreateNotificationDTO createNotificationDTO, UUID personId) {
+
+    public boolean sendNotification(CreateNotificationDTO createNotificationDTO,UUID eventId, UUID productID, UUID personId) {
         Notification notification = new Notification();
         notification.setContent(createNotificationDTO.getContent().trim());
         notification.setTimestamp(LocalDateTime.now());
+
+        Event event = eventRepository.findById(eventId).orElse(null);
+        Product product = productRepository.findById(productID).orElse(null);
+
+        if (event == null && product == null) {
+            return false;
+        }
+
+        notification.setEvent(event);
+        notification.setProduct(product);
 
         notificationRepository.save(notification);
         notificationRepository.flush();

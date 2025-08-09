@@ -27,8 +27,8 @@ public class NotificationController {
     }
 
     @MessageMapping("/notification")
-    public boolean sendNotification(CreateNotificationDTO createNotificationDTO, UUID personId) {
-        return notificationService.sendNotification(createNotificationDTO, personId);
+    public boolean sendNotification(CreateNotificationDTO createNotificationDTO, UUID eventId, UUID productId,UUID personId) {
+        return notificationService.sendNotification(createNotificationDTO, eventId, productId, personId);
     }
 
     @GetMapping(value = "/api/notification/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

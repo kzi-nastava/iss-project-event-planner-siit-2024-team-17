@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -14,5 +15,7 @@ import java.time.LocalDateTime;
 public class SimpleNotificationDTO {
     private String content;
     private LocalDateTime timestamp;
+    private UUID productID;
+    private UUID eventID;
 
 }
