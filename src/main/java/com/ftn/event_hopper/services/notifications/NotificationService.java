@@ -65,7 +65,6 @@ public class NotificationService {
             }
 
             messagingTemplate.convertAndSendToUser(account.getUsername(),"/topic/notifications", notification);
-
             return true;
         }
 

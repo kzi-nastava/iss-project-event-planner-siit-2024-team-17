@@ -12,10 +12,14 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/api/notifications")
 public class NotificationController {
     private final SimpMessagingTemplate messagingTemplate;
     private final NotificationService notificationService;
@@ -31,7 +35,7 @@ public class NotificationController {
         return notificationService.sendNotification(createNotificationDTO, eventId, productId, personId);
     }
 
-    @GetMapping(value = "/api/notification/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleNotificationDTO> getNotification(@PathVariable UUID id) {
         SimpleNotificationDTO notificationDTO = notificationService.findOne(id);
         if (notificationDTO == null) {
