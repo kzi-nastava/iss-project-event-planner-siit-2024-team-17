@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.services.solutions;
 
+import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.dtos.solutions.*;
 import com.ftn.event_hopper.mapper.prices.PriceDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ServiceDTOMapper;
@@ -10,11 +11,14 @@ import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.models.solutions.Service;
 import com.ftn.event_hopper.models.users.Account;
+import com.ftn.event_hopper.models.users.PersonType;
 import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ServiceRepository;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import com.ftn.event_hopper.services.notifications.NotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
@@ -50,6 +54,10 @@ public class ServiceService {
     private EventTypeRepository eventTypeRepository;
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
+    @Autowired
+    private PersonRepository personRepository;
+    @Autowired
+    private NotificationService notificationService;
 
 
     public boolean deleteService(UUID id) {
@@ -235,6 +243,18 @@ public class ServiceService {
         newService.setStatus(ProductStatus.APPROVED);
         if (category.getStatus() == CategoryStatus.PENDING) {
             newService.setStatus(ProductStatus.PENDING);
+
+            CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                    "You have new category to review!",
+                    null,
+                    newService.getId()
+            );
+
+            //check this
+            UUID personId = personRepository.findByType(PersonType.ADMIN).get(0).getId();
+            notificationService.sendNotification(notificationDTO, personId );
+
+            //send notification
         }
 
         newService.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(service.getEventTypesIds())));

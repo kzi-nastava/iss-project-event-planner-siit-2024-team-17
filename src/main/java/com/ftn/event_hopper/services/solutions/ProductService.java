@@ -132,6 +132,7 @@ public class ProductService {
 
         newProduct.setStatus(ProductStatus.APPROVED);
         if (category.getStatus() == CategoryStatus.PENDING) {
+            System.out.println("upaooo" + serviceProvider.getName());
             newProduct.setStatus(ProductStatus.PENDING);
             CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
                     "You have new category to review!",
