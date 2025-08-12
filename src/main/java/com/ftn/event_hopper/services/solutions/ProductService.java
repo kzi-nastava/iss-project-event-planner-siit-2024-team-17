@@ -4,6 +4,7 @@ import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
+import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
@@ -37,6 +38,7 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import com.ftn.event_hopper.services.notifications.NotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +87,8 @@ public class ProductService {
     private PriceDTOMapper priceDTOMapper;
     @Autowired
     private EventDTOMapper eventDTOMapper;
+    @Autowired
+    private NotificationService notificationService;
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -129,6 +133,17 @@ public class ProductService {
         newProduct.setStatus(ProductStatus.APPROVED);
         if (category.getStatus() == CategoryStatus.PENDING) {
             newProduct.setStatus(ProductStatus.PENDING);
+            CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                    "You have new category to review!",
+                    null,
+                    newProduct.getId()
+            );
+
+            //check this
+            UUID personId = personRepository.findByType(PersonType.ADMIN).get(0).getId();
+            notificationService.sendNotification(notificationDTO, personId );
+
+            //send notification
         }
 
         newProduct.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(product.getEventTypesIds())));

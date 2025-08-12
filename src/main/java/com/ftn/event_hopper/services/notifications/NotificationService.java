@@ -36,13 +36,16 @@ public class NotificationService {
     private SimpMessagingTemplate messagingTemplate;
 
 
-    public boolean sendNotification(CreateNotificationDTO createNotificationDTO,UUID eventId, UUID productID, UUID personId) {
+    public boolean sendNotification(CreateNotificationDTO createNotificationDTO, UUID personId) {
         Notification notification = new Notification();
         notification.setContent(createNotificationDTO.getContent().trim());
         notification.setTimestamp(LocalDateTime.now());
 
+        UUID eventId = createNotificationDTO.getEventId();
+        UUID productId = createNotificationDTO.getProductId();
+
         Event event = eventRepository.findById(eventId).orElse(null);
-        Product product = productRepository.findById(productID).orElse(null);
+        Product product = productRepository.findById(productId).orElse(null);
 
         if (event == null && product == null) {
             return false;
