@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.services.categories;
 
 import com.ftn.event_hopper.dtos.categories.*;
+import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.categories.Category;
@@ -11,6 +12,7 @@ import com.ftn.event_hopper.models.solutions.Product;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import com.ftn.event_hopper.services.notifications.NotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class CategoryService {
 
     @Autowired
     private EventTypeRepository eventTypeRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<CategoryDTO> findAllApproved() {
         List<Category> categories = categoryRepository.findByStatusAndIsDeletedFalse(CategoryStatus.APPROVED);
@@ -77,6 +82,17 @@ public class CategoryService {
         category.setDeleted(false);
         Category created = categoryRepository.save(category);
         categoryRepository.flush();
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                "New category created!!/n " + category.getName(),
+                null,
+                null
+        );
+
+        //naci sve pupove
+        //notificationService.sendNotification(notificationDTO,);
+
+
         return categoryMapper.fromCategoryToCreatedCategorySuggestionDTO(created);
     }
 
@@ -110,6 +126,16 @@ public class CategoryService {
         }
 
         Category updated = categoryRepository.save(existing);
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+            "Category name is changed from " + existing.getName() + " to " + category.getName(),
+                null,
+                null
+        );
+
+        //naci sve pupove ciji proizvodi su izmenjene kategorije
+        //notificationService.sendNotification(notificationDTO,);
+
         categoryRepository.flush();
         return categoryMapper.fromCategoryToUpdatedCategoryDTO(updated);
     }
@@ -124,6 +150,16 @@ public class CategoryService {
         existing.setEventTypes(null);
         categoryRepository.save(existing);
         categoryRepository.flush();
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                "Category  " + existing.getName() + "is deleted!",
+                null,
+                null
+        );
+
+        //naci sve pupove ciji proizvodi su obrisane kategorije
+        //notificationService.sendNotification(notificationDTO,);
+
         return true;
     }
 
@@ -151,7 +187,6 @@ public class CategoryService {
         requester.setStatus(ProductStatus.APPROVED);
         productRepository.save(requester);
         productRepository.flush();
-
         return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
     }
 
@@ -173,6 +208,16 @@ public class CategoryService {
         requester.setStatus(ProductStatus.APPROVED);
         productRepository.save(requester);
         productRepository.flush();
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                "New category created and upgraded/n " + existing.getName() + " -> " + requester.getName(),
+                null,
+                null
+        );
+
+        //naci sve pupove
+        //notificationService.sendNotification(notificationDTO,);
+
 
         return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
     }
