@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.services.reservations;
 
+import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.dtos.reservations.CreateReservationServiceDTO;
 import com.ftn.event_hopper.dtos.reservations.CreatedReservationServiceDTO;
 import com.ftn.event_hopper.mapper.reservations.ReservationDTOMapper;
@@ -17,6 +18,8 @@ import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
 import com.ftn.event_hopper.services.emails.EmailService;
 import com.ftn.event_hopper.services.messages.MessageService;
+import com.ftn.event_hopper.services.notifications.NotificationSchedulerService;
+import com.ftn.event_hopper.services.notifications.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,13 +57,14 @@ public class ReservationService {
     private ServiceProviderRepository serviceProviderRepository;
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     private ReservationDTOMapper reservationDTOMapper;
     @Autowired
     private EmailService emailService;
     @Autowired
     private ServiceRepository serviceRepository;
+    @Autowired
+    private NotificationSchedulerService notificationSchedulerService;
 
 
     public CreatedReservationServiceDTO bookService(CreateReservationServiceDTO createReservation) {
@@ -123,12 +127,22 @@ public class ReservationService {
 
         this.save(reservation);
 
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO();
+        notificationDTO.setContent("Your service will start in one hour.");
+        notificationDTO.setEventId(event.getId());
+        notificationDTO.setProductId(product.getId());
 
+        notificationSchedulerService.scheduleNotification(
+                notificationDTO,
+                eventOrganizer.getId(),
+                reservation.getStartTime()
+        );
 
         sendEmailToOD(reservation);
         sendEmailToPUP(reservation);
 
         this.notifyOfReservation(account, providerAccount, this.generateServiceReservationMessage(event, service, eventOrganizer, provider));
+
 
 
         return reservationDTOMapper.fromReservationToCreatedReservationServiceDTO(reservation);
