@@ -1,5 +1,6 @@
 package com.ftn.event_hopper.repositories.solutions;
 
+import com.ftn.event_hopper.models.comments.Comment;
 import com.ftn.event_hopper.models.solutions.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> , JpaSpe
     Page<Product> findAll(Pageable page);
 
     List<Product> findByIsDeletedFalse();
+
+    Product findByCommentsContaining(Comment comment);
 
     boolean existsByCategory_Id(UUID id);
 }

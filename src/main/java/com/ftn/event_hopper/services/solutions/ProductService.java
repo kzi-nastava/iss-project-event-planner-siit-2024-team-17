@@ -783,6 +783,15 @@ public class ProductService {
         ret.setValue(newRating.getValue());
         ret.setProductId(product.getId());
 
+        CreateNotificationDTO createNotificationDTO = new CreateNotificationDTO(
+          "New rating for your product!!/Product: " + product.getName() + "\nRating: " + ret.getValue(),
+          null,
+          product.getId()
+        );
+
+        notificationService.sendNotification(createNotificationDTO, serviceProviderRepository.findByProductsContaining(product).getId());
+
+
         return ret;
     }
 
