@@ -162,8 +162,8 @@ public class ProductService {
             System.out.println(newProduct.getId().toString());
             CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
                     "You have new category to review!",
-                    UUID.fromString("3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a"),
-                    //3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a,
+                    //UUID.fromString("3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a"),
+                    null,
                     newProduct.getId()
             );
 

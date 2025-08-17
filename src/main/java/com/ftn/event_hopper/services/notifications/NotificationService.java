@@ -44,8 +44,15 @@ public class NotificationService {
         UUID eventId = createNotificationDTO.getEventId();
         UUID productId = createNotificationDTO.getProductId();
 
-        Event event = eventRepository.findById(eventId).orElse(null);
-        Product product = productRepository.findById(productId).orElse(null);
+        Event event = null;
+        Product product = null;
+
+        if (eventId != null) {
+            event = eventRepository.findById(eventId).orElse(null);
+        }
+        if (productId != null) {
+            product = productRepository.findById(productId).orElse(null);
+        }
 
 //        if (event == null && product == null) {
 //            return false;
@@ -67,7 +74,15 @@ public class NotificationService {
                 return false;
             }
 
-            messagingTemplate.convertAndSendToUser(account.getUsername(),"/topic/notifications", notification);
+            // Napravi DTO za slanje preko WebSocket-a
+            SimpleNotificationDTO dto = new SimpleNotificationDTO();
+            dto.setContent(notification.getContent());
+            dto.setTimestamp(notification.getTimestamp());
+            if (notification.getEvent() != null) dto.setEventID(notification.getEvent().getId());
+            if (notification.getProduct() != null) dto.setProductID(notification.getProduct().getId());
+
+
+            messagingTemplate.convertAndSendToUser(account.getUsername(),"/topic/notifications", dto);
             return true;
         }
 
