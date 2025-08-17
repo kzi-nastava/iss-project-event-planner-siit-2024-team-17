@@ -132,19 +132,7 @@ public class ProductService {
 
         newProduct.setStatus(ProductStatus.APPROVED);
         if (category.getStatus() == CategoryStatus.PENDING) {
-            System.out.println("upaooo" + serviceProvider.getName());
             newProduct.setStatus(ProductStatus.PENDING);
-            CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
-                    "You have new category to review!",
-                    null,
-                    newProduct.getId()
-            );
-
-            //check this
-            UUID personId = personRepository.findByType(PersonType.ADMIN).get(0).getId();
-            notificationService.sendNotification(notificationDTO, personId );
-
-            //send notification
         }
 
         newProduct.setEventTypes(new HashSet<>(eventTypeRepository.findAllById(product.getEventTypesIds())));
@@ -168,6 +156,23 @@ public class ProductService {
         serviceProvider.getProducts().add(newProduct);
         serviceProviderRepository.save(serviceProvider);
         serviceProviderRepository.flush();
+
+        if(category.getStatus() == CategoryStatus.PENDING) {
+            System.out.println("upaooo" + serviceProvider.getName());
+            System.out.println(newProduct.getId().toString());
+            CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                    "You have new category to review!",
+                    UUID.fromString("3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a"),
+                    //3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a,
+                    newProduct.getId()
+            );
+
+            //check this
+            UUID personId = personRepository.findByType(PersonType.ADMIN).get(0).getId();
+            notificationService.sendNotification(notificationDTO, personId );
+
+            //send notification
+        }
 
         return productDTOMapper.fromProductToCreatedProductDTO(newProduct);
     }

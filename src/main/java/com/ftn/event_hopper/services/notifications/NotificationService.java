@@ -47,9 +47,9 @@ public class NotificationService {
         Event event = eventRepository.findById(eventId).orElse(null);
         Product product = productRepository.findById(productId).orElse(null);
 
-        if (event == null && product == null) {
-            return false;
-        }
+//        if (event == null && product == null) {
+//            return false;
+//        }
 
         notification.setEvent(event);
         notification.setProduct(product);
