@@ -366,15 +366,37 @@ public class ProductService {
 
 
         Sort sort = Sort.unsorted();
+
         if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
-            sort = switch (sortField) {
-                case "prices" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices[-1].finalPrice");
-                case "name" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
-                default -> throw new IllegalStateException("Unexpected value: " + sortField);
-            };
+            if ("price".equalsIgnoreCase(sortField)) {
+
+                specification = specification.and((root, query, cb) -> {
+                    Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+
+                    Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                    Root<Product> subRoot = subquery.from(Product.class);
+                    Join<Object, Object> subPrices = subRoot.join("prices", JoinType.INNER);
+
+                    subquery.select(cb.greatest(subPrices.get("timestamp").as(LocalDateTime.class)))
+                            .where(cb.equal(subRoot.get("id"), root.get("id")));
+
+                    if ("asc".equalsIgnoreCase(sortDirection)) {
+                        query.orderBy(cb.asc(pricesJoin.get("finalPrice")));
+                    } else {
+                        query.orderBy(cb.desc(pricesJoin.get("finalPrice")));
+                    }
+
+                    return cb.equal(pricesJoin.get("timestamp"), subquery);
+                });
+
+                sort = Sort.unsorted();
+            } else if ("name".equalsIgnoreCase(sortField)) {
+                sort = Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "name");
+            } else {
+                throw new IllegalStateException("Unexpected value: " + sortField);
+            }
         }
+
 
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
                 && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){

@@ -60,16 +60,13 @@ public class SolutionController{
     @GetMapping(value = "/persons-top-5", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<SimpleProductDTO>> getTop5Solutions(){
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("usao???");
         if(account == null) {
-            System.out.println("Nije nasao usera");
             return new ResponseEntity<Collection<SimpleProductDTO>>(HttpStatus.NOT_FOUND);
         }
 
         Collection<SimpleProductDTO> top5Solutions= productService.findTop5(account.getId());
 
         if(top5Solutions == null){
-            System.out.println("Nije nasao top");
             return new ResponseEntity<Collection<SimpleProductDTO>>(HttpStatus.NOT_FOUND);
         }
 
