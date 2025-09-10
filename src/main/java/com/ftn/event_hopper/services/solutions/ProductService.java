@@ -4,6 +4,7 @@ import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
+import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
@@ -37,6 +38,7 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import com.ftn.event_hopper.services.notifications.NotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +87,8 @@ public class ProductService {
     private PriceDTOMapper priceDTOMapper;
     @Autowired
     private EventDTOMapper eventDTOMapper;
+    @Autowired
+    private NotificationService notificationService;
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -152,6 +156,23 @@ public class ProductService {
         serviceProvider.getProducts().add(newProduct);
         serviceProviderRepository.save(serviceProvider);
         serviceProviderRepository.flush();
+
+        if(category.getStatus() == CategoryStatus.PENDING) {
+            System.out.println("upaooo" + serviceProvider.getName());
+            System.out.println(newProduct.getId().toString());
+            CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                    "You have new category to review!",
+                    //UUID.fromString("3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a"),
+                    null,
+                    newProduct.getId()
+            );
+
+            //check this
+            UUID personId = personRepository.findByType(PersonType.ADMIN).get(0).getId();
+            notificationService.sendNotification(notificationDTO, personId );
+
+            //send notification
+        }
 
         return productDTOMapper.fromProductToCreatedProductDTO(newProduct);
     }
@@ -766,6 +787,15 @@ public class ProductService {
         ret.setId(p.getRatings().stream().filter(r -> r.getEventOrganizer().getId().equals(person.getId())).findFirst().get().getId());
         ret.setValue(newRating.getValue());
         ret.setProductId(product.getId());
+
+        CreateNotificationDTO createNotificationDTO = new CreateNotificationDTO(
+          "New rating for your product!!/Product: " + product.getName() + "\nRating: " + ret.getValue(),
+          null,
+          product.getId()
+        );
+
+        notificationService.sendNotification(createNotificationDTO, serviceProviderRepository.findByProductsContaining(product).getId());
+
 
         return ret;
     }

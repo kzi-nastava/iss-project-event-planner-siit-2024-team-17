@@ -1,6 +1,7 @@
 package com.ftn.event_hopper.services.categories;
 
 import com.ftn.event_hopper.dtos.categories.*;
+import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.mapper.categories.CategoryDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.categories.Category;
@@ -8,9 +9,15 @@ import com.ftn.event_hopper.models.eventTypes.EventType;
 import com.ftn.event_hopper.models.shared.CategoryStatus;
 import com.ftn.event_hopper.models.shared.ProductStatus;
 import com.ftn.event_hopper.models.solutions.Product;
+import com.ftn.event_hopper.models.users.Person;
+import com.ftn.event_hopper.models.users.PersonType;
+import com.ftn.event_hopper.models.users.ServiceProvider;
 import com.ftn.event_hopper.repositories.categoies.CategoryRepository;
 import com.ftn.event_hopper.repositories.eventTypes.EventTypeRepository;
 import com.ftn.event_hopper.repositories.solutions.ProductRepository;
+import com.ftn.event_hopper.repositories.users.PersonRepository;
+import com.ftn.event_hopper.services.notifications.NotificationService;
+import com.ftn.event_hopper.services.users.PersonService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +42,14 @@ public class CategoryService {
 
     @Autowired
     private EventTypeRepository eventTypeRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private PersonService personService;
 
     public List<CategoryDTO> findAllApproved() {
         List<Category> categories = categoryRepository.findByStatusAndIsDeletedFalse(CategoryStatus.APPROVED);
@@ -67,6 +82,19 @@ public class CategoryService {
         category.setDeleted(false);
         Category created = categoryRepository.save(category);
         categoryRepository.flush();
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                "New category created!!/n " + category.getName(),
+                null,
+                null
+        );
+
+        List<Person> serviceProviders = personRepository.findByType(PersonType.SERVICE_PROVIDER);
+
+        for (Person person: serviceProviders) {
+            notificationService.sendNotification(notificationDTO, person.getId());
+        }
+
         return categoryMapper.fromCategoryToCreatedCategoryDTO(created);
     }
 
@@ -77,6 +105,9 @@ public class CategoryService {
         category.setDeleted(false);
         Category created = categoryRepository.save(category);
         categoryRepository.flush();
+
+        //obavestiti admina?
+
         return categoryMapper.fromCategoryToCreatedCategorySuggestionDTO(created);
     }
 
@@ -110,6 +141,19 @@ public class CategoryService {
         }
 
         Category updated = categoryRepository.save(existing);
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+            "Category name is changed from " + existing.getName() + " to " + category.getName(),
+                null,
+                null
+        );
+
+        //naci sve pupove ciji proizvodi su izmenjene kategorije
+        List<ServiceProvider> serviceProviders = personRepository.findByTypeAndProductCategoryId(PersonType.SERVICE_PROVIDER, updated.getId());
+        for (ServiceProvider serviceProvider: serviceProviders) {
+            notificationService.sendNotification(notificationDTO, serviceProvider.getId());
+        }
+
         categoryRepository.flush();
         return categoryMapper.fromCategoryToUpdatedCategoryDTO(updated);
     }
@@ -124,6 +168,18 @@ public class CategoryService {
         existing.setEventTypes(null);
         categoryRepository.save(existing);
         categoryRepository.flush();
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                "Category  " + existing.getName() + "is deleted!",
+                null,
+                null
+        );
+
+        List<ServiceProvider> serviceProviders = personRepository.findByTypeAndProductCategoryId(PersonType.SERVICE_PROVIDER, existing.getId());
+        for (ServiceProvider serviceProvider: serviceProviders) {
+            notificationService.sendNotification(notificationDTO, serviceProvider.getId());
+        }
+
         return true;
     }
 
@@ -151,7 +207,6 @@ public class CategoryService {
         requester.setStatus(ProductStatus.APPROVED);
         productRepository.save(requester);
         productRepository.flush();
-
         return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
     }
 
@@ -173,6 +228,17 @@ public class CategoryService {
         requester.setStatus(ProductStatus.APPROVED);
         productRepository.save(requester);
         productRepository.flush();
+
+        CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                "New category created and upgraded/n " + existing.getName() + " -> " + requester.getName(),
+                null,
+                null
+        );
+
+        List<Person> serviceProviders = personRepository.findByType(PersonType.SERVICE_PROVIDER);
+        for (Person serviceProvider: serviceProviders) {
+            notificationService.sendNotification(notificationDTO, serviceProvider.getId());
+        }
 
         return categoryMapper.fromCategoryToUpdatedCategorySuggestionDTO(updated);
     }
