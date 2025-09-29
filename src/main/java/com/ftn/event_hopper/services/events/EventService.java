@@ -375,7 +375,7 @@ public class EventService {
 
                 Account loggedAccount = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-                if (loggedAccount.getType() != PersonType.EVENT_ORGANIZER){
+                if (loggedAccount.getType() != PersonType.EVENT_ORGANIZER && loggedAccount.getType() != PersonType.ADMIN){
 
 
                 specification = specification.and((root, query, criteriaBuilder) -> {

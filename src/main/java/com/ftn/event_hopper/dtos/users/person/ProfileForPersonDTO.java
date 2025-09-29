@@ -2,6 +2,7 @@ package com.ftn.event_hopper.dtos.users.person;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.location.SimpleLocationDTO;
+import com.ftn.event_hopper.dtos.notifications.SimpleNotificationDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class ProfileForPersonDTO {
     private Set<SimpleEventDTO> favoriteEvents;
     private Set<SimpleProductDTO> favoriteProducts;
     private List<SimpleEventDTO> myEvents;
+    private List<SimpleNotificationDTO> notifications;
     private String companyName;
     private String companyEmail;
     private String companyPhoneNumber;

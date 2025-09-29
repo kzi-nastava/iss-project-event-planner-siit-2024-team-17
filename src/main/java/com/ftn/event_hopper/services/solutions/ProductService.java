@@ -4,6 +4,7 @@ import com.ftn.event_hopper.dtos.comments.CreateCommentDTO;
 import com.ftn.event_hopper.dtos.comments.CreatedCommentDTO;
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.messages.ConversationPreviewDTO;
+import com.ftn.event_hopper.dtos.notifications.CreateNotificationDTO;
 import com.ftn.event_hopper.dtos.prices.PriceManagementDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatePriceDTO;
 import com.ftn.event_hopper.dtos.prices.UpdatedPriceDTO;
@@ -37,6 +38,7 @@ import com.ftn.event_hopper.repositories.users.AccountRepository;
 import com.ftn.event_hopper.repositories.users.EventOrganizerRepository;
 import com.ftn.event_hopper.repositories.users.PersonRepository;
 import com.ftn.event_hopper.repositories.users.ServiceProviderRepository;
+import com.ftn.event_hopper.services.notifications.NotificationService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +87,8 @@ public class ProductService {
     private PriceDTOMapper priceDTOMapper;
     @Autowired
     private EventDTOMapper eventDTOMapper;
+    @Autowired
+    private NotificationService notificationService;
 
 
     public Collection<SimpleProductDTO> findAll() {
@@ -152,6 +156,23 @@ public class ProductService {
         serviceProvider.getProducts().add(newProduct);
         serviceProviderRepository.save(serviceProvider);
         serviceProviderRepository.flush();
+
+        if(category.getStatus() == CategoryStatus.PENDING) {
+            System.out.println("upaooo" + serviceProvider.getName());
+            System.out.println(newProduct.getId().toString());
+            CreateNotificationDTO notificationDTO = new CreateNotificationDTO(
+                    "You have new category to review!",
+                    //UUID.fromString("3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a"),
+                    null,
+                    newProduct.getId()
+            );
+
+            //check this
+            UUID personId = personRepository.findByType(PersonType.ADMIN).get(0).getId();
+            notificationService.sendNotification(notificationDTO, personId );
+
+            //send notification
+        }
 
         return productDTOMapper.fromProductToCreatedProductDTO(newProduct);
     }
@@ -345,15 +366,37 @@ public class ProductService {
 
 
         Sort sort = Sort.unsorted();
+
         if (StringUtils.hasText(sortField) && StringUtils.hasText(sortDirection)) {
-            sort = switch (sortField) {
-                case "prices" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "prices[-1].finalPrice");
-                case "name" ->
-                        Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
-                default -> throw new IllegalStateException("Unexpected value: " + sortField);
-            };
+            if ("price".equalsIgnoreCase(sortField)) {
+
+                specification = specification.and((root, query, cb) -> {
+                    Join<Object, Object> pricesJoin = root.join("prices", JoinType.INNER);
+
+                    Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                    Root<Product> subRoot = subquery.from(Product.class);
+                    Join<Object, Object> subPrices = subRoot.join("prices", JoinType.INNER);
+
+                    subquery.select(cb.greatest(subPrices.get("timestamp").as(LocalDateTime.class)))
+                            .where(cb.equal(subRoot.get("id"), root.get("id")));
+
+                    if ("asc".equalsIgnoreCase(sortDirection)) {
+                        query.orderBy(cb.asc(pricesJoin.get("finalPrice")));
+                    } else {
+                        query.orderBy(cb.desc(pricesJoin.get("finalPrice")));
+                    }
+
+                    return cb.equal(pricesJoin.get("timestamp"), subquery);
+                });
+
+                sort = Sort.unsorted();
+            } else if ("name".equalsIgnoreCase(sortField)) {
+                sort = Sort.by("asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, "name");
+            } else {
+                throw new IllegalStateException("Unexpected value: " + sortField);
+            }
         }
+
 
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null
                 && (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account)){
@@ -766,6 +809,15 @@ public class ProductService {
         ret.setId(p.getRatings().stream().filter(r -> r.getEventOrganizer().getId().equals(person.getId())).findFirst().get().getId());
         ret.setValue(newRating.getValue());
         ret.setProductId(product.getId());
+
+        CreateNotificationDTO createNotificationDTO = new CreateNotificationDTO(
+          "New rating for your product!!/Product: " + product.getName() + "\nRating: " + ret.getValue(),
+          null,
+          product.getId()
+        );
+
+        notificationService.sendNotification(createNotificationDTO, serviceProviderRepository.findByProductsContaining(product).getId());
+
 
         return ret;
     }

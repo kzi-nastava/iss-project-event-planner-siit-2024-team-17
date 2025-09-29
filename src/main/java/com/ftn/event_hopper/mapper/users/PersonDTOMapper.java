@@ -2,11 +2,14 @@ package com.ftn.event_hopper.mapper.users;
 
 import com.ftn.event_hopper.dtos.events.SimpleEventDTO;
 import com.ftn.event_hopper.dtos.location.CreateLocationDTO;
+import com.ftn.event_hopper.dtos.notifications.SimpleNotificationDTO;
 import com.ftn.event_hopper.dtos.solutions.SimpleProductDTO;
 import com.ftn.event_hopper.mapper.events.EventDTOMapper;
 import com.ftn.event_hopper.mapper.locations.LocationDTOMapper;
+import com.ftn.event_hopper.mapper.notifications.NotificationDTOMapper;
 import com.ftn.event_hopper.mapper.solutions.ProductDTOMapper;
 import com.ftn.event_hopper.models.events.Event;
+import com.ftn.event_hopper.models.notifications.Notification;
 import com.ftn.event_hopper.models.solutions.Product;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Converter;
@@ -29,13 +32,15 @@ public class PersonDTOMapper {
     private final LocationDTOMapper locationDTOMapper;
     private final EventDTOMapper eventDTOMapper;
     private final ProductDTOMapper productDTOMapper;
+    private final NotificationDTOMapper notificationDTOMapper;
 
     @Autowired
-    public PersonDTOMapper(ModelMapper modelMapper, LocationDTOMapper locationDTOMapper, EventDTOMapper eventDTOMapper, ProductDTOMapper productDTOMapper) {
+    public PersonDTOMapper(ModelMapper modelMapper, LocationDTOMapper locationDTOMapper, EventDTOMapper eventDTOMapper, ProductDTOMapper productDTOMapper, NotificationDTOMapper notificationDTOMapper) {
         this.modelMapper = modelMapper;
         this.locationDTOMapper = locationDTOMapper;
         this.eventDTOMapper = eventDTOMapper;
         this.productDTOMapper = productDTOMapper;
+        this.notificationDTOMapper = notificationDTOMapper;
         configureMappings();
     }
 
@@ -53,6 +58,9 @@ public class PersonDTOMapper {
         Converter<Product, SimpleProductDTO> productConverter = context ->
                 productDTOMapper.fromProductToSimpleDTO(context.getSource());
 
+        Converter<Notification, SimpleNotificationDTO> notificationConverter = context ->
+                notificationDTOMapper.fromNotificationToSimpleDTO(context.getSource());
+
 
         Converter<Set<Event>, Set<SimpleEventDTO>> eventSetConverter = context ->
                 context.getSource().stream()
@@ -63,6 +71,12 @@ public class PersonDTOMapper {
                 context.getSource().stream()
                         .map(productDTOMapper::fromProductToSimpleDTO)
                         .collect(Collectors.toSet());
+
+        Converter<List<Notification>, List<SimpleNotificationDTO>> notificationListConverter = context ->
+                context.getSource().stream()
+                            .map(notificationDTOMapper::fromNotificationToSimpleDTO)
+                            .collect(Collectors.toList());
+
 
 
         // Custom mapping for Person -> SimplePersonDTO
@@ -97,6 +111,7 @@ public class PersonDTOMapper {
                     mapper.using(eventSetConverter).map(Person::getFavoriteEvents, ProfileForPersonDTO::setFavoriteEvents);
                     mapper.using(eventSetConverter).map(Person::getAttendingEvents, ProfileForPersonDTO::setAttendingEvents);
                     mapper.using(productSetConverter).map(Person::getFavoriteProducts, ProfileForPersonDTO::setFavoriteProducts);
+                    mapper.using(notificationListConverter).map(Person::getNotifications, ProfileForPersonDTO::setNotifications);
                 });
 
         // For HomepageForPersonDTO (attending and favorite events mapped)
@@ -135,6 +150,9 @@ public class PersonDTOMapper {
         dto.setFavoriteEvents(person.getFavoriteEvents().stream()
                 .map(eventDTOMapper::fromEventToSimpleDTO)
                 .collect(Collectors.toSet()));
+        dto.setNotifications(person.getNotifications().stream()
+                .map(notificationDTOMapper::fromNotificationToSimpleDTO)
+                .collect(Collectors.toList()));
         return dto;
     }
 
