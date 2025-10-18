@@ -120,7 +120,7 @@ VALUES
 
 INSERT INTO events (max_attendance, privacy, time, event_type_id, event_organizer_id, id, location_id, description, name, picture)
 VALUES
-    (100, 0, '2025-10-20 10:00:00', 'f0dcab26-9656-491e-bcce-bf23f723e998', '57c05a8a-dd8b-4da8-af73-90961e423f42', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Kontig Tech Meetup inspires and connects tech enthusiasts and innovators. Join engaging talks', 'Tech Meetup', '15.jpeg'),
+    (100, 0, '2025-10-28 10:00:00', 'f0dcab26-9656-491e-bcce-bf23f723e998', '57c05a8a-dd8b-4da8-af73-90961e423f42', '3f7b2c9e-4a6f-4d5b-b8c1-7a2f9e3b6d4a', '4e2d5b9f-a6c3-49a1-b8f5-7d9c7b6e3a2c', 'Kontig Tech Meetup inspires and connects tech enthusiasts and innovators. Join engaging talks', 'Tech Meetup', '15.jpeg'),
     (200, 1, '2025-10-18 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '57c05a8a-dd8b-4da8-af73-90961e423f42', '2d4a7c9e-6f3b-42a1-b8f5-3c7e9b6a4d5f', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Winter Fest celebrates the magic of the season with enchanting attractions, live performances, ', 'Winter Fest', '16.jpg'),
     (300, 1, '2025-10-18 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '8c216a1f-6d65-4256-95e0-6a820d5fb902', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Celebrate in style at the Big Birthday Party! Enjoy lively music, delicious food, fun games,.', 'Big Birthday party', '17.jpg'),
     (100, 1, '2025-10-20 18:00:00', '5de088d0-7bff-44f5-b144-51d6a24e740b', '243d38ad-8ba3-48e0-99bd-0f2e31a710be', '06aee816-a4ec-4d3c-9d9c-2c0f6bb96285', 'a7c5e2b9-d3f4-49b8-b6c1-3f9e7a4d5b2c', 'Join the celebration of Queen''s 50th Anniversary, honoring five decades of remarkable achievements.', 'Queens 50th Anniversary', '18.jpg'),
@@ -325,8 +325,8 @@ VALUES
     ('5de088d0-7bff-44f5-b144-51d6a24e740b', '11fbaacb-5d2e-44b0-8f7e-1d302baef461'),
     ('5de088d0-7bff-44f5-b144-51d6a24e740b', 'df9a2350-c532-4a75-9cbf-5d5ea6fc807d'),
     ('f0dcab26-9656-491e-bcce-bf23f723e998', '1237e35c-80ff-4a2a-8245-2728cb45ee11'),
-    ('4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '45067d8d-9d86-4104-97cd-7054c48cbbc6'),
     ('5de088d0-7bff-44f5-b144-51d6a24e740b', '45067d8d-9d86-4104-97cd-7054c48cbbc6'),
+    ('4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '935e1b52-6180-419a-bbe8-909db6cd6cbc'),
     ('4e7ec0af-af4e-463b-abe9-d8c2ba317d0a', '894d865c-0343-4a4a-9594-6ffc4f3a5a16');
 
 
