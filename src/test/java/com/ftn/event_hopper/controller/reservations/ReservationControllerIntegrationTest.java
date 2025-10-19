@@ -194,6 +194,28 @@ public class ReservationControllerIntegrationTest {
 
     }
 
+//    @Test
+//    void shouldReturnAvailableTermsSuccessfully() {
+//
+//        HttpHeaders headers = getHeadersWithCorrectToken();
+//        UUID serviceId = UUID.fromString("935e1b52-6180-419a-bbe8-909db6cd6cbc");
+//        String dateParam = LocalDateTime.now().plusDays(1).toString();
+//
+//        ResponseEntity<List<LocalDateTime>> response = restTemplate.exchange(
+//                "/api/reservations/services/" + serviceId + "/terms/?date=" + dateParam,
+//                HttpMethod.GET,
+//                null,
+//                new ParameterizedTypeReference<List<LocalDateTime>>() {}
+//        );
+//
+//        List<LocalDateTime> terms = response.getBody();
+//
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertNotNull(response.getBody(), "Response body should not be null");
+//    }
+
+
 
 
 }
