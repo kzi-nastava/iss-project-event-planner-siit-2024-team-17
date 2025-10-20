@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -37,6 +39,7 @@ public class ReservationController {
         }
     }
 
+    @PreAuthorize("hasRole('EVENT_ORGANIZER')")
     @PostMapping(value = "/services", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createReservationService(@RequestBody CreateReservationServiceDTO reservation) {
 
@@ -52,11 +55,19 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/services/{id}/terms/")
-    public ResponseEntity<Collection<LocalDateTime>> getAvailableTerms(@PathVariable("id") UUID serviceId,@RequestParam("date") String date) {
-        LocalDateTime parsedDate = LocalDateTime.parse(date);
+    @ResponseBody
+    public ResponseEntity<List<LocalDateTime>> getAvailableTerms(@PathVariable("id") UUID serviceId,@RequestParam("date") String date) {
+        LocalDateTime parsedDate;
+        try {
+            if (date.contains(".")) {
+                date = date.substring(0, date.indexOf("."));
+            }
+            parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
 
         List<LocalDateTime> terms = reservationService.findAvailableTerms(serviceId, parsedDate);
-
-        return new ResponseEntity<>(terms, HttpStatus.OK);
+        return ResponseEntity.ok(terms);
     }
 }

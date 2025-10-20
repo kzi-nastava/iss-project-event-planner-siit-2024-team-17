@@ -74,6 +74,14 @@ public class ReservationService {
             throw new EntityNotFoundException("You must be logged in to make a reservation.");
         }
 
+        if (createReservation.getFrom().isBefore(LocalDateTime.now())) {
+            throw new EntityNotFoundException("Service is not available for this date");
+        }
+
+        if (createReservation.getFrom().isAfter(createReservation.getTo())) {
+            throw new EntityNotFoundException("Invalid dates");
+        }
+
         EventOrganizer eventOrganizer = eventOrganizerRepository.findById(account.getPerson().getId())
                 .orElseThrow(() -> new EntityNotFoundException("You must be an event organizer to make a reservation."));
 
