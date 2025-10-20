@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface ReservationRepository extends JpaRepository<Reservation, UUID> {
     boolean existsByProductAndEvent(Product product, Event event);
 
-    @Query("SELECT r FROM Reservation r WHERE r.product = :product AND DATE(r.startTime) = DATE(:timeStamp)")
+    @Query("SELECT r FROM Reservation r WHERE r.product = :product AND CAST(r.startTime AS date) = CAST(:timeStamp AS date)")
     Collection<Reservation> findByProductAndStartTime(@Param("product") Product product, @Param("timeStamp") LocalDateTime timeStamp);
 
     Collection<Reservation> findByEvent(Event event);
