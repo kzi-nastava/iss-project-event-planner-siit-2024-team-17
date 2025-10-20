@@ -18,8 +18,6 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -55,14 +53,16 @@ public class ReservationControllerIntegrationTest {
 
     private UUID eventId = UUID.fromString("4b3a7e9c-d8f5-49a1-b2c7-5a9d7f6e3c2b");
     private UUID serviceId = UUID.fromString("935e1b52-6180-419a-bbe8-909db6cd6cbc");
+
+
     @BeforeEach
     void setUp() {
 
         reservationServiceDTO = new CreateReservationServiceDTO(
                 eventId,
                 serviceId,
-                LocalDateTime.now().plusDays(2),
-                LocalDateTime.now().plusDays(2).plusMinutes(30)
+                LocalDateTime.of(2025,10,28,12,0),
+                LocalDateTime.of(2025,10,28,14,0)
         );
     }
 
@@ -114,23 +114,21 @@ public class ReservationControllerIntegrationTest {
 
         CreatedReservationServiceDTO createdReservationServiceDTO = response.getBody();
         Optional<Reservation> savedReservation = reservationRepository.findById(createdReservationServiceDTO.getId());
-        if(savedReservation.isPresent()){
-            assertEquals(createdReservationServiceDTO.getEvent().getId(), savedReservation.get().getEvent().getId());
-            assertEquals(createdReservationServiceDTO.getProduct().getId(), savedReservation.get().getProduct().getId());
+        assertTrue(savedReservation.isPresent());
+        assertEquals(createdReservationServiceDTO.getEvent().getId(), savedReservation.get().getEvent().getId());
+        assertEquals(createdReservationServiceDTO.getProduct().getId(), savedReservation.get().getProduct().getId());
 
-            assertEquals(
-                    createdReservationServiceDTO.getStartTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS),
-                    savedReservation.get().getStartTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS)
-            );
+        assertEquals(
+                createdReservationServiceDTO.getStartTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS),
+                savedReservation.get().getStartTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS)
+        );
 
-            assertEquals(
-                    createdReservationServiceDTO.getEndTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS),
-                    savedReservation.get().getEndTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS)
-            );
+        assertEquals(
+                createdReservationServiceDTO.getEndTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS),
+                savedReservation.get().getEndTime().truncatedTo(java.time.temporal.ChronoUnit.MILLIS)
+        );
 
-        }else{
-            fail("Reservation was not saved in the database");
-        }
+
     }
 
     @Test

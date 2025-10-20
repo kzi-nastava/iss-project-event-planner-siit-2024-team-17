@@ -364,6 +364,9 @@ public class ReservationServiceTest {
         assertNotNull(result.getTimestamp());
 
         verify(reservationRepository).save(any());
+        verify(emailService).sendSimpleMail(any());
+        verify(notificationSchedulerService).scheduleNotification(any(), any(), any());
+        verify(messageService).sendMessage(any());
     }
 
     @Test

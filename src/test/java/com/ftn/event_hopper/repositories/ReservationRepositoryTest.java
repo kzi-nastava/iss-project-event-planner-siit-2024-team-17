@@ -73,14 +73,10 @@ public class ReservationRepositoryTest {
         reservation.setEndTime(reservationDate.plusHours(1));
         reservation = reservationRepository.save(reservation);
 
-        LocalDateTime startOfDay = reservationDate.toLocalDate().atStartOfDay();
-        LocalDateTime endOfDay = reservationDate.toLocalDate().atTime(23, 59, 59);
 
-        Collection<Reservation> found = reservationRepository.findAll()
-                .stream()
-                .filter(r -> r.getProduct().equals(savedProduct))
-                .filter(r -> !r.getStartTime().isBefore(startOfDay) && !r.getStartTime().isAfter(endOfDay))
-                .toList();
+        Collection<Reservation> found =
+                reservationRepository.findByProductAndStartTime(product, reservation.getStartTime());
+
 
         assertThat(found).isNotEmpty();
         assertThat(found).contains(reservation);
@@ -98,14 +94,10 @@ public class ReservationRepositoryTest {
         final Product savedProduct = productRepository.save(product);
 
         LocalDateTime reservationDate = LocalDateTime.of(2025, 10, 30, 10, 0);
-        LocalDateTime startOfDay = reservationDate.toLocalDate().atStartOfDay();
-        LocalDateTime endOfDay = reservationDate.toLocalDate().atTime(23, 59, 59);
 
-        Collection<Reservation> found = reservationRepository.findAll()
-                .stream()
-                .filter(r -> r.getProduct().equals(savedProduct))
-                .filter(r -> !r.getStartTime().isBefore(startOfDay) && !r.getStartTime().isAfter(endOfDay))
-                .toList();
+        Collection<Reservation> found =
+                reservationRepository.findByProductAndStartTime(savedProduct, reservationDate);
+
         assertThat(found).isEmpty();
     }
 }
